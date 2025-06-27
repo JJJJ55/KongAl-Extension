@@ -1,0 +1,21 @@
+@layer theme, base, components, utilities;
+
+/* @import 'tailwindcss'; */
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@theme {
+  --color-knuBlue: #033884;
+  --color-knuGreen: #23955c;
+  --color-bgColor: #f5f7fa;
+  --color-positive: #3f8cff;
+  --color-negative: #ff6e65;
+  --color-kongju: #db5039;
+  --color-chenan: #308c9b;
+  --color-yesan: #e1971c;
+  --color-gray1: #f0f0f0;
+  --color-gray2: #d3d3d3;
+  --color-gray3: #a6a6a6;
+  --color-gray4: #757575;
+  --color-gray5: #757575;
+}
