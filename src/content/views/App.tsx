@@ -7,7 +7,28 @@ function App() {
   const toggle = () => setShow(!show)
 
   return (
-    <div className="popup-container">
+    // <div>
+    //   {show && (
+    //     <div className={`popup-content ${show ? 'opacity-100' : 'opacity-0'}`}>
+    //       <h1>HELLO CRXJS</h1>
+    //       <div className="w-50px h-50px bg-knuBlue text-2xl font-bold underline">테스트</div>
+    //       <div className="bottom-25px right-25px h-56px w-56px fixed z-500">ggg</div>
+    //     </div>
+    //   )}
+    //   <div
+    //     className="fixed right-0 bottom-0 z-100 m-5 h-[24px] w-[24px] bg-cover bg-center bg-no-repeat"
+    //     style={{ backgroundImage: `url(${chrome.runtime.getURL('/logo.png')})` }}
+    //     onClick={toggle}
+    //   >
+    //     er
+    //     {/* <img src={Logo} alt="CRXJS logo" className="button-icon bg-cover bg-center bg-no-repeat" /> */}
+    //   </div>
+    // </div>
+    <div
+      className="fixed right-0 bottom-0 z-100 m-5 h-[48px] w-[48px] bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${chrome.runtime.getURL('/logo.png')})` }}
+      onClick={toggle}
+    >
       {show && (
         <div className={`popup-content ${show ? 'opacity-100' : 'opacity-0'}`}>
           <h1>HELLO CRXJS</h1>
@@ -15,19 +36,7 @@ function App() {
           <div className="bottom-25px right-25px h-56px w-56px fixed z-500">ggg</div>
         </div>
       )}
-      <div className="gt-content">
-        <button className="toggle-button" onClick={toggle}>
-          <img src={''} alt="CRXJS logo" className="button-icon" />
-        </button>
-      </div>
     </div>
-    // <div className="bottom-25px right-25px h-56px w-56px fixed z-500">
-    //   <div>
-    //     <button>
-    //       <img src={Logo} alt="CRXJS logo" />
-    //     </button>
-    //   </div>
-    // </div>
   )
 }
 
