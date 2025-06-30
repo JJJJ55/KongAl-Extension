@@ -1,4 +1,5 @@
 import Logo from '@/assets/crx.svg'
+import BasicButton from '@/components/BasicButton'
 import { useState } from 'react'
 // import './App.css'
 
@@ -31,6 +32,7 @@ function App() {
     >
       {show && (
         <div className={`popup-content ${show ? 'opacity-100' : 'opacity-0'}`}>
+          <BasicButton className="bg-knuBlue" content="dfdf" onClick={() => console.log('클릭')} />
           <h1>HELLO CRXJS</h1>
           <div className="w-50px h-50px bg-knuBlue text-2xl font-bold underline">테스트</div>
           <div className="bottom-25px right-25px h-56px w-56px fixed z-500">ggg</div>

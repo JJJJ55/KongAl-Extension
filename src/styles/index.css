@@ -2,8 +2,16 @@
 
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
 @theme {
   --color-knuBlue: #033884;
+  --color-knuBlue-pointer: #002c6c;
   --color-knuGreen: #23955c;
   --color-bgColor: #f5f7fa;
   --color-positive: #3f8cff;
@@ -16,4 +24,5 @@
   --color-gray3: #a6a6a6;
   --color-gray4: #757575;
   --color-gray5: #757575;
+  --font-pretendard: 'Pretendard-Regular';
 }
