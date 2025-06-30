@@ -9,7 +9,10 @@ type ButtonProps = {
 const BasicButton = ({ className, content, onClick }: ButtonProps) => {
   return (
     <button
-      className={clsx('bg-knuBlue h-[40px] w-[300px] text-[15px] font-bold text-white', className)}
+      className={clsx(
+        'bg-knuBlue hover:bg-knuBlue-pointer font-pretendard h-[40px] w-[300px] cursor-pointer rounded-xl text-[15px] text-white',
+        className,
+      )}
       onClick={onClick}
     >
       {content}
