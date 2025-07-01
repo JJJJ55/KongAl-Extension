@@ -6,7 +6,7 @@ type ButtonProps = {
   onClick: () => void
 }
 
-const BasicButton = ({ className, content, onClick }: ButtonProps) => {
+export const BasicButton = ({ className, content, onClick }: ButtonProps) => {
   return (
     <button
       className={clsx(
@@ -19,5 +19,3 @@ const BasicButton = ({ className, content, onClick }: ButtonProps) => {
     </button>
   )
 }
-
-export default BasicButton

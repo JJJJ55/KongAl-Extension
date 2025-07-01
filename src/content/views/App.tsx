@@ -1,5 +1,5 @@
 import Logo from '@/assets/crx.svg'
-import BasicButton from '@/components/BasicButton'
+import { BasicButton } from '@/components'
 import { useState } from 'react'
 // import './App.css'
 

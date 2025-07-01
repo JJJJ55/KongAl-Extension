@@ -2,11 +2,9 @@ import clsx from 'clsx'
 
 type ButtonProps = {
   className?: string
-  content: string
+  children: string
 }
 
-const Text = ({ className, content }: ButtonProps) => {
-  return <div className={clsx('font-pretendard', className)}>{content}</div>
+export const Text = ({ className, children }: ButtonProps) => {
+  return <div className={clsx('font-pretendard', className)}>{children}</div>
 }
-
-export default Text
