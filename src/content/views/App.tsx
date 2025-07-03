@@ -1,6 +1,7 @@
 import { BasicButton } from '@/components'
 import { useState } from 'react'
 import { ModalButton } from '../components/ModalButton'
+import { Content } from '../components/Content'
 
 function App() {
   const [show, setShow] = useState(false)
@@ -21,7 +22,7 @@ function App() {
     //     </div>
     //   )}
     // </div>
-    <ModalButton />
+    <Content />
   )
 }
 
