@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import type { Variants } from 'framer-motion'
+import { SubjectPage } from './subject/SubjectPage'
+import { BottomNavBar } from './subject/BottomNavbar'
 
 const modalVariants: Variants = {
   hidden: {
@@ -26,16 +28,12 @@ export const MainModal = () => {
       animate="visible"
       exit="exit"
       transition={{ duration: 0.3 }}
-      className="bg-kongju fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-[36px]"
-      style={{ bottom: '96px', right: '25px' }}
+      className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)]"
+      style={{ boxShadow: ' 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)', bottom: '96px', right: '25px' }}
     >
-      <div className="p-4">
-        <button>토큰 생성 테스트</button>
-        <div></div>
-        <button>토큰 생성 테스트</button> <div></div>
-        <button>토큰 생성 테스트</button> <div></div>
-        <button>토큰 생성 테스트</button> <div></div>
-        <button>토큰 생성 테스트</button>
+      <div className="flex h-full flex-col">
+        <SubjectPage />
+        <BottomNavBar />
       </div>
     </motion.div>
   )
