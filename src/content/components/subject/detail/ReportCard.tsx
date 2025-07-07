@@ -1,7 +1,7 @@
-import { Text } from '@/components'
+import { Text, TimeIcon } from '@/components'
 import { ClockAlert } from 'lucide-react'
 
-const UnSubmitIssue = () => <span className="bg-kongju rounded-2xl px-2 text-[10px] text-white">미 제 출</span>
+const UnSubmitIssue = () => <span className="bg-kongju rounded-2xl px-2 text-[10px] text-white">미제출</span>
 const SubmitIssue = () => <span className="bg-knuGreen rounded-2xl px-2 text-[10px] text-white">제출 완료</span>
 
 const ChangeStateBtn = () => (
@@ -12,7 +12,7 @@ export const ReportCard = () => {
   return (
     <div
       className="bg-kongju flex h-[60px] w-[282px] cursor-pointer justify-end rounded-xl"
-      style={{ boxShadow: '0 5px 10px rgba(0,0,0,0.3)' }}
+      style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
     >
       <div className="flex h-full w-[277px] flex-col justify-center gap-3 rounded-xl bg-white p-5">
         <div className="flex items-center justify-between">
@@ -22,8 +22,9 @@ export const ReportCard = () => {
         </div>
         <div className="flex items-end justify-between">
           <div className="flex items-center">
-            <ClockAlert size={13} />
-            <Text className="ml-2 text-[10px]">2일 전</Text>
+            {/* <ClockAlert size={18} /> */}
+            <TimeIcon className="h-[16px] w-[16px]" />
+            <Text className="ml-2 text-[12px] font-bold">2일 전</Text>
           </div>
           <ChangeStateBtn />
         </div>
