@@ -11,7 +11,7 @@ export const SubjectCard = ({ onClick }: SubjectProps) => {
   return (
     <div
       className="bg-knuBlue flex h-[60px] w-[282px] cursor-pointer justify-end rounded-xl"
-      style={{ boxShadow: '0 5px 10px rgba(0,0,0,0.3)' }}
+      style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       onClick={onClick}
     >
       <div className="flex h-full w-[277px] flex-col justify-center rounded-xl bg-white p-5">

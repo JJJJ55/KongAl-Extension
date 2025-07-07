@@ -34,8 +34,8 @@ export const SubjectDetailPage = ({ onClick }: { onClick: () => void }) => {
       className="flex h-full flex-col"
     >
       <DetailTopNav onClick={onClick} />
-      {/* <DetailPlay /> */}
-      <DetailBoard />
+      <DetailPlay />
+      {/* <DetailBoard /> */}
       {/* <DetailReport /> */}
       <DetailBottomNav />
     </motion.div>
