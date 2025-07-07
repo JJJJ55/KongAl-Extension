@@ -5,7 +5,7 @@ export const DetailTopNav = ({ onClick }: { onClick: () => void }) => {
   return (
     <header
       className="flex flex-row items-center rounded-2xl bg-white p-5"
-      style={{ boxShadow: '0 5px 10px rgba(0,0,0,0.3)', height: '60px' }}
+      style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)', height: '60px' }}
     >
       <InfoIcon className="h-[20px] w-[20px] flex-1/12" />
       <div className="ml-5 flex-10/12">
