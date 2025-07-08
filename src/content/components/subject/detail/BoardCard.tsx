@@ -9,7 +9,7 @@ export const BoardCard = () => {
     >
       <div className="flex h-full w-[277px] flex-col justify-center gap-2 rounded-xl bg-white p-5">
         <div className="flex items-start justify-between">
-          <Text className="w-[230px] truncate text-[13px]">과제과제과제과제과제과제과제과제과제과제</Text>
+          <Text className="w-[220px] truncate text-[13px]">과제과제과제과제과제과제과제과제과제과제</Text>
           <NotReadIssue />
         </div>
         <div>
