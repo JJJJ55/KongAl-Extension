@@ -26,3 +26,9 @@
   --color-gray5: #757575;
   --font-pretendard: 'Pretendard-Regular';
 }
+
+@utility scrollbar-hidden {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

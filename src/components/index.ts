@@ -1,3 +1,4 @@
 export * from './BasicButton'
 export * from './Icons'
 export * from './Text'
+export * from './LineText'

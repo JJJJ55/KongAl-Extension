@@ -1,12 +1,12 @@
 import clsx from 'clsx'
 
 type ButtonProps = {
-  className: string
-  content: string
+  className?: string
+  children: string
   onClick: () => void
 }
 
-export const BasicButton = ({ className, content, onClick }: ButtonProps) => {
+export const BasicButton = ({ className, children, onClick }: ButtonProps) => {
   return (
     <button
       className={clsx(
@@ -15,7 +15,7 @@ export const BasicButton = ({ className, content, onClick }: ButtonProps) => {
       )}
       onClick={onClick}
     >
-      {content}
+      {children}
     </button>
   )
 }
