@@ -1,11 +1,27 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
-// import './index.css'
-import '@/styles/index.css?inline'
+import styles from '@/styles/index.css?inline'
+import { CommonContainer } from '@/components/CommonContainer.tsx'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+function createShadowRoot(styles: string[]): ShadowRoot {
+  const host = document.createElement('div')
+  host.setAttribute('id', 'kong-al-shadow-host')
+  const shadowRoot = host.attachShadow({ mode: 'open' })
+
+  const globalStyleSheet = new CSSStyleSheet()
+  globalStyleSheet.replaceSync(styles.join('\n'))
+
+  shadowRoot.adoptedStyleSheets = [globalStyleSheet]
+
+  document.body.appendChild(host)
+
+  return shadowRoot
+}
+
+const shadowRoot = createShadowRoot([styles])
+
+createRoot(shadowRoot).render(
+  <CommonContainer>
     <App />
-  </StrictMode>,
+  </CommonContainer>,
 )

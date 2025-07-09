@@ -3,13 +3,6 @@ import App from './views/App.tsx'
 import styles from '@/styles/index.css?inline'
 import { SHADOW_HOST_ID } from '@/constants'
 
-// const container = document.createElement('div')
-// container.id = 'crxjs-app'
-// document.body.appendChild(container)
-// createRoot(container).render(<App />)
-
-/////
-
 function createShadowRoot(styles: string[]): ShadowRoot {
   const host = document.createElement('div')
   host.setAttribute('id', SHADOW_HOST_ID)
