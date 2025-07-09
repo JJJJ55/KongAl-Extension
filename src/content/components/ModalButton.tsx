@@ -23,7 +23,8 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
       style={{
         bottom: '25px',
         right: '25px',
-        backgroundImage: `url(${chrome.runtime.getURL('/assets/popup_getToken.png')})`,
+        boxShadow: '-3px -3px 7px #ffffff73, 3px 3px 5px rgba(94, 104, 121, .288)',
+        backgroundImage: `url(${chrome.runtime.getURL('kongal_Logo.png')})`,
       }}
     >
       <AnimatePresence> {isOpen && <CloseOverlay />}</AnimatePresence>
