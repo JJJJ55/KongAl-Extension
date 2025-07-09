@@ -45,7 +45,7 @@ const modalVariants: Variants = {
 //         {isOpen ? (
 //           <SubjectDetailPage onClick={toggleDetail} />
 //         ) : (
-//           <div className="flex h-full flex-col">
+//           <div className="flex flex-col h-full">
 //             <SubjectPage onClick={toggleDetail} />
 //             {/* <SettingPage /> */}
 //             <BottomNavBar />
@@ -69,7 +69,7 @@ export const MainModal = () => {
       animate="visible"
       exit="exit"
       transition={{ duration: 0.3 }}
-      className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)]"
+      className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
       style={{ boxShadow: ' 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)', bottom: '96px', right: '25px' }}
     >
       <AnimatePresence>
@@ -77,8 +77,8 @@ export const MainModal = () => {
           <SubjectDetailPage key="detail" onClick={toggleDetail} />
         ) : (
           <div className="flex h-full flex-col">
-            <SubjectPage onClick={toggleDetail} />
-            {/* <SettingPage /> */}
+            {/* <SubjectPage onClick={toggleDetail} /> */}
+            <SettingPage />
             <BottomNavBar />
           </div>
         )}
