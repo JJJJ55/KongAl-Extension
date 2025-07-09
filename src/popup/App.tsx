@@ -7,7 +7,9 @@ export default function App() {
     <div className="flex h-[350px] w-[350px] flex-col items-center justify-around">
       {/* <TopContent /> */}
       {/* 아래버튼은 토큰 생성시 invisible 처리할 예정 */}
-      {/* <BasicButton content="토큰 생성하기" onClick={() => alert('작동')} className="" /> */}
+      {/* <BasicButton onClick={() => alert('작동')} className="">
+        토큰 생성하기
+      </BasicButton> */}
       <TokenLoading />
       <PopupNav />
     </div>

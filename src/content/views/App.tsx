@@ -1,10 +1,11 @@
+import { CommonContainer } from '@/components'
 import { Content } from '../components/Content'
 
 function App() {
   return (
-    <div id="kong-app">
+    <CommonContainer>
       <Content />
-    </div>
+    </CommonContainer>
   )
 }
 
