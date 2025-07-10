@@ -1,6 +1,6 @@
 import { BasicButton, Text } from '@/components'
 import { Camera } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { ImageCropModal } from './ImageCropModal'
 import { AnimatePresence } from 'framer-motion'
 
@@ -19,6 +19,11 @@ export const SettingPage = () => {
       setImg(`${import.meta.env.VITE_PUBLIC_URL}/img/default_image3.png`)
     }
   }
+
+  const handleCropOk = useCallback(async (cropImg: string) => {
+    setIsImgCrppOpen(false)
+    setImg(cropImg)
+  }, [])
 
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -86,10 +91,12 @@ export const SettingPage = () => {
       <AnimatePresence>
         {isImgCropOpen && img && (
           <ImageCropModal
+            croppedImage={img}
+            onCrop={handleCropOk}
             onCancle={() => {
               setIsImgCrppOpen(false)
+              setImg(null)
             }}
-            croppedImage={img}
           />
         )}
       </AnimatePresence>
