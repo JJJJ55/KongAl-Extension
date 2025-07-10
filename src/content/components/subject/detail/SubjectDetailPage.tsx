@@ -5,6 +5,7 @@ import { DetailBottomNav } from './DetailBottomNav'
 import { DetailPlay } from './DetailPlay'
 import { DetailBoard } from './DetailBoard'
 import { DetailReport } from './DetailReport'
+import { useMemo, useState } from 'react'
 
 const modalVariants: Variants = {
   hidden: {
@@ -24,6 +25,12 @@ const modalVariants: Variants = {
 }
 
 export const SubjectDetailPage = ({ onClick }: { onClick: () => void }) => {
+  const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('play')
+
+  const ActiveContent = useMemo(() => {
+    return activeType === 'play' ? <DetailPlay /> : activeType === 'board' ? <DetailBoard /> : <DetailReport />
+  }, [activeType])
+
   return (
     <motion.div
       variants={modalVariants}
@@ -36,8 +43,9 @@ export const SubjectDetailPage = ({ onClick }: { onClick: () => void }) => {
       <DetailTopNav onClick={onClick} />
       {/* <DetailPlay /> */}
       {/* <DetailBoard /> */}
-      <DetailReport />
-      <DetailBottomNav />
+      {/* <DetailReport /> */}
+      {ActiveContent}
+      <DetailBottomNav activeType={activeType} setActiveType={setActiveType} />
     </motion.div>
   )
 }
