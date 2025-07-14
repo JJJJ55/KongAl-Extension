@@ -5,11 +5,13 @@ import { ImageCropModal } from './ImageCropModal'
 import { AnimatePresence } from 'framer-motion'
 
 import pkg from '../../../../package.json'
+import { useStoragestore } from '@/store/useStorageStore'
 
 export const SettingPage = () => {
   const [isImgCropOpen, setIsImgCrppOpen] = useState<boolean>(false)
-  const [img, setImg] = useState<string | null>('null')
+  const [img, setImg] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { settings, updateData } = useStoragestore()
 
   const handleDeletePreviewFile = (e: React.MouseEvent) => {
     //기본 이미지로
@@ -21,8 +23,9 @@ export const SettingPage = () => {
   }
 
   const handleCropOk = useCallback(async (cropImg: string) => {
+    updateData('settings', prev => ({ ...prev, image: cropImg }))
     setIsImgCrppOpen(false)
-    setImg(cropImg)
+    setImg(null)
   }, [])
 
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,15 +48,10 @@ export const SettingPage = () => {
         style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       >
         <div className="relative h-[100px] w-[100px] overflow-hidden rounded-full">
-          <img
-            src={img === null ? chrome.runtime.getURL('kongal_Logo.png') : img}
-            alt="프로필 사진"
-            className="h-full w-full object-cover"
-          />
+          <img src={settings.image} alt="프로필 사진" className="h-full w-full object-cover" />
           <div className="absolute inset-0 flex h-full w-full items-center justify-center rounded-full bg-black/25">
             <div
               onClick={() => inputRef.current?.click()}
-              // onClick={() => setIsImgCrppOpen(true)}
               className="bg-gray1 flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full opacity-70 hover:opacity-100"
             >
               <Camera size={20} />
