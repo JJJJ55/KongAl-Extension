@@ -16,7 +16,8 @@
     "lucide-react": "^0.525.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-easy-crop": "^5.4.2"
+    "react-easy-crop": "^5.4.2",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0",
