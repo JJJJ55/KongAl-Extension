@@ -11,6 +11,11 @@ interface StorageStore extends StorageData {
 }
 
 const initialStorageData: StorageData = {
+  info: {
+    studentId: 12345,
+    userId: '12345',
+    username: '홍길동',
+  },
   settings: {
     siteToken: null,
     version: pkg.version,
@@ -25,6 +30,7 @@ const initialStorageData: StorageData = {
 }
 
 const mergeData = (initial: StorageData, stored: Partial<StorageData>): StorageData => ({
+  info: { ...initial.info, ...stored.info },
   settings: { ...initial.settings, ...stored.settings, version: pkg.version },
   contents: { ...initial.contents, ...stored.contents },
 })
