@@ -21,7 +21,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
   return (
     <div
       onClick={onClick}
-      className="fixed z-500 h-[56px] w-[56px] cursor-pointer rounded-2xl bg-cover bg-center bg-no-repeat"
+      className="fixed z-500 h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat"
       style={{
         bottom: '25px',
         right: '25px',
