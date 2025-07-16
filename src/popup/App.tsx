@@ -1,43 +1,37 @@
 import '@/styles/index.css'
 import { PopupNav, TokenLoading, TopContent } from './components'
-import { BasicButton } from '@/components'
 import { useState } from 'react'
 import { useStoragestore } from '@/store/useStorageStore'
-import { P } from 'node_modules/framer-motion/dist/types.d-D0HXPxHm'
 
 export default function App() {
-  const { settings, updateData } = useStoragestore()
+  const { settings, info, updateData } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleAddToken = async (token: string | null) => {
     setIsLoading(true)
-    await updateData('settings', prev => ({ ...prev, siteToken: token }))
-    try {
-      const res = await getInfo()
-      console.log('aaa', res)
-    } catch (error) {
-      console.error('getInfo error', error)
-    } finally {
-      setIsLoading(false)
-    }
+    await getInfo(token)
+    setIsLoading(false)
   }
 
-  const getInfo = () => {
-    return new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage({ type: 'USER_INFO' }, response => {
-        if (chrome.runtime.lastError) {
-          console.error('messageError', chrome.runtime.lastError.message)
-          reject(chrome.runtime.lastError.message)
-        } else {
-          console.log('bbb', response)
-          resolve(response)
-        }
-      })
+  const getInfo = async (token: string | null) => {
+    chrome.runtime.sendMessage({ type: 'USER_INFO', token: token }, response => {
+      if (response.success) {
+        const regex = /^([^\(]+)\(([^)]+)\)$/
+        const info = response.data.name.match(regex)
+        updateData('settings', prev => ({ ...prev, siteToken: token }))
+        updateData('info', prev => ({ ...prev, studentId: response.data.id, username: info[1], userId: info[2] }))
+      } else {
+        window.alert('올바른 토큰이 아닙니다. 다시 확인해주세요.')
+      }
     })
   }
   return (
     <div className="flex h-[350px] w-[350px] flex-col items-center justify-around">
-      {isLoading ? <TokenLoading /> : <TopContent token={settings.siteToken} updateFn={handleAddToken} />}
+      {isLoading ? (
+        <TokenLoading />
+      ) : (
+        <TopContent noti={info.noti} token={settings.siteToken} updateFn={handleAddToken} />
+      )}
       <PopupNav />
     </div>
   )
