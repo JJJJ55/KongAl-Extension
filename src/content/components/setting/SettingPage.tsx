@@ -3,15 +3,13 @@ import { Camera, Undo2 } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { ImageCropModal } from './ImageCropModal'
 import { AnimatePresence } from 'framer-motion'
-
-import pkg from '../../../../package.json'
 import { useStoragestore } from '@/store/useStorageStore'
 
 export const SettingPage = () => {
   const [isImgCropOpen, setIsImgCrppOpen] = useState<boolean>(false)
   const [img, setImg] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { settings, updateData } = useStoragestore()
+  const { settings, info, updateData } = useStoragestore()
 
   const handleImgReset = useCallback(async () => {
     updateData('settings', prev => ({ ...prev, image: chrome.runtime.getURL('/kongal_Logo.png') }))
@@ -39,7 +37,7 @@ export const SettingPage = () => {
   return (
     <div className="scrollbar-hidden relative flex flex-1 flex-col items-center gap-3 overflow-auto pt-8">
       <div
-        className="mb-3 flex h-[140px] w-[300px] items-center justify-around gap-1 rounded-xl bg-white"
+        className="mb-3 flex h-[140px] w-[300px] items-center justify-center gap-1 rounded-xl bg-white"
         style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       >
         <div className="relative h-[120px] w-[120px] overflow-hidden rounded-full">
@@ -71,9 +69,9 @@ export const SettingPage = () => {
             </div>
           </div>
         </div>
-        <div className="w-[165px] text-left text-[15px] font-bold">
-          <Text>오진영님 반가워요!</Text>
-          <Text>(201801###)</Text>
+        <div className="w-[165px] text-center text-[15px] font-bold">
+          <Text>{`${info.username} 님`}</Text>
+          <Text>{`(${info.userId})`}</Text>
         </div>
       </div>
 
@@ -95,7 +93,7 @@ export const SettingPage = () => {
       <BasicButton onClick={() => {}}>문의 & 버그 제보</BasicButton>
       <footer className="mt-4 text-center text-[12px]">
         <Text>공주대학교 LMS 알리미</Text>
-        <Text>{`콩알 v${pkg.version}`}</Text>
+        <Text>{`콩알 v${settings.version}`}</Text>
       </footer>
 
       <input type="file" ref={inputRef} hidden onChange={handleChangeFile} />
