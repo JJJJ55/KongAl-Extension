@@ -5,9 +5,11 @@ export type StorageData = {
     studentId: number
     userId: string
     username: string
+    noti: boolean
   }
   settings: {
     siteToken: string | null
+    xToken: string | null
     version: string
     updateAt: string
     fetchCycle: number | null

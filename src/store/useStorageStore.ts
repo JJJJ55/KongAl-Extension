@@ -15,9 +15,11 @@ const initialStorageData: StorageData = {
     studentId: 12345,
     userId: '12345',
     username: '홍길동',
+    noti: false,
   },
   settings: {
     siteToken: null,
+    xToken: null,
     version: pkg.version,
     updateAt: '2025-01-01T00:00:00.000Z',
     fetchCycle: null,
