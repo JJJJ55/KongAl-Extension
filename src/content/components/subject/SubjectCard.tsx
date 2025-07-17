@@ -1,25 +1,26 @@
 import { Text } from '@/components'
+import type { Course } from '@/types'
 
 const ReportIssue = () => <span className="bg-kongju rounded-2xl px-1 text-[10px] text-white">과제 미제출</span>
 const ClassIssue = () => <span className="bg-chenan rounded-2xl px-1 text-[10px] text-white">강의 확인</span>
 const BoardIssue = () => <span className="bg-yesan rounded-2xl px-1 text-[10px] text-white">공지 확인</span>
 
-type SubjectProps = {
+interface SubjectProps extends Course {
   onClick: () => void
 }
-export const SubjectCard = ({ onClick }: SubjectProps) => {
+export const SubjectCard = ({ courseId, title, teacher, onClick }: SubjectProps) => {
   return (
     <div
       className="bg-knuBlue flex h-[60px] w-[282px] cursor-pointer justify-end rounded-xl"
       style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       onClick={onClick}
     >
-      <div className="flex h-full w-[277px] flex-col justify-center rounded-xl bg-white p-3">
+      <div className="flex h-[60px] w-[277px] flex-col justify-center gap-2 rounded-xl bg-white px-2">
         <div>
-          <Text className="text-[15px]">데이터 통신</Text>
+          <Text className="text-[15px] font-bold">{title}</Text>
         </div>
         <div className="flex items-center justify-between">
-          <Text className="text-[12px]">김용강 교수</Text>
+          <Text className="text-[12px]">{`${teacher} 교수`}</Text>
           <div className="flex gap-1">
             <ReportIssue />
             <ClassIssue />
