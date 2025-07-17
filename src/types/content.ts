@@ -1,13 +1,13 @@
-interface BaseCourse {
+export interface BaseCourse {
   courseId: string
   title: string
   teacher: string
 }
 
 export interface Course extends BaseCourse {
-  isReport: boolean
-  isPlay: boolean
-  isBoard: boolean
+  isReport?: boolean
+  isPlay?: boolean
+  isBoard?: boolean
 }
 
 export type Play = {
