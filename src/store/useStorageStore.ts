@@ -1,17 +1,25 @@
 import type { StorageData } from '@/types'
 import { create } from 'zustand'
 import pkg from '../../package.json'
+import { chromeStorage } from './chromeStorage'
 
 interface StorageStore extends StorageData {
   isInit: boolean
-  initializs: () => Promise<void>
+  initialize: () => Promise<void>
   updateData: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
   resetStore: () => Promise<void>
 }
 
 const initialStorageData: StorageData = {
+  info: {
+    studentId: 12345,
+    userId: '12345',
+    username: '홍길동',
+    noti: false,
+  },
   settings: {
     siteToken: null,
+    xToken: null,
     version: pkg.version,
     updateAt: '2025-01-01T00:00:00.000Z',
     fetchCycle: null,
@@ -23,4 +31,43 @@ const initialStorageData: StorageData = {
   },
 }
 
-export const useStoragestore = create((set, get) => ({}))
+const mergeData = (initial: StorageData, stored: Partial<StorageData>): StorageData => ({
+  info: { ...initial.info, ...stored.info },
+  settings: { ...initial.settings, ...stored.settings, version: pkg.version },
+  contents: { ...initial.contents, ...stored.contents },
+})
+
+export const useStoragestore = create<StorageStore>((set, get) => ({
+  ...initialStorageData,
+  isInit: false,
+  initialize: async () => {
+    const chromeStorageData = await chromeStorage.getData()
+    const mergedData = mergeData(initialStorageData, chromeStorageData)
+    await chromeStorage.setData(mergedData)
+    set({ ...mergedData, isInit: true })
+  },
+  updateData: async <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => {
+    const updateData = update(get()[key])
+    await chromeStorage.updateDataByKey(key, () => updateData)
+    set(state => ({ ...state, [key]: updateData }))
+  },
+  resetStore: async () => {
+    await chromeStorage.setData(initialStorageData)
+    set({ ...initialStorageData, isInit: true })
+  },
+}))
+
+useStoragestore.getState().initialize()
+
+chromeStorage.onStorageChanged(changes => {
+  const newState = Object.entries(changes).reduce((acc, [key, { newValue }]) => {
+    if (key in initialStorageData) {
+      acc[key as keyof StorageData] = newValue
+    }
+    return acc
+  }, {} as Partial<StorageData>)
+
+  if (Object.keys(newState).length > 0) {
+    useStoragestore.setState(state => ({ ...state, ...newState }))
+  }
+})

@@ -14,10 +14,16 @@ export default defineManifest({
     },
     default_popup: 'src/popup/index.html',
   },
+  background: {
+    service_worker: 'src/background/index.ts',
+    type: 'module',
+  },
   content_scripts: [
     {
       js: ['src/content/main.tsx'],
       matches: ['https://kncu.kongju.ac.kr/*', 'https://knulms.kongju.ac.kr/*', 'https://www.naver.com/'],
     },
   ],
+  host_permissions: ['https://kncu.kongju.ac.kr/*', 'https://knulms.kongju.ac.kr/*', 'https://www.naver.com/'],
+  permissions: ['storage', 'unlimitedStorage', 'tabs', 'scripting'],
 })
