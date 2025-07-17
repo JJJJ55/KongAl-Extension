@@ -19,6 +19,9 @@ function App() {
       const xToken = token ? decodeURIComponent(token.split('=')[1]) : ''
       updateData('settings', prev => ({ ...prev, xToken: xToken }))
     }
+    // const images: NodeListOf<HTMLImageElement> = document.querySelectorAll('div.fs-exclude img')
+    // const altTexts = Array.from(images).map(img => img.alt)
+    // console.log('test', altTexts)
   }, [])
   return <CommonContainer>{settings.siteToken && settings.siteToken!.length === 64 && <Content />}</CommonContainer>
 }
