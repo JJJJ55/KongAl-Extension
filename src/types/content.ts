@@ -1,5 +1,5 @@
 export interface BaseCourse {
-  courseId: string
+  courseId?: string
   title: string
   teacher: string
 }
