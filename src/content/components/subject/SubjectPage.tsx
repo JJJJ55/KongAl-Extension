@@ -57,9 +57,7 @@ export const SubjectPage = () => {
             {isLoading ? (
               <LoadingSkeleton />
             ) : contents.courseList.length ? (
-              contents.courseList.map(data => (
-                <SubjectCard title={data.title} teacher={data.teacher} onClick={() => ToggleModal(data)} />
-              ))
+              contents.courseList.map(data => <SubjectCard data={data} onClick={() => ToggleModal(data)} />)
             ) : (
               <NotFound />
             )}

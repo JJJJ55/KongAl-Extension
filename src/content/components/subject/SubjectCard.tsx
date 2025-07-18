@@ -5,26 +5,27 @@ const ReportIssue = () => <span className="bg-kongju rounded-2xl px-1 text-[10px
 const ClassIssue = () => <span className="bg-chenan rounded-2xl px-1 text-[10px] text-white">강의 확인</span>
 const BoardIssue = () => <span className="bg-yesan rounded-2xl px-1 text-[10px] text-white">공지 확인</span>
 
-interface SubjectProps extends Course {
+interface SubjectProps {
+  data: Course
   onClick: () => void
 }
-export const SubjectCard = ({ title, teacher, onClick }: SubjectProps) => {
+export const SubjectCard = ({ data, onClick }: SubjectProps) => {
   return (
     <div
-      className="bg-knuBlue flex h-[60px] w-[282px] cursor-pointer justify-end rounded-xl"
+      className="bg-knuBlue flex h-[60px] w-[300px] cursor-pointer justify-end rounded-xl"
       style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       onClick={onClick}
     >
-      <div className="flex h-[60px] w-[277px] flex-col justify-center gap-2 rounded-xl bg-white px-2">
+      <div className="flex h-[60px] w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-2">
         <div>
-          <Text className="text-[15px] font-bold">{title}</Text>
+          <Text className="text-[15px] font-bold">{data.title}</Text>
         </div>
         <div className="flex items-center justify-between">
-          <Text className="text-[12px]">{`${teacher} 교수`}</Text>
+          <Text className="text-[12px]">{`${data.teacher} 교수`}</Text>
           <div className="flex gap-1">
-            <ReportIssue />
-            <ClassIssue />
-            <BoardIssue />
+            {data.isReport && <ReportIssue />}
+            {data.isPlay && <ClassIssue />}
+            {data.isBoard && <BoardIssue />}
           </div>
         </div>
       </div>

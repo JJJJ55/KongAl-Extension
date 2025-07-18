@@ -25,7 +25,7 @@ const modalVariants: Variants = {
   },
 }
 
-export const SubjectDetailPage = ({ data, onClick }: { data: Course; onClick: () => void }) => {
+export const SubjectDetailPage = ({ data, onClick }: { data: Course | null; onClick: () => void }) => {
   const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('play')
 
   const ActiveContent = useMemo(() => {
