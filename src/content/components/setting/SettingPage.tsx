@@ -9,7 +9,7 @@ export const SettingPage = () => {
   const [isImgCropOpen, setIsImgCrppOpen] = useState<boolean>(false)
   const [img, setImg] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { settings, info, updateData } = useStoragestore()
+  const { settings, info, updateData, resetStore } = useStoragestore()
 
   const handleImgReset = useCallback(async () => {
     updateData('settings', prev => ({ ...prev, image: chrome.runtime.getURL('/kongal_Logo.png') }))
@@ -20,6 +20,14 @@ export const SettingPage = () => {
     setIsImgCrppOpen(false)
     setImg(null)
   }, [])
+
+  const handleLogout = useCallback(async () => {
+    resetStore()
+  }, [])
+
+  const handleHelp = () => {
+    window.location.href = 'https://www.naver.com'
+  }
 
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -89,8 +97,8 @@ export const SettingPage = () => {
           {settings.siteToken ? settings.siteToken : '토큰이 존재하지 않습니다.'}
         </div>
       </div>
-      <BasicButton onClick={() => {}}>토큰 삭제하기</BasicButton>
-      <BasicButton onClick={() => {}}>문의 & 버그 제보</BasicButton>
+      <BasicButton onClick={handleLogout}>서비스 로그아웃 (토큰 삭제)</BasicButton>
+      <BasicButton onClick={handleHelp}>문의 & 버그 제보</BasicButton>
       <footer className="mt-4 text-center text-[12px]">
         <Text>공주대학교 LMS 알리미</Text>
         <Text>{`콩알 v${settings.version}`}</Text>
