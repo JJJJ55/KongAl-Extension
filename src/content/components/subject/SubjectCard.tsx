@@ -8,7 +8,7 @@ const BoardIssue = () => <span className="bg-yesan rounded-2xl px-1 text-[10px] 
 interface SubjectProps extends Course {
   onClick: () => void
 }
-export const SubjectCard = ({ courseId, title, teacher, onClick }: SubjectProps) => {
+export const SubjectCard = ({ title, teacher, onClick }: SubjectProps) => {
   return (
     <div
       className="bg-knuBlue flex h-[60px] w-[282px] cursor-pointer justify-end rounded-xl"
