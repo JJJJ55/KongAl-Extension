@@ -10,13 +10,14 @@ interface SubjectProps {
   onClick: () => void
 }
 export const SubjectCard = ({ data, onClick }: SubjectProps) => {
+  const num: number = 0
   return (
     <div
       className="bg-knuBlue flex h-[60px] w-[300px] cursor-pointer justify-end rounded-xl"
       style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       onClick={onClick}
     >
-      <div className="flex h-[60px] w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-2">
+      <div className="flex h-[60px] w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-3">
         <div>
           <Text className="text-[15px] font-bold">{data.title}</Text>
         </div>

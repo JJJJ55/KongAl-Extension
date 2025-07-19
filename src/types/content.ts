@@ -5,9 +5,9 @@ export interface BaseCourse {
 }
 
 export interface Course extends BaseCourse {
-  isReport?: boolean
-  isPlay?: boolean
-  isBoard?: boolean
+  isReport?: number
+  isPlay?: number
+  isBoard?: number
 }
 
 export type Play = {
@@ -18,17 +18,21 @@ export type Play = {
 }
 
 export type Board = {
+  id: number
   title: string
   teacher: string
   planAt: string
+  html_url: string
   isRead: boolean
 }
 
 export type Report = {
+  id: number
   title: string
   isSubmit: boolean
   dueAt: number
   isChange: boolean
+  html_url: string
 }
 
 export interface Detail extends BaseCourse {
