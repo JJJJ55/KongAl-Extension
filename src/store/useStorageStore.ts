@@ -26,8 +26,8 @@ const initialStorageData: StorageData = {
     image: chrome.runtime.getURL('/kongal_Logo.png'),
   },
   contents: {
-    courseList: [],
-    courseDetail: [],
+    courseList: {},
+    courseDetail: {},
   },
 }
 
