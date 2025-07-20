@@ -10,7 +10,6 @@ interface SubjectProps {
   onClick: () => void
 }
 export const SubjectCard = ({ data, onClick }: SubjectProps) => {
-  const num: number = 0
   return (
     <div
       className="bg-knuBlue flex h-[60px] w-[300px] cursor-pointer justify-end rounded-xl"
