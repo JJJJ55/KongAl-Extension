@@ -1,12 +1,12 @@
 import { Text } from '@/components'
-import type { Course } from '@/types'
+import type { CourseItem } from '@/types'
 
 const ReportIssue = () => <span className="bg-kongju rounded-2xl px-1 text-[10px] text-white">과제 미제출</span>
 const ClassIssue = () => <span className="bg-chenan rounded-2xl px-1 text-[10px] text-white">강의 확인</span>
 const BoardIssue = () => <span className="bg-yesan rounded-2xl px-1 text-[10px] text-white">공지 확인</span>
 
 interface SubjectProps {
-  data: Course
+  data: CourseItem
   onClick: () => void
 }
 export const SubjectCard = ({ data, onClick }: SubjectProps) => {

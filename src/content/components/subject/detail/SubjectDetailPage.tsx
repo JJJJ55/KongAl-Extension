@@ -6,7 +6,7 @@ import { DetailPlay } from './DetailPlay'
 import { DetailBoard } from './DetailBoard'
 import { DetailReport } from './DetailReport'
 import { useMemo, useState } from 'react'
-import type { Course } from '@/types'
+import type { CourseItem } from '@/types'
 
 const modalVariants: Variants = {
   hidden: {
@@ -25,7 +25,7 @@ const modalVariants: Variants = {
   },
 }
 
-export const SubjectDetailPage = ({ data, onClick }: { data: Course | null; onClick: () => void }) => {
+export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem] | null; onClick: () => void }) => {
   const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('play')
 
   const ActiveContent = useMemo(() => {
@@ -41,10 +41,7 @@ export const SubjectDetailPage = ({ data, onClick }: { data: Course | null; onCl
       transition={{ duration: 0.3 }}
       className="flex h-full flex-col"
     >
-      <DetailTopNav data={data} onClick={onClick} />
-      {/* <DetailPlay /> */}
-      {/* <DetailBoard /> */}
-      {/* <DetailReport /> */}
+      <DetailTopNav title={data?.[1].title} teacher={data?.[1].teacher} onClick={onClick} />
       {ActiveContent}
       <DetailBottomNav activeType={activeType} setActiveType={setActiveType} />
     </motion.div>
