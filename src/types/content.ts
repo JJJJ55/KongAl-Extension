@@ -66,31 +66,27 @@ export type Play = {
   dueAt: number
 }
 
-export type Board = {
-  id: number
+export type IssueItem = {
   title: string
-  planAt: string
+  createAt: string
+  dueAt?: number
+  isChange?: boolean
   html_url: string
-  isRead: boolean
+  isOk: boolean
 }
 
-export type Report = {
-  id: number
-  title: string
-  isSubmit: boolean
-  dueAt: number
-  isChange: boolean
-  html_url: string
+export type Issue = {
+  [plannable_id: string]: IssueItem
 }
 
 export type Detail = {
-  [courseId: string]: DetailItem
+  [course_id: string]: DetailItem
 }
 
 export type DetailItem = {
   PlayList: Play[]
-  BoardList: Board[]
-  ReportList: Report[]
+  BoardList: Issue
+  ReportList: Issue
 }
 
 export type Contents = {
