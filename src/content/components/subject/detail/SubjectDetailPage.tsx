@@ -29,7 +29,13 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
   const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('play')
 
   const ActiveContent = useMemo(() => {
-    return activeType === 'play' ? <DetailPlay /> : activeType === 'board' ? <DetailBoard /> : <DetailReport />
+    return activeType === 'play' ? (
+      <DetailPlay courseId={data?.[0]} />
+    ) : activeType === 'board' ? (
+      <DetailBoard courseId={data?.[0]} />
+    ) : (
+      <DetailReport courseId={data?.[0]} />
+    )
   }, [activeType])
 
   return (
