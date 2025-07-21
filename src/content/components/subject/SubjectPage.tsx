@@ -6,7 +6,7 @@ import { TopNavBar } from './TopNavbar'
 import { useStoragestore } from '@/store/useStorageStore'
 import { AnimatePresence } from 'framer-motion'
 import { SubjectDetailPage } from './detail/SubjectDetailPage'
-import type { CourseItem } from '@/types'
+import type { CourseItem, DetailItem, IssueItem, Play } from '@/types'
 
 export const SubjectPage = () => {
   const [data, setData] = useState<[string, CourseItem] | null>(null)
@@ -19,10 +19,159 @@ export const SubjectPage = () => {
     setData(value)
   }
 
+  // const testGetIssue = () => {
+  //   const ids = Object.keys(contents.courseList)
+  //   chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
+  //     if (response.success) {
+  //       for (const data of response.data) {
+  //         const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
+
+  //         const currentDetail = contents.courseDetail[course_id] || {
+  //           PlayList: [],
+  //           BoardList: {},
+  //           ReportList: {},
+  //         }
+
+  //         if (plannable_type === 'announcement') {
+  //           if (!currentDetail.BoardList[plannable_id]) {
+  //             const newValue: Record<string, IssueItem> = {
+  //               [plannable_id]: {
+  //                 title: plannable.title,
+  //                 createAt: plannable.created_at,
+  //                 html_url,
+  //                 isOk: plannable.read_state,
+  //               },
+  //             }
+
+  //             updateData('contents', prev => ({
+  //               ...prev,
+  //               courseDetail: {
+  //                 ...prev.courseDetail,
+  //                 [course_id]: {
+  //                   ...currentDetail,
+  //                   BoardList: {
+  //                     ...currentDetail.BoardList,
+  //                     ...newValue,
+  //                   },
+  //                 },
+  //               },
+  //             }))
+  //           }
+  //         } else {
+  //           if (!currentDetail.ReportList[plannable_id]) {
+  //             const newValue: Record<string, IssueItem> = {
+  //               [plannable_id]: {
+  //                 title: plannable.title,
+  //                 createAt: plannable.created_at,
+  //                 dueAt: plannable_date,
+  //                 html_url,
+  //                 isOk: submissions?.submitted ?? false,
+  //               },
+  //             }
+
+  //             updateData('contents', prev => ({
+  //               ...prev,
+  //               courseDetail: {
+  //                 ...prev.courseDetail,
+  //                 [course_id]: {
+  //                   ...currentDetail,
+  //                   ReportList: {
+  //                     ...currentDetail.ReportList,
+  //                     ...newValue,
+  //                   },
+  //                 },
+  //               },
+  //             }))
+  //           }
+  //         }
+  //       }
+  //     } else {
+  //       window.alert('실패')
+  //     }
+  //   })
+  // }
+
   const testGetIssue = () => {
-    chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken }, response => {
+    const ids = Object.keys(contents.courseList)
+    chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
       if (response.success) {
-        console.log('a')
+        const newBoardList: Record<string, Record<string, IssueItem>> = {}
+        const newReportList: Record<string, Record<string, IssueItem>> = {}
+
+        for (const data of response.data) {
+          const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
+
+          // 기존 데이터
+          const currentDetail = contents.courseDetail[course_id] || {
+            PlayList: [],
+            BoardList: {},
+            ReportList: {},
+          }
+
+          if (plannable_type === 'announcement') {
+            if (!currentDetail.BoardList[plannable_id]) {
+              if (!newBoardList[course_id]) newBoardList[course_id] = {}
+              newBoardList[course_id][plannable_id] = {
+                title: plannable.title,
+                createAt: plannable.created_at,
+                html_url,
+                isOk: plannable.read_state,
+              }
+            }
+          } else {
+            if (!currentDetail.ReportList[plannable_id]) {
+              if (!newReportList[course_id]) newReportList[course_id] = {}
+              newReportList[course_id][plannable_id] = {
+                title: plannable.title,
+                createAt: plannable.created_at,
+                dueAt: plannable_date,
+                html_url,
+                isOk: submissions.submitted ?? false,
+              }
+            }
+          }
+        }
+
+        updateData('contents', prev => {
+          const newCourseDetail = { ...prev.courseDetail }
+
+          // BoardList 갱신
+          for (const courseId in newBoardList) {
+            const currentDetail = newCourseDetail[courseId] || {
+              PlayList: [],
+              BoardList: {},
+              ReportList: {},
+            }
+            newCourseDetail[courseId] = {
+              ...currentDetail,
+              BoardList: {
+                ...currentDetail.BoardList,
+                ...newBoardList[courseId],
+              },
+            }
+          }
+
+          // ReportList 갱신
+          for (const courseId in newReportList) {
+            const currentDetail = newCourseDetail[courseId] || {
+              PlayList: [],
+              BoardList: {},
+              ReportList: {},
+            }
+            newCourseDetail[courseId] = {
+              ...currentDetail,
+              ReportList: {
+                ...currentDetail.ReportList,
+                ...newReportList[courseId],
+              },
+            }
+          }
+
+          return {
+            ...prev,
+            courseDetail: newCourseDetail,
+          }
+        })
       } else {
         window.alert('실패')
       }
@@ -43,7 +192,7 @@ export const SubjectPage = () => {
         // })
         // updateData('contents', prev => ({ ...prev, courseList: res }))
         // console.log(res)
-        const newCourseList: Record<string, { title: string; teacher: string }> = {}
+        const newCourseList: Record<string, CourseItem> = {}
         for (const data of response.data) {
           const { id, name, teachers } = data
           newCourseList[id] = {
