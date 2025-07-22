@@ -30,11 +30,11 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
 
   const ActiveContent = useMemo(() => {
     return activeType === 'play' ? (
-      <DetailPlay courseId={data?.[0]} />
+      <DetailPlay courseId={data![0]} />
     ) : activeType === 'board' ? (
-      <DetailBoard courseId={data?.[0]} />
+      <DetailBoard courseId={data![0]} />
     ) : (
-      <DetailReport courseId={data?.[0]} />
+      <DetailReport courseId={data![0]} />
     )
   }, [activeType])
 
@@ -45,11 +45,14 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
       animate="visible"
       exit="exit"
       transition={{ duration: 0.3 }}
-      className="flex h-full flex-col"
+      // className="flex flex-col h-full"
+      className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
     >
-      <DetailTopNav title={data?.[1].title} teacher={data?.[1].teacher} onClick={onClick} />
-      {ActiveContent}
-      <DetailBottomNav activeType={activeType} setActiveType={setActiveType} />
+      <main className="flex h-full flex-col">
+        <DetailTopNav title={data![1].title} teacher={data![1].teacher} onClick={onClick} />
+        {ActiveContent}
+        <DetailBottomNav activeType={activeType} setActiveType={setActiveType} />
+      </main>
     </motion.div>
   )
 }
