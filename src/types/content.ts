@@ -75,7 +75,11 @@ export type IssueItem = {
 }
 
 export type Play = {
-  [week: string]: PlayItem
+  [week: string]: PlayItems
+}
+
+export type PlayItems = {
+  [moduleId: string]: PlayItem
 }
 
 export type Issue = {
