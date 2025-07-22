@@ -44,5 +44,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch(error => sendResponse({ success: false, data: error.message }))
 
     return true
+  } else if (message.type === 'SUBJECT_LIST') {
+    fetch(`${import.meta.env.VITE_XTOKEN_URL}courses/${message.id}/modules?include_detail=true`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_TEST_TOKEN}`,
+      },
+    })
+      .then(response => response.json())
+      .then(res => sendResponse({ success: true, data: res }))
+      .catch(error => sendResponse({ success: false, data: error.message }))
+
+    return true
   }
 })
