@@ -14,9 +14,13 @@ export const SubjectPage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { settings, contents, updateData } = useStoragestore()
 
-  const ToggleModal = (value: [string, CourseItem] | null) => {
+  const ToggleModal = () => {
     setIsOpen(prev => !prev)
+  }
+
+  const handleDetailModal = (value: [string, CourseItem] | null) => {
     setData(value)
+    ToggleModal()
   }
 
   // const testGetIssue = () => {
@@ -103,7 +107,7 @@ export const SubjectPage = () => {
 
           // 기존 데이터
           const currentDetail = contents.courseDetail[course_id] || {
-            PlayList: [],
+            PlayList: {},
             BoardList: {},
             ReportList: {},
           }
@@ -138,7 +142,7 @@ export const SubjectPage = () => {
           // BoardList 갱신
           for (const courseId in newBoardList) {
             const currentDetail = newCourseDetail[courseId] || {
-              PlayList: [],
+              PlayList: {},
               BoardList: {},
               ReportList: {},
             }
@@ -154,7 +158,7 @@ export const SubjectPage = () => {
           // ReportList 갱신
           for (const courseId in newReportList) {
             const currentDetail = newCourseDetail[courseId] || {
-              PlayList: [],
+              PlayList: {},
               BoardList: {},
               ReportList: {},
             }
@@ -230,7 +234,7 @@ export const SubjectPage = () => {
   return (
     <AnimatePresence>
       {isOpen ? (
-        <SubjectDetailPage data={data} onClick={() => ToggleModal(null)} />
+        <SubjectDetailPage data={data} onClick={() => ToggleModal()} />
       ) : (
         <>
           <TopNavBar onClick={handleGetSubject} onIssueTest={testGetIssue} />
@@ -238,8 +242,13 @@ export const SubjectPage = () => {
             {isLoading ? (
               <LoadingSkeleton />
             ) : Object.keys(contents.courseList).length ? (
-              Object.entries(contents.courseList).map(([courseId, course]) => (
-                <SubjectCard key={courseId} data={course} onClick={() => ToggleModal([courseId, course])} />
+              Object.entries(contents.courseList).map(([courseId, course], idx) => (
+                <SubjectCard
+                  key={courseId}
+                  color={idx % 2 === 0 ? 'bg-knuBlue' : 'bg-knuGreen'}
+                  data={course}
+                  onClick={() => handleDetailModal([courseId, course])}
+                />
               ))
             ) : (
               <NotFound />
