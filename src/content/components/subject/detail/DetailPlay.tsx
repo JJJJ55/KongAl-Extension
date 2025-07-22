@@ -9,18 +9,19 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
 
   const handleGetPlay = (id: string) => {
     chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
-      // updateData('contents',prev => ({...prev, 'courseDetail'}))
       if (response.success) {
-        const newValue: Record<string, PlayItem> = {}
+        const newPlayList: Record<string, Record<string, PlayItem>> = {}
         const currentDetail = contents.courseDetail[id] || {
           PlayList: {},
           BoardList: {},
           ReportList: {},
         }
         for (const data of response.data) {
+          const { position } = data
           for (const d of data.module_items) {
-            const { title, position, content_type, completed } = d
-            newValue[position] = {
+            const { module_item_id, title, content_type, completed } = d
+            if (!newPlayList[position]) newPlayList[position] = {}
+            newPlayList[position][module_item_id] = {
               title,
               isComplete: completed,
               isAttendance: null,
@@ -29,19 +30,18 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
             if (content_type === 'attendance_item') {
               const { use_attendance, omit_progress } = d.content_data
               if (use_attendance === true && omit_progress === false) {
-                newValue[position].isAttendance = d.attendance_status
+                newPlayList[position][module_item_id].isAttendance = d.attendance_status
               }
             }
-            newValue[position].dueAt = d.content_data.due_at
+            newPlayList[position][module_item_id].dueAt = d.content_data.due_at
           }
         }
-
         updateData('contents', prev => {
           const newCourseDetail = { ...prev.courseDetail }
           newCourseDetail[id] = {
             ...currentDetail,
             PlayList: {
-              ...newValue,
+              ...newPlayList,
             },
           }
 
