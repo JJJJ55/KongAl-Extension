@@ -1,18 +1,20 @@
 import { Text } from '@/components'
 import type { CourseItem } from '@/types'
+import clsx from 'clsx'
 
 const ReportIssue = () => <span className="bg-kongju rounded-2xl px-1 text-[10px] text-white">과제 미제출</span>
 const ClassIssue = () => <span className="bg-chenan rounded-2xl px-1 text-[10px] text-white">강의 확인</span>
 const BoardIssue = () => <span className="bg-yesan rounded-2xl px-1 text-[10px] text-white">공지 확인</span>
 
 interface SubjectProps {
+  color: string
   data: CourseItem
   onClick: () => void
 }
-export const SubjectCard = ({ data, onClick }: SubjectProps) => {
+export const SubjectCard = ({ color, data, onClick }: SubjectProps) => {
   return (
     <div
-      className="bg-knuBlue flex h-[60px] w-[300px] cursor-pointer justify-end rounded-xl"
+      className={clsx('flex h-[60px] w-[300px] cursor-pointer justify-end rounded-xl', color)}
       style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       onClick={onClick}
     >
