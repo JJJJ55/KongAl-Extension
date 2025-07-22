@@ -58,12 +58,11 @@ export type CourseItem = {
   isBoard?: number
 }
 
-export type Play = {
-  weeks: number
+export type PlayItem = {
   title: string
-  type: string
   isComplete: boolean
-  dueAt: number
+  isAttendance: boolean | null
+  dueAt: number | null
 }
 
 export type IssueItem = {
@@ -75,6 +74,10 @@ export type IssueItem = {
   isOk: boolean
 }
 
+export type Play = {
+  [week: string]: PlayItem
+}
+
 export type Issue = {
   [plannable_id: string]: IssueItem
 }
@@ -84,7 +87,7 @@ export type Detail = {
 }
 
 export type DetailItem = {
-  PlayList: Play[]
+  PlayList: Play
   BoardList: Issue
   ReportList: Issue
 }
