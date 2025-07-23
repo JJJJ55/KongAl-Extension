@@ -1,5 +1,6 @@
 import { Text } from '@/components'
 import type { IssueItem } from '@/types'
+import { ChangeCreateAt } from '@/utils/FormatDate'
 
 type BoardProps = {
   data: IssueItem
@@ -16,13 +17,13 @@ export const BoardCard = ({ data }: BoardProps) => {
       style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       onClick={() => handleLink(data.html_url)}
     >
-      <div className="flex h-full w-[277px] flex-col justify-center gap-2 rounded-xl bg-white p-5">
+      <div className="flex h-full w-[277px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5">
         <div className="flex items-start justify-between">
-          <Text className="w-[220px] truncate text-[13px]">{data.title}</Text>
+          <Text className="w-[240px] truncate text-[14px] font-bold">{data.title}</Text>
           {!data.isOk && <NotReadIssue />}
         </div>
         <div>
-          <Text className="text-[11px]">{data.createAt}</Text>
+          <Text className="text-[11px]">{ChangeCreateAt(data.createAt)}</Text>
         </div>
       </div>
     </div>

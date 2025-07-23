@@ -1,5 +1,6 @@
 import { Text, TimeIcon } from '@/components'
 import type { IssueItem } from '@/types'
+import { ChangeDutAt } from '@/utils/FormatDate'
 import clsx from 'clsx'
 
 type ReportProps = {
@@ -27,15 +28,15 @@ export const ReportCard = ({ data }: ReportProps) => {
       style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       onClick={() => handleLink(data.html_url)}
     >
-      <div className="flex h-full w-[277px] flex-col justify-center gap-2 rounded-xl bg-white p-5">
+      <div className="flex h-full w-[277px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5">
         <div className="flex items-center justify-between">
-          <Text className="w-[185px] truncate text-[13px]">{data.title}</Text>
+          <Text className="w-[195px] truncate text-[14px] font-bold">{data.title}</Text>
           {data.isOk ? <SubmitIssue /> : <UnSubmitIssue />}
         </div>
         <div className="flex items-end justify-between">
           <div className="flex items-center">
             <TimeIcon className="h-[16px] w-[16px]" />
-            <Text className="ml-1 text-[12px] font-bold">{`마감 ${data.dueAt}전`}</Text>
+            <Text className="ml-1 text-[12px] font-bold">{ChangeDutAt(data.dueAt)}</Text>
           </div>
           <ChangeStateBtn />
         </div>
