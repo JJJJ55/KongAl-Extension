@@ -6,7 +6,7 @@ import { TopNavBar } from './TopNavbar'
 import { useStoragestore } from '@/store/useStorageStore'
 import { AnimatePresence } from 'framer-motion'
 import { SubjectDetailPage } from './detail/SubjectDetailPage'
-import type { CourseItem, DetailItem, IssueItem, Play } from '@/types'
+import type { CourseItem, IssueItem } from '@/types'
 
 export const SubjectPage = () => {
   const [data, setData] = useState<[string, CourseItem] | null>(null)
@@ -23,78 +23,6 @@ export const SubjectPage = () => {
     ToggleModal()
   }
 
-  // const testGetIssue = () => {
-  //   const ids = Object.keys(contents.courseList)
-  //   chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
-  //     if (response.success) {
-  //       for (const data of response.data) {
-  //         const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
-
-  //         const currentDetail = contents.courseDetail[course_id] || {
-  //           PlayList: [],
-  //           BoardList: {},
-  //           ReportList: {},
-  //         }
-
-  //         if (plannable_type === 'announcement') {
-  //           if (!currentDetail.BoardList[plannable_id]) {
-  //             const newValue: Record<string, IssueItem> = {
-  //               [plannable_id]: {
-  //                 title: plannable.title,
-  //                 createAt: plannable.created_at,
-  //                 html_url,
-  //                 isOk: plannable.read_state,
-  //               },
-  //             }
-
-  //             updateData('contents', prev => ({
-  //               ...prev,
-  //               courseDetail: {
-  //                 ...prev.courseDetail,
-  //                 [course_id]: {
-  //                   ...currentDetail,
-  //                   BoardList: {
-  //                     ...currentDetail.BoardList,
-  //                     ...newValue,
-  //                   },
-  //                 },
-  //               },
-  //             }))
-  //           }
-  //         } else {
-  //           if (!currentDetail.ReportList[plannable_id]) {
-  //             const newValue: Record<string, IssueItem> = {
-  //               [plannable_id]: {
-  //                 title: plannable.title,
-  //                 createAt: plannable.created_at,
-  //                 dueAt: plannable_date,
-  //                 html_url,
-  //                 isOk: submissions?.submitted ?? false,
-  //               },
-  //             }
-
-  //             updateData('contents', prev => ({
-  //               ...prev,
-  //               courseDetail: {
-  //                 ...prev.courseDetail,
-  //                 [course_id]: {
-  //                   ...currentDetail,
-  //                   ReportList: {
-  //                     ...currentDetail.ReportList,
-  //                     ...newValue,
-  //                   },
-  //                 },
-  //               },
-  //             }))
-  //           }
-  //         }
-  //       }
-  //     } else {
-  //       window.alert('실패')
-  //     }
-  //   })
-  // }
-
   const testGetIssue = () => {
     const ids = Object.keys(contents.courseList)
     chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
@@ -105,7 +33,6 @@ export const SubjectPage = () => {
         for (const data of response.data) {
           const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
 
-          // 기존 데이터
           const currentDetail = contents.courseDetail[course_id] || {
             PlayList: {},
             BoardList: {},
@@ -138,8 +65,6 @@ export const SubjectPage = () => {
 
         updateData('contents', prev => {
           const newCourseDetail = { ...prev.courseDetail }
-
-          // BoardList 갱신
           for (const courseId in newBoardList) {
             const currentDetail = newCourseDetail[courseId] || {
               PlayList: {},
@@ -155,7 +80,6 @@ export const SubjectPage = () => {
             }
           }
 
-          // ReportList 갱신
           for (const courseId in newReportList) {
             const currentDetail = newCourseDetail[courseId] || {
               PlayList: {},
@@ -186,16 +110,6 @@ export const SubjectPage = () => {
     setIsLoading(true)
     chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, response => {
       if (response.success) {
-        // const res = response.data.map(data => {
-        //   const { id, name, teachers } = data
-        //   if (teachers.length > 1) {
-        //     return { courseId: id, title: name, teacher: `${teachers[0].display_name} 등 ${teachers.length}인` }
-        //   } else {
-        //     return { courseId: id, title: name, teacher: teachers[0].display_name }
-        //   }
-        // })
-        // updateData('contents', prev => ({ ...prev, courseList: res }))
-        // console.log(res)
         const newCourseList: Record<string, CourseItem> = {}
         for (const data of response.data) {
           const { id, name, teachers } = data
@@ -204,23 +118,6 @@ export const SubjectPage = () => {
             teacher:
               teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
           }
-          // if (teachers.length > 1) {
-          //   updateData('contents', prev => ({
-          //     ...prev,
-          //     courseList: {
-          //       ...prev.courseList,
-          //       [id]: { title: name, teacher: `${teachers[0].display_name} 등 ${teachers.length}인` },
-          //     },
-          //   }))
-          // } else {
-          //   updateData('contents', prev => ({
-          //     ...prev,
-          //     courseList: {
-          //       ...prev.courseList,
-          //       [id]: { title: name, teacher: teachers[0].display_name },
-          //     },
-          //   }))
-          // }
         }
         updateData('contents', prev => ({ ...prev, courseList: { ...prev.courseList, ...newCourseList } }))
       } else {

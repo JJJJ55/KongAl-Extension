@@ -1,10 +1,9 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import type { Variants } from 'framer-motion'
 import { SubjectPage } from './subject/SubjectPage'
 import { BottomNavBar } from './subject/BottomNavbar'
 import { SettingPage } from './setting/SettingPage'
 import { useMemo, useState } from 'react'
-import { SubjectDetailPage } from './subject/detail/SubjectDetailPage'
 
 const modalVariants: Variants = {
   hidden: {
