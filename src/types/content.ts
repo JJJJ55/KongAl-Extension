@@ -62,13 +62,13 @@ export type PlayItem = {
   title: string
   isComplete: boolean
   isAttendance: boolean | null
-  dueAt: number | null
+  dueAt: string | null
 }
 
 export type IssueItem = {
   title: string
   createAt: string
-  dueAt?: number
+  dueAt?: string | null
   isChange?: boolean
   html_url: string
   isOk: boolean
