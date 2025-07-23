@@ -6,7 +6,8 @@ import { DetailPlay } from './DetailPlay'
 import { DetailBoard } from './DetailBoard'
 import { DetailReport } from './DetailReport'
 import { useMemo, useState } from 'react'
-import type { CourseItem } from '@/types'
+import type { CourseItem, PlayItem } from '@/types'
+import { useStoragestore } from '@/store/useStorageStore'
 
 const modalVariants: Variants = {
   hidden: {
@@ -27,6 +28,53 @@ const modalVariants: Variants = {
 
 export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem] | null; onClick: () => void }) => {
   const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('play')
+
+  const { contents, updateData } = useStoragestore()
+  const handleGetPlay = (id: string) => {
+    chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
+      if (response.success) {
+        const newPlayList: Record<string, Record<string, PlayItem>> = {}
+        const currentDetail = contents.courseDetail[id] || {
+          PlayList: {},
+          BoardList: {},
+          ReportList: {},
+        }
+        for (const data of response.data) {
+          const { position } = data
+          for (const d of data.module_items) {
+            const { module_item_id, title, content_type, completed } = d
+            if (!newPlayList[position]) newPlayList[position] = {}
+            newPlayList[position][module_item_id] = {
+              title,
+              isComplete: completed,
+              isAttendance: null,
+              dueAt: null,
+            }
+            if (content_type === 'attendance_item') {
+              const { use_attendance, omit_progress } = d.content_data
+              if (use_attendance === true && omit_progress === false) {
+                newPlayList[position][module_item_id].isAttendance = d.attendance_status
+              }
+            }
+            newPlayList[position][module_item_id].dueAt = d.content_data.due_at
+          }
+        }
+        updateData('contents', prev => {
+          const newCourseDetail = { ...prev.courseDetail }
+          newCourseDetail[id] = {
+            ...currentDetail,
+            PlayList: {
+              ...newPlayList,
+            },
+          }
+
+          return { ...prev, courseDetail: newCourseDetail }
+        })
+      } else {
+        alert('실패')
+      }
+    })
+  }
 
   const ActiveContent = useMemo(() => {
     return activeType === 'play' ? (
@@ -49,7 +97,12 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
       className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
     >
       <main className="flex h-full flex-col">
-        <DetailTopNav title={data![1].title} teacher={data![1].teacher} onClick={onClick} />
+        <DetailTopNav
+          title={data![1].title}
+          teacher={data![1].teacher}
+          onClick={onClick}
+          onGet={() => handleGetPlay(data![0])}
+        />
         {ActiveContent}
         <DetailBottomNav activeType={activeType} setActiveType={setActiveType} />
       </main>
