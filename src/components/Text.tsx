@@ -2,7 +2,7 @@ import clsx from 'clsx'
 
 type ButtonProps = {
   className?: string
-  children: string
+  children: React.ReactNode
 }
 
 export const Text = ({ className, children }: ButtonProps) => {
