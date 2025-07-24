@@ -38,7 +38,7 @@ export const ReportCard = ({ data }: ReportProps) => {
             <TimeIcon className="h-[16px] w-[16px]" />
             <Text className="ml-1 text-[12px] font-bold">{ChangeDutAt(data.dueAt)}</Text>
           </div>
-          <ChangeStateBtn />
+          {!data.isOk && <ChangeStateBtn />}
         </div>
       </div>
     </div>
