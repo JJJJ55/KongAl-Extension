@@ -6,7 +6,7 @@ import { TopNavBar } from './TopNavbar'
 import { useStoragestore } from '@/store/useStorageStore'
 import { AnimatePresence } from 'framer-motion'
 import { SubjectDetailPage } from './detail/SubjectDetailPage'
-import type { CourseItem, IssueItem } from '@/types'
+import type { CourseItem, IssueItem, Noti } from '@/types'
 
 export const SubjectPage = () => {
   const [data, setData] = useState<[string, CourseItem] | null>(null)
@@ -29,6 +29,7 @@ export const SubjectPage = () => {
       if (response.success) {
         const newBoardList: Record<string, Record<string, IssueItem>> = {}
         const newReportList: Record<string, Record<string, IssueItem>> = {}
+        const newNoti: Record<string, Noti> = {}
 
         for (const data of response.data) {
           const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
@@ -39,6 +40,8 @@ export const SubjectPage = () => {
             ReportList: {},
           }
 
+          if (!newNoti[course_id]) newNoti[course_id] = { isBoard: 0, isReport: 0 }
+
           if (plannable_type === 'announcement') {
             if (!currentDetail.BoardList[plannable_id]) {
               if (!newBoardList[course_id]) newBoardList[course_id] = {}
@@ -46,7 +49,11 @@ export const SubjectPage = () => {
                 title: plannable.title,
                 createAt: plannable.created_at,
                 html_url,
-                isOk: plannable.read_state,
+                isOk: plannable.read_state === 'read' ? true : false,
+              }
+              if (plannable.read_state !== 'read') {
+                newNoti[course_id].isBoard = newNoti[course_id].isBoard! + 1
+                console.log('공지 미 숙지', newNoti[course_id].isBoard)
               }
             }
           } else {
@@ -59,9 +66,35 @@ export const SubjectPage = () => {
                 html_url,
                 isOk: submissions.submitted ?? false,
               }
+              if (!newReportList[course_id][plannable_id].isOk) {
+                newNoti[course_id].isReport = newNoti[course_id].isReport! + 1
+                console.log('과제 미 이행', newNoti[course_id].isReport)
+              }
             }
           }
         }
+
+        updateData('contents', prev => {
+          const mergedCourseList = { ...prev.courseList }
+
+          for (const courseId in newNoti) {
+            if (!mergedCourseList[courseId]) continue
+            mergedCourseList[courseId] = {
+              ...mergedCourseList[courseId],
+              ...newNoti[courseId],
+            }
+          }
+
+          const result = {
+            ...prev,
+            courseList: mergedCourseList,
+          }
+
+          console.log('[업데이트 반환 값]', result)
+          console.log('[현재 상태]', useStoragestore.getState().contents.courseList)
+
+          return result
+        })
 
         updateData('contents', prev => {
           const newCourseDetail = { ...prev.courseDetail }
@@ -117,6 +150,9 @@ export const SubjectPage = () => {
             title: name,
             teacher:
               teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
+            isReport: 0,
+            isPlay: 0,
+            isBoard: 0,
           }
         }
         updateData('contents', prev => ({ ...prev, courseList: { ...prev.courseList, ...newCourseList } }))

@@ -25,9 +25,9 @@ export const SubjectCard = ({ color, data, onClick }: SubjectProps) => {
         <div className="flex items-center justify-between">
           <Text className="text-[12px]">{`${data.teacher} 교수`}</Text>
           <div className="flex gap-1">
-            {data.isReport && <ReportIssue />}
-            {data.isPlay && <ClassIssue />}
-            {data.isBoard && <BoardIssue />}
+            {data.isReport > 0 && <ReportIssue />}
+            {data.isPlay > 0 && <ClassIssue />}
+            {data.isBoard > 0 && <BoardIssue />}
           </div>
         </div>
       </div>
