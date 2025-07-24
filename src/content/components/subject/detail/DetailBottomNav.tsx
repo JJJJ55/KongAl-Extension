@@ -2,6 +2,9 @@ import { BoardIcon, PlayIcon, ReportIcon, Text } from '@/components'
 import clsx from 'clsx'
 
 type BottomNavProps = {
+  isPlay: number
+  isBoard: number
+  isReport: number
   activeType: 'play' | 'board' | 'report'
   setActiveType: (type: 'play' | 'board' | 'report') => void
 }
@@ -10,10 +13,10 @@ const IssueOn = () => (
   <div className="bg-negative absolute h-[6px] w-[6px] rounded-full" style={{ top: '8px', right: '40px' }}></div>
 )
 
-export const DetailBottomNav = ({ activeType, setActiveType }: BottomNavProps) => {
+export const DetailBottomNav = ({ isPlay, isBoard, isReport, activeType, setActiveType }: BottomNavProps) => {
   return (
     <div
-      className="flex justify-around rounded-2xl bg-white"
+      className="flex justify-around bg-white rounded-2xl"
       style={{ boxShadow: '0 -5px 5px -5px rgba(0,0,0,0.3)', height: '70px' }}
     >
       <button
@@ -23,7 +26,7 @@ export const DetailBottomNav = ({ activeType, setActiveType }: BottomNavProps) =
         )}
         onClick={() => setActiveType('play')}
       >
-        <IssueOn />
+        {isPlay > 0 && <IssueOn />}
         <PlayIcon />
         <Text>학 습</Text>
       </button>
@@ -35,7 +38,7 @@ export const DetailBottomNav = ({ activeType, setActiveType }: BottomNavProps) =
         )}
         onClick={() => setActiveType('board')}
       >
-        <IssueOn />
+        {isBoard > 0 && <IssueOn />}
         <BoardIcon />
         <Text>공 지</Text>
       </button>
@@ -47,7 +50,7 @@ export const DetailBottomNav = ({ activeType, setActiveType }: BottomNavProps) =
         )}
         onClick={() => setActiveType('report')}
       >
-        <IssueOn />
+        {isReport > 0 && <IssueOn />}
         <ReportIcon />
         <Text>과 제</Text>
       </button>
