@@ -75,28 +75,6 @@ export const SubjectPage = () => {
         }
 
         updateData('contents', prev => {
-          const mergedCourseList = { ...prev.courseList }
-
-          for (const courseId in newNoti) {
-            if (!mergedCourseList[courseId]) continue
-            mergedCourseList[courseId] = {
-              ...mergedCourseList[courseId],
-              ...newNoti[courseId],
-            }
-          }
-
-          const result = {
-            ...prev,
-            courseList: mergedCourseList,
-          }
-
-          console.log('[업데이트 반환 값]', result)
-          console.log('[현재 상태]', useStoragestore.getState().contents.courseList)
-
-          return result
-        })
-
-        updateData('contents', prev => {
           const newCourseDetail = { ...prev.courseDetail }
           for (const courseId in newBoardList) {
             const currentDetail = newCourseDetail[courseId] || {
@@ -128,9 +106,20 @@ export const SubjectPage = () => {
             }
           }
 
+          const mergedCourseList = { ...prev.courseList }
+
+          for (const courseId in newNoti) {
+            if (!mergedCourseList[courseId]) continue
+            mergedCourseList[courseId] = {
+              ...mergedCourseList[courseId],
+              ...newNoti[courseId],
+            }
+          }
+
           return {
             ...prev,
             courseDetail: newCourseDetail,
+            courseList: mergedCourseList,
           }
         })
       } else {
@@ -171,7 +160,7 @@ export const SubjectPage = () => {
       ) : (
         <>
           <TopNavBar onClick={handleGetSubject} onIssueTest={testGetIssue} />
-          <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">
+          <div className="flex flex-col items-center flex-1 gap-3 py-3 overflow-auto scrollbar-hidden">
             {isLoading ? (
               <LoadingSkeleton />
             ) : Object.keys(contents.courseList).length ? (

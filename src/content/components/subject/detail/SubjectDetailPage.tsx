@@ -96,7 +96,7 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
       // className="flex flex-col h-full"
       className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
     >
-      <main className="flex h-full flex-col">
+      <main className="flex flex-col h-full">
         <DetailTopNav
           title={data![1].title}
           teacher={data![1].teacher}
@@ -104,7 +104,13 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
           onGet={() => handleGetPlay(data![0])}
         />
         {ActiveContent}
-        <DetailBottomNav activeType={activeType} setActiveType={setActiveType} />
+        <DetailBottomNav
+          isPlay={data![1].isPlay}
+          isBoard={data![1].isBoard}
+          isReport={data![1].isReport}
+          activeType={activeType}
+          setActiveType={setActiveType}
+        />
       </main>
     </motion.div>
   )
