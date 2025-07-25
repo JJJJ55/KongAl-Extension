@@ -12,6 +12,21 @@ function App() {
     return userAllowedSites.some(site => site === url)
   }
 
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'AL_TEST') {
+      console.log('알람 실행')
+      const response = { success: true, data: message.data }
+
+      console.log(response)
+    }
+  })
+
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'PLANNER_ITEMS') {
+      console.log('[콘텐츠 스크립트] 받은 데이터:', message.data)
+    }
+  })
+
   useEffect(() => {
     if (!isInit) return
 
