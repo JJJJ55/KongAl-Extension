@@ -5,7 +5,6 @@ import { BottomNavBar } from './subject/BottomNavbar'
 import { SettingPage } from './setting/SettingPage'
 import { useMemo, useState } from 'react'
 import { ToastComponent } from './ToastComponent'
-import { toast } from 'react-toastify'
 
 const modalVariants: Variants = {
   hidden: {
@@ -31,8 +30,6 @@ export const MainModal = () => {
     return activeType === 'subjects' ? <SubjectPage /> : <SettingPage />
   }, [activeType])
 
-  const notify = () => toast.error('Wow so easy!', { icon: false })
-
   return (
     <motion.div
       variants={modalVariants}
@@ -45,8 +42,7 @@ export const MainModal = () => {
     >
       <div className="flex h-full flex-col">
         {ActiveContent}
-        {/* <BottomNavBar activeType={activeType} setActiveType={setActiveType} /> */}
-        <BottomNavBar activeType={activeType} setActiveType={notify} />
+        <BottomNavBar activeType={activeType} setActiveType={setActiveType} />
         <ToastComponent />
       </div>
     </motion.div>
