@@ -7,6 +7,7 @@ import { useStoragestore } from '@/store/useStorageStore'
 import { AnimatePresence } from 'framer-motion'
 import { SubjectDetailPage } from './detail/SubjectDetailPage'
 import type { CourseItem, IssueItem, Noti } from '@/types'
+import { UpdateIssue } from '@/utils/UpdateData'
 
 export const SubjectPage = () => {
   const [data, setData] = useState<[string, CourseItem] | null>(null)
@@ -27,89 +28,7 @@ export const SubjectPage = () => {
     const ids = Object.keys(contents.courseList)
     chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
       if (response.success) {
-        console.log(response.data)
-        const newBoardList: Record<string, Record<string, IssueItem>> = {}
-        const newReportList: Record<string, Record<string, IssueItem>> = {}
-        const newNoti: Record<string, Noti> = {}
-
-        for (const data of response.data) {
-          const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
-
-          if (!newNoti[course_id]) newNoti[course_id] = { isBoard: 0, isReport: 0 }
-          if (plannable_type === 'announcement') {
-            if (!newBoardList[course_id]) newBoardList[course_id] = {}
-            newBoardList[course_id][plannable_id] = {
-              title: plannable.title,
-              createAt: plannable.created_at,
-              html_url,
-              isOk: plannable.read_state === 'read' ? true : false,
-            }
-            if (plannable.read_state !== 'read') {
-              newNoti[course_id].isBoard = newNoti[course_id].isBoard! + 1
-            }
-          } else {
-            if (!newReportList[course_id]) newReportList[course_id] = {}
-            newReportList[course_id][plannable_id] = {
-              title: plannable.title,
-              createAt: plannable.created_at,
-              dueAt: plannable_date,
-              html_url,
-              isOk: submissions.submitted ?? false,
-            }
-            if (!newReportList[course_id][plannable_id].isOk) {
-              newNoti[course_id].isReport = newNoti[course_id].isReport! + 1
-            }
-          }
-        }
-
-        updateData('contents', prev => {
-          const newCourseDetail = { ...prev.courseDetail }
-          for (const courseId in newBoardList) {
-            const currentDetail = newCourseDetail[courseId] || {
-              PlayList: {},
-              BoardList: {},
-              ReportList: {},
-            }
-            newCourseDetail[courseId] = {
-              ...currentDetail,
-              BoardList: {
-                ...currentDetail.BoardList,
-                ...newBoardList[courseId],
-              },
-            }
-          }
-
-          for (const courseId in newReportList) {
-            const currentDetail = newCourseDetail[courseId] || {
-              PlayList: {},
-              BoardList: {},
-              ReportList: {},
-            }
-            newCourseDetail[courseId] = {
-              ...currentDetail,
-              ReportList: {
-                ...currentDetail.ReportList,
-                ...newReportList[courseId],
-              },
-            }
-          }
-
-          const mergedCourseList = { ...prev.courseList }
-
-          for (const courseId in newNoti) {
-            if (!mergedCourseList[courseId]) continue
-            mergedCourseList[courseId] = {
-              ...mergedCourseList[courseId],
-              ...newNoti[courseId],
-            }
-          }
-
-          return {
-            ...prev,
-            courseDetail: newCourseDetail,
-            courseList: mergedCourseList,
-          }
-        })
+        UpdateIssue({ itemData: response.data, updateFn: updateData })
       } else {
         window.alert('실패')
       }
@@ -120,7 +39,6 @@ export const SubjectPage = () => {
     setIsLoading(true)
     chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, response => {
       if (response.success) {
-        console.log(response.data)
         const newCourseList: Record<string, CourseItem> = {}
         for (const data of response.data) {
           const { id, name, teachers } = data
