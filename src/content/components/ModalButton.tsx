@@ -1,4 +1,4 @@
-import { useRefreshCheck } from '@/hooks/useRecyclehook'
+import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
 import type { CourseItem, IssueItem, Noti } from '@/types'
 import { UpdateIssue, UpdateSubject } from '@/utils/UpdateData'
