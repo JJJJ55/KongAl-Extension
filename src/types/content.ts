@@ -46,6 +46,12 @@
 //   courseDetail: Detail[]
 // }
 
+export type Noti = {
+  isReport?: number
+  isPlay?: number
+  isBoard?: number
+}
+
 export type Course = {
   [courseId: string]: CourseItem
 }
@@ -53,9 +59,9 @@ export type Course = {
 export type CourseItem = {
   title: string
   teacher: string
-  isReport?: number
-  isPlay?: number
-  isBoard?: number
+  isReport: number
+  isPlay: number
+  isBoard: number
 }
 
 export type PlayItem = {

@@ -93,7 +93,6 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
       animate="visible"
       exit="exit"
       transition={{ duration: 0.3 }}
-      // className="flex flex-col h-full"
       className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
     >
       <main className="flex h-full flex-col">
@@ -104,7 +103,7 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
           onGet={() => handleGetPlay(data![0])}
         />
         {ActiveContent}
-        <DetailBottomNav activeType={activeType} setActiveType={setActiveType} />
+        <DetailBottomNav dId={data![0]} activeType={activeType} setActiveType={setActiveType} />
       </main>
     </motion.div>
   )

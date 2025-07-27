@@ -6,7 +6,8 @@ import { TopNavBar } from './TopNavbar'
 import { useStoragestore } from '@/store/useStorageStore'
 import { AnimatePresence } from 'framer-motion'
 import { SubjectDetailPage } from './detail/SubjectDetailPage'
-import type { CourseItem, IssueItem } from '@/types'
+import type { CourseItem, IssueItem, Noti } from '@/types'
+import { UpdateIssue } from '@/utils/UpdateData'
 
 export const SubjectPage = () => {
   const [data, setData] = useState<[string, CourseItem] | null>(null)
@@ -27,79 +28,7 @@ export const SubjectPage = () => {
     const ids = Object.keys(contents.courseList)
     chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
       if (response.success) {
-        const newBoardList: Record<string, Record<string, IssueItem>> = {}
-        const newReportList: Record<string, Record<string, IssueItem>> = {}
-
-        for (const data of response.data) {
-          const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
-
-          const currentDetail = contents.courseDetail[course_id] || {
-            PlayList: {},
-            BoardList: {},
-            ReportList: {},
-          }
-
-          if (plannable_type === 'announcement') {
-            if (!currentDetail.BoardList[plannable_id]) {
-              if (!newBoardList[course_id]) newBoardList[course_id] = {}
-              newBoardList[course_id][plannable_id] = {
-                title: plannable.title,
-                createAt: plannable.created_at,
-                html_url,
-                isOk: plannable.read_state,
-              }
-            }
-          } else {
-            if (!currentDetail.ReportList[plannable_id]) {
-              if (!newReportList[course_id]) newReportList[course_id] = {}
-              newReportList[course_id][plannable_id] = {
-                title: plannable.title,
-                createAt: plannable.created_at,
-                dueAt: plannable_date,
-                html_url,
-                isOk: submissions.submitted ?? false,
-              }
-            }
-          }
-        }
-
-        updateData('contents', prev => {
-          const newCourseDetail = { ...prev.courseDetail }
-          for (const courseId in newBoardList) {
-            const currentDetail = newCourseDetail[courseId] || {
-              PlayList: {},
-              BoardList: {},
-              ReportList: {},
-            }
-            newCourseDetail[courseId] = {
-              ...currentDetail,
-              BoardList: {
-                ...currentDetail.BoardList,
-                ...newBoardList[courseId],
-              },
-            }
-          }
-
-          for (const courseId in newReportList) {
-            const currentDetail = newCourseDetail[courseId] || {
-              PlayList: {},
-              BoardList: {},
-              ReportList: {},
-            }
-            newCourseDetail[courseId] = {
-              ...currentDetail,
-              ReportList: {
-                ...currentDetail.ReportList,
-                ...newReportList[courseId],
-              },
-            }
-          }
-
-          return {
-            ...prev,
-            courseDetail: newCourseDetail,
-          }
-        })
+        UpdateIssue({ itemData: response.data, updateFn: updateData })
       } else {
         window.alert('실패')
       }
@@ -117,11 +46,15 @@ export const SubjectPage = () => {
             title: name,
             teacher:
               teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
+            isReport: 0,
+            isPlay: 0,
+            isBoard: 0,
           }
         }
-        updateData('contents', prev => ({ ...prev, courseList: { ...prev.courseList, ...newCourseList } }))
+        updateData('contents', prev => ({ ...prev, courseList: { ...newCourseList } }))
       } else {
         window.alert('올바른 토큰이 아닙니다. 다시 확인해주세요.')
+        console.log(response)
         //토스트 메세지
       }
     })

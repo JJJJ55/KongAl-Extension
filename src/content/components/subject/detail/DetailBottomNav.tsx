@@ -1,7 +1,9 @@
 import { BoardIcon, PlayIcon, ReportIcon, Text } from '@/components'
+import { useStoragestore } from '@/store/useStorageStore'
 import clsx from 'clsx'
 
 type BottomNavProps = {
+  dId: string
   activeType: 'play' | 'board' | 'report'
   setActiveType: (type: 'play' | 'board' | 'report') => void
 }
@@ -10,7 +12,8 @@ const IssueOn = () => (
   <div className="bg-negative absolute h-[6px] w-[6px] rounded-full" style={{ top: '8px', right: '40px' }}></div>
 )
 
-export const DetailBottomNav = ({ activeType, setActiveType }: BottomNavProps) => {
+export const DetailBottomNav = ({ dId, activeType, setActiveType }: BottomNavProps) => {
+  const { contents } = useStoragestore()
   return (
     <div
       className="flex justify-around rounded-2xl bg-white"
@@ -23,7 +26,7 @@ export const DetailBottomNav = ({ activeType, setActiveType }: BottomNavProps) =
         )}
         onClick={() => setActiveType('play')}
       >
-        <IssueOn />
+        {contents.courseList[dId].isPlay > 0 && <IssueOn />}
         <PlayIcon />
         <Text>학 습</Text>
       </button>
@@ -35,7 +38,7 @@ export const DetailBottomNav = ({ activeType, setActiveType }: BottomNavProps) =
         )}
         onClick={() => setActiveType('board')}
       >
-        <IssueOn />
+        {contents.courseList[dId].isBoard > 0 && <IssueOn />}
         <BoardIcon />
         <Text>공 지</Text>
       </button>
@@ -47,7 +50,7 @@ export const DetailBottomNav = ({ activeType, setActiveType }: BottomNavProps) =
         )}
         onClick={() => setActiveType('report')}
       >
-        <IssueOn />
+        {contents.courseList[dId].isReport > 0 && <IssueOn />}
         <ReportIcon />
         <Text>과 제</Text>
       </button>
