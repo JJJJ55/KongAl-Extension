@@ -5,6 +5,7 @@ import { UpdateIssue, UpdateSubject } from '@/utils/UpdateData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useEffect } from 'react'
+import { toast } from 'react-toastify'
 
 const CloseOverlay = () => (
   <motion.div
@@ -34,12 +35,13 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
           chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
             if (issueRes.success) {
               UpdateIssue({ itemData: issueRes.data, updateFn: updateData })
+              toast.success('정보가 업데이트 됐어요!', { icon: false })
             } else {
-              console.log('이슈 api 오류')
+              toast.error('이슈 업데이트에 실패했어요.', { icon: false })
             }
           })
         } else {
-          console.log('과목 api 오류')
+          toast.error('과목 업데이트에 실패했어요.', { icon: false })
         }
       })
       // console.log('업데이트 시작')
