@@ -14,15 +14,15 @@ export const PlayCard = ({ data, onLink }: PlayProps) => {
   return (
     <div
       className={clsx(
-        'flex h-[60px] w-[282px] cursor-pointer justify-end rounded-xl',
+        'flex h-[60px] w-[300px] cursor-pointer justify-end rounded-xl',
         data.isComplete ? 'bg-knuGreen' : 'bg-kongju',
       )}
       style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       onClick={onLink}
     >
-      <div className="flex h-[60px] w-[277px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5">
+      <div className="flex h-[60px] w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5">
         <div className="flex items-center justify-between">
-          <Text className={clsx('truncate text-[13px] font-bold', data.isAttendance !== null ? 'w-[210px]' : 'w-full')}>
+          <Text className={clsx('truncate text-[13px] font-bold', data.isAttendance !== null ? 'w-[220px]' : 'w-full')}>
             {data.title}
           </Text>
           {data.isAttendance !== null ? data.isAttendance ? <CheckIssue /> : <UnCheckIssue /> : ''}
