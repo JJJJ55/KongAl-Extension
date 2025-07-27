@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import App from './views/App.tsx'
 import styles from '@/styles/index.css?inline'
 import cropperStyles from 'react-easy-crop/react-easy-crop.css?inline'
+import toastStyles from 'react-toastify/dist/ReactToastify.css?inline'
 
 import { SHADOW_HOST_ID } from '@/constants'
 
@@ -21,7 +22,7 @@ function createShadowRoot(styles: string[]): ShadowRoot {
 }
 
 function initApp() {
-  const shadowRoot = createShadowRoot([styles, cropperStyles])
+  const shadowRoot = createShadowRoot([styles, cropperStyles, toastStyles])
   createRoot(shadowRoot).render(<App />)
 }
 
