@@ -38,6 +38,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 const getSubject = async (token: string) => {
+  // return { success: true, data: '성공' }
   return await fetch(`${import.meta.env.VITE_SITETOKEN_URL}users/self/favorites/courses?include[]=teachers`, {
     method: 'GET',
     credentials: 'include',

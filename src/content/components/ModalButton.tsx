@@ -22,14 +22,16 @@ const CloseOverlay = () => (
 )
 
 export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) => {
-  const { settings, updateData } = useStoragestore()
+  const { contents, settings, updateData } = useStoragestore()
   const { shouldRefresh } = useRefreshCheck()
 
   useEffect(() => {
     console.log('업데이트 체크')
     console.log(shouldRefresh)
     if (shouldRefresh) {
+      console.log('정보가져온당')
       chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
+        // console.log(subjectRes.success, subjectRes.data)
         if (subjectRes.success) {
           const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
           chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
