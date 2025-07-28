@@ -28,7 +28,7 @@ export const SubjectPage = () => {
     const ids = Object.keys(contents.courseList)
     chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
       if (response.success) {
-        UpdateIssue({ itemData: response.data, updateFn: updateData })
+        UpdateIssue({ contents, itemData: response.data, updateFn: updateData })
       } else {
         window.alert('실패')
       }
@@ -74,6 +74,7 @@ export const SubjectPage = () => {
             ) : Object.keys(contents.courseList).length ? (
               Object.entries(contents.courseList).map(([courseId, course], idx) => (
                 <SubjectCard
+                  index={idx}
                   key={courseId}
                   color={idx % 2 === 0 ? 'bg-knuBlue' : 'bg-knuGreen'}
                   data={course}
