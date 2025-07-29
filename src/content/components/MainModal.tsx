@@ -4,6 +4,7 @@ import { SubjectPage } from './subject/SubjectPage'
 import { BottomNavBar } from './subject/BottomNavbar'
 import { SettingPage } from './setting/SettingPage'
 import { useMemo, useState } from 'react'
+import { ToastComponent } from './ToastComponent'
 
 const modalVariants: Variants = {
   hidden: {
@@ -42,6 +43,7 @@ export const MainModal = () => {
       <div className="flex h-full flex-col">
         {ActiveContent}
         <BottomNavBar activeType={activeType} setActiveType={setActiveType} />
+        <ToastComponent />
       </div>
     </motion.div>
   )

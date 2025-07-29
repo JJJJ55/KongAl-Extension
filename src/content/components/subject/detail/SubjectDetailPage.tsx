@@ -8,6 +8,8 @@ import { DetailReport } from './DetailReport'
 import { useMemo, useState } from 'react'
 import type { CourseItem, PlayItem } from '@/types'
 import { useStoragestore } from '@/store/useStorageStore'
+import { toast } from 'react-toastify'
+import { UpdatePlay } from '@/utils/UpdateData'
 
 const modalVariants: Variants = {
   hidden: {
@@ -33,45 +35,10 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
   const handleGetPlay = (id: string) => {
     chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
       if (response.success) {
-        const newPlayList: Record<string, Record<string, PlayItem>> = {}
-        const currentDetail = contents.courseDetail[id] || {
-          PlayList: {},
-          BoardList: {},
-          ReportList: {},
-        }
-        for (const data of response.data) {
-          const { position } = data
-          for (const d of data.module_items) {
-            const { module_item_id, title, content_type, completed } = d
-            if (!newPlayList[position]) newPlayList[position] = {}
-            newPlayList[position][module_item_id] = {
-              title,
-              isComplete: completed,
-              isAttendance: null,
-              dueAt: null,
-            }
-            if (content_type === 'attendance_item') {
-              const { use_attendance, omit_progress } = d.content_data
-              if (use_attendance === true && omit_progress === false) {
-                newPlayList[position][module_item_id].isAttendance = d.attendance_status
-              }
-            }
-            newPlayList[position][module_item_id].dueAt = d.content_data.due_at
-          }
-        }
-        updateData('contents', prev => {
-          const newCourseDetail = { ...prev.courseDetail }
-          newCourseDetail[id] = {
-            ...currentDetail,
-            PlayList: {
-              ...newPlayList,
-            },
-          }
-
-          return { ...prev, courseDetail: newCourseDetail }
-        })
+        UpdatePlay({ itemData: response.data, contents, id, updateFn: updateData })
+        toast.success('학습 정보를 가져왔어요!', { icon: false })
       } else {
-        alert('실패')
+        toast.error('학습 정보 업데이트를 실패했어요.', { icon: false })
       }
     })
   }

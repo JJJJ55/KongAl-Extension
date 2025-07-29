@@ -1,10 +1,11 @@
-import { useRefreshCheck } from '@/hooks/useRecyclehook'
+import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
 import type { CourseItem, IssueItem, Noti } from '@/types'
 import { UpdateIssue, UpdateSubject } from '@/utils/UpdateData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useEffect } from 'react'
+import { toast } from 'react-toastify'
 
 const CloseOverlay = () => (
   <motion.div
@@ -21,25 +22,28 @@ const CloseOverlay = () => (
 )
 
 export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) => {
-  const { settings, updateData } = useStoragestore()
+  const { contents, settings, updateData } = useStoragestore()
   const { shouldRefresh } = useRefreshCheck()
 
   useEffect(() => {
     console.log('업데이트 체크')
     console.log(shouldRefresh)
     if (shouldRefresh) {
+      console.log('정보가져온당')
       chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
+        // console.log(subjectRes.success, subjectRes.data)
         if (subjectRes.success) {
           const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
           chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
             if (issueRes.success) {
               UpdateIssue({ itemData: issueRes.data, updateFn: updateData })
+              toast.success('정보가 업데이트 됐어요!', { icon: false })
             } else {
-              console.log('이슈 api 오류')
+              toast.error('이슈 업데이트에 실패했어요.', { icon: false })
             }
           })
         } else {
-          console.log('과목 api 오류')
+          toast.error('과목 업데이트에 실패했어요.', { icon: false })
         }
       })
       // console.log('업데이트 시작')

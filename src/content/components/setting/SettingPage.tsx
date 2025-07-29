@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react'
 import { ImageCropModal } from './ImageCropModal'
 import { AnimatePresence } from 'framer-motion'
 import { useStoragestore } from '@/store/useStorageStore'
+import { toast } from 'react-toastify'
 
 export const SettingPage = () => {
   const [isImgCropOpen, setIsImgCrppOpen] = useState<boolean>(false)
@@ -13,10 +14,12 @@ export const SettingPage = () => {
 
   const handleImgReset = useCallback(async () => {
     updateData('settings', prev => ({ ...prev, image: chrome.runtime.getURL('/kongal_Logo.png') }))
+    toast.success('사진이 기본 이미지로 설정됐어요!', { icon: false })
   }, [])
 
   const handleCropOk = useCallback(async (cropImg: string) => {
     updateData('settings', prev => ({ ...prev, image: cropImg }))
+    toast.success('사진이 변경됐어요!', { icon: false })
     setIsImgCrppOpen(false)
     setImg(null)
   }, [])

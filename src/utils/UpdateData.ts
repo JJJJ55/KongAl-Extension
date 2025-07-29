@@ -1,10 +1,17 @@
-import type { CourseItem, IssueItem, Noti, StorageData } from '@/types'
+import type { Contents, CourseItem, IssueItem, Noti, PlayItem, StorageData } from '@/types'
 import { ChangeDutAt } from './FormatDate'
 
 type UpdateDataProps = {
   itemData: any
-  ids?: Record<string, CourseItem>
+  contents?: Contents
+  id?: string
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
+}
+
+const Item = {
+  PlayList: {},
+  BoardList: {},
+  ReportList: {},
 }
 
 export const UpdateSubject = ({ itemData, updateFn }: UpdateDataProps) => {
@@ -24,7 +31,7 @@ export const UpdateSubject = ({ itemData, updateFn }: UpdateDataProps) => {
   return Object.keys(newCourseList)
 }
 
-export const UpdateIssue = ({ itemData, updateFn }: UpdateDataProps) => {
+export const UpdateIssue = ({ contents, itemData, updateFn }: UpdateDataProps) => {
   console.log(itemData)
   const newBoardList: Record<string, Record<string, IssueItem>> = {}
   const newReportList: Record<string, Record<string, IssueItem>> = {}
@@ -46,15 +53,24 @@ export const UpdateIssue = ({ itemData, updateFn }: UpdateDataProps) => {
         newNoti[course_id].isBoard = newNoti[course_id].isBoard! + 1
       }
     } else {
-      if (!newReportList[course_id]) newReportList[course_id] = {}
+      if (!newReportList[course_id]) newReportList[course_id] = contents?.courseDetail?.[course_id]?.ReportList || {}
       newReportList[course_id][plannable_id] = {
         title: plannable.title,
         createAt: plannable.created_at,
         dueAt: plannable_date,
         html_url,
-        isOk: submissions.submitted ?? false,
+        isOk: newReportList[course_id][plannable_id]
+          ? newReportList[course_id][plannable_id].isChange
+            ? true
+            : (submissions.submitted ?? false)
+          : (submissions.submitted ?? false),
+        isChange: newReportList[course_id][plannable_id] ? newReportList[course_id][plannable_id].isChange : false,
       }
-      if (!newReportList[course_id][plannable_id].isOk && ChangeDutAt(plannable_date) !== '마감') {
+      if (
+        !newReportList[course_id][plannable_id].isOk &&
+        !newReportList[course_id][plannable_id].isChange &&
+        ChangeDutAt(plannable_date) !== '마감'
+      ) {
         console.log(ChangeDutAt(plannable_date))
         newNoti[course_id].isReport = newNoti[course_id].isReport! + 1
       }
@@ -64,11 +80,7 @@ export const UpdateIssue = ({ itemData, updateFn }: UpdateDataProps) => {
   updateFn('contents', prev => {
     const newCourseDetail = { ...prev.courseDetail }
     for (const courseId in newBoardList) {
-      const currentDetail = newCourseDetail[courseId] || {
-        PlayList: {},
-        BoardList: {},
-        ReportList: {},
-      }
+      const currentDetail = newCourseDetail[courseId] || Item
       newCourseDetail[courseId] = {
         ...currentDetail,
         BoardList: {
@@ -79,11 +91,7 @@ export const UpdateIssue = ({ itemData, updateFn }: UpdateDataProps) => {
     }
 
     for (const courseId in newReportList) {
-      const currentDetail = newCourseDetail[courseId] || {
-        PlayList: {},
-        BoardList: {},
-        ReportList: {},
-      }
+      const currentDetail = newCourseDetail[courseId] || Item
       newCourseDetail[courseId] = {
         ...currentDetail,
         ReportList: {
@@ -110,4 +118,41 @@ export const UpdateIssue = ({ itemData, updateFn }: UpdateDataProps) => {
     }
   })
   updateFn('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
+}
+
+export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps) => {
+  const newPlayList: Record<string, Record<string, PlayItem>> = {}
+  const currentDetail = contents!.courseDetail[id!] || Item
+
+  for (const data of itemData) {
+    const { position } = data
+    for (const d of data.module_items) {
+      const { module_item_id, title, content_type, completed } = d
+      if (!newPlayList[position]) newPlayList[position] = {}
+      newPlayList[position][module_item_id] = {
+        title,
+        isComplete: completed,
+        isAttendance: null,
+        dueAt: null,
+      }
+      if (content_type === 'attendance_item') {
+        const { use_attendance, omit_progress } = d.content_data
+        if (use_attendance === true && omit_progress === false) {
+          newPlayList[position][module_item_id].isAttendance = d.attendance_status
+        }
+      }
+      newPlayList[position][module_item_id].dueAt = d.content_data.due_at
+    }
+  }
+  updateFn('contents', prev => {
+    const newCourseDetail = { ...prev.courseDetail }
+    newCourseDetail[id!] = {
+      ...currentDetail,
+      PlayList: {
+        ...newPlayList,
+      },
+    }
+
+    return { ...prev, courseDetail: newCourseDetail }
+  })
 }

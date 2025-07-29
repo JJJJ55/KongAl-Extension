@@ -22,7 +22,9 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
             <>
               <LineText className="w-[60px] text-[13px] font-bold">{`${week}주차`}</LineText>
               {weekData ? (
-                Object.entries(weekData).map(([pid, p]) => <PlayCard key={pid} data={p} onLink={handleLink} />)
+                Object.entries(weekData).map(([pid, p], idx) => (
+                  <PlayCard key={pid} index={idx} data={p} onLink={handleLink} />
+                ))
               ) : (
                 <Text className="text-[12px]">학습이 존재하지 않습니다.</Text>
               )}

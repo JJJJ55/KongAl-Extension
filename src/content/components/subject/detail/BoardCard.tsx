@@ -1,29 +1,35 @@
 import { Text } from '@/components'
 import type { IssueItem } from '@/types'
 import { ChangeCreateAt } from '@/utils/FormatDate'
+import { motion } from 'framer-motion'
 
 type BoardProps = {
+  index: number
   data: IssueItem
   onLink: () => void
 }
 
 const NotReadIssue = () => <div className="bg-negative h-[6px] w-[6px] rounded-full"></div>
-export const BoardCard = ({ data, onLink }: BoardProps) => {
+export const BoardCard = ({ index, data, onLink }: BoardProps) => {
   return (
-    <div
-      className="bg-knuBlue flex h-[60px] w-[282px] cursor-pointer justify-end rounded-xl"
+    <motion.div
+      key={index}
+      className="bg-knuBlue flex h-[60px] w-[300px] cursor-pointer justify-end rounded-xl"
       style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       onClick={onLink}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
     >
-      <div className="flex h-full w-[277px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5">
+      <div className="flex h-full w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5">
         <div className="flex items-start justify-between">
-          <Text className="w-[240px] truncate text-[14px] font-bold">{data.title}</Text>
+          <Text className="w-[258px] truncate text-[14px] font-bold">{data.title}</Text>
           {!data.isOk && <NotReadIssue />}
         </div>
         <div>
           <Text className="text-[11px]">{ChangeCreateAt(data.createAt)}</Text>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
