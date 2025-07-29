@@ -34,6 +34,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch(error => sendResponse({ success: false, data: error.message }))
 
     return true
+  } else if (message.type === 'NOTI') {
+    // 알림 테스트
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: chrome.runtime.getURL('kongal_Logo.png'), // public 폴더에 icon.png 넣어두세요
+      title: 'API 응답 도착',
+      message: `알림 발생`,
+      priority: 2,
+    })
+    // return true
   }
 })
 

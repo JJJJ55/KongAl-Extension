@@ -30,6 +30,10 @@ export const MainModal = () => {
     return activeType === 'subjects' ? <SubjectPage /> : <SettingPage />
   }, [activeType])
 
+  const notiTest = () => {
+    chrome.runtime.sendMessage({ type: 'NOTI' })
+  }
+
   return (
     <motion.div
       variants={modalVariants}
@@ -42,7 +46,7 @@ export const MainModal = () => {
     >
       <div className="flex h-full flex-col">
         {ActiveContent}
-        <BottomNavBar activeType={activeType} setActiveType={setActiveType} />
+        <BottomNavBar activeType={activeType} setActiveType={notiTest} />
         <ToastComponent />
       </div>
     </motion.div>
