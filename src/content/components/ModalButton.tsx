@@ -31,12 +31,11 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
     if (shouldRefresh) {
       console.log('정보가져온당')
       chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
-        // console.log(subjectRes.success, subjectRes.data)
         if (subjectRes.success) {
           const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
           chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
             if (issueRes.success) {
-              UpdateIssue({ itemData: issueRes.data, updateFn: updateData })
+              UpdateIssue({ contents, itemData: issueRes.data, updateFn: updateData })
               toast.success('정보가 업데이트 됐어요!', { icon: false })
             } else {
               toast.error('이슈 업데이트에 실패했어요.', { icon: false })
@@ -46,6 +45,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
           toast.error('과목 업데이트에 실패했어요.', { icon: false })
         }
       })
+
       // console.log('업데이트 시작')
       // chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
       //   if (subjectRes.success) {
