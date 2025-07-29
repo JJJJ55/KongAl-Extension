@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import styles from '@/styles/index.css?inline'
 import { CommonContainer } from '@/components/CommonContainer.tsx'
+import toastStyles from 'react-toastify/dist/ReactToastify.css?inline'
 
 function createShadowRoot(styles: string[]): ShadowRoot {
   const host = document.createElement('div')
@@ -18,7 +19,7 @@ function createShadowRoot(styles: string[]): ShadowRoot {
   return shadowRoot
 }
 
-const shadowRoot = createShadowRoot([styles])
+const shadowRoot = createShadowRoot([styles, toastStyles])
 
 createRoot(shadowRoot).render(
   <CommonContainer>
