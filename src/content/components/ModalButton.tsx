@@ -1,6 +1,5 @@
 import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
-import type { CourseItem, IssueItem, Noti } from '@/types'
 import { UpdateIssue, UpdateSubject } from '@/utils/UpdateData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
@@ -35,7 +34,8 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
           const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
           chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
             if (issueRes.success) {
-              UpdateIssue({ contents, itemData: issueRes.data, updateFn: updateData })
+              UpdateIssue({ contents, itemData: issueRes.data, updateAt: settings.updateAt, updateFn: updateData })
+              // 여기에 위 함수에서 리턴 받은 것 가지고 NOTI를 울리면 되지 않을까?
               toast.success('정보가 업데이트 됐어요!', { icon: false })
             } else {
               toast.error('이슈 업데이트에 실패했어요.', { icon: false })
