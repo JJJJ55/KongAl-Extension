@@ -21,14 +21,13 @@ export default function App() {
       if (response.success) {
         const regex = /^([^\(]+)\(([^)]+)\)$/
         const info = response.data.name.match(regex)
-        updateData('settings', prev => ({ ...prev, siteToken: token }))
-        updateData('info', prev => ({ ...prev, studentId: response.data.id, username: info[1], userId: info[2] }))
         chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token }, subjectRes => {
           if (subjectRes.success) {
             const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
+            console.log('목록 : ', ids)
             chrome.runtime.sendMessage({ type: 'USER_ISSUE', token, ids }, issueRes => {
               if (issueRes.success) {
-                UpdateIssue({ contents, itemData: issueRes.data, updateFn: updateData })
+                UpdateIssue({ contents, itemData: issueRes.data, updateAt: settings.updateAt, updateFn: updateData })
                 toast.success('정보가 업데이트 됐어요!', { icon: false })
               } else {
                 toast.error('이슈 업데이트에 실패했어요.', { icon: false })
@@ -38,6 +37,8 @@ export default function App() {
             toast.error('과목 업데이트에 실패했어요.', { icon: false })
           }
         })
+        updateData('settings', prev => ({ ...prev, siteToken: token }))
+        updateData('info', prev => ({ ...prev, studentId: response.data.id, username: info[1], userId: info[2] }))
       } else {
         toast.error('올바른 토큰이 아닙니다. 다시 확인해주세요.', { icon: false })
       }
