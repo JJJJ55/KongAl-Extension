@@ -1,10 +1,11 @@
-import type { Contents, CourseItem, IssueItem, Noti, PlayItem, StorageData } from '@/types'
-import { ChangeDutAt } from './FormatDate'
+import type { Contents, CourseItem, IssueItem, Noti, NotificationItem, PlayItem, StorageData } from '@/types'
+import { ChangeDutAt, CompareDueAt, CompareUpdateAt } from './FormatDate'
 
 type UpdateDataProps = {
   itemData: any
   contents?: Contents
   id?: string
+  updateAt?: string | null
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
 }
 
@@ -31,11 +32,13 @@ export const UpdateSubject = ({ itemData, updateFn }: UpdateDataProps) => {
   return Object.keys(newCourseList)
 }
 
-export const UpdateIssue = ({ contents, itemData, updateFn }: UpdateDataProps) => {
-  console.log(itemData)
+export const UpdateIssue = ({ contents, updateAt, itemData, updateFn }: UpdateDataProps) => {
   const newBoardList: Record<string, Record<string, IssueItem>> = {}
   const newReportList: Record<string, Record<string, IssueItem>> = {}
   const newNoti: Record<string, Noti> = {}
+  const notificationList: NotificationItem[] = []
+  console.log(itemData)
+  console.log(updateAt)
 
   for (const data of itemData) {
     const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
@@ -51,6 +54,13 @@ export const UpdateIssue = ({ contents, itemData, updateFn }: UpdateDataProps) =
       }
       if (plannable.read_state !== 'read') {
         newNoti[course_id].isBoard = newNoti[course_id].isBoard! + 1
+        if (CompareUpdateAt(plannable.created_at, updateAt)) {
+          console.log('알림예정')
+          notificationList.push({
+            title: contents?.courseList[course_id]?.title || '콩알',
+            message: '새로운 공지가 있어요!',
+          })
+        }
       }
     } else {
       if (!newReportList[course_id]) newReportList[course_id] = contents?.courseDetail?.[course_id]?.ReportList || {}
@@ -71,12 +81,38 @@ export const UpdateIssue = ({ contents, itemData, updateFn }: UpdateDataProps) =
         !newReportList[course_id][plannable_id].isChange &&
         ChangeDutAt(plannable_date) !== '마감'
       ) {
-        console.log(ChangeDutAt(plannable_date))
         newNoti[course_id].isReport = newNoti[course_id].isReport! + 1
+        if (updateAt === null) {
+          notificationList.push({
+            title: contents?.courseList[course_id]?.title || '콩알',
+            message: '새로운 과제가 있어요!',
+          })
+        } else {
+          if (CompareUpdateAt(plannable.created_at, updateAt)) {
+            notificationList.push({
+              title: contents?.courseList[course_id]?.title || '콩알',
+              message: '새로운 과제가 있어요!',
+            })
+          }
+          const type = CompareDueAt(plannable_date, updateAt)
+          console.log('과제 결과', type, newReportList[course_id][plannable_id])
+          if (type === '오늘') {
+            notificationList.push({
+              title: contents?.courseList[course_id]?.title || '콩알',
+              message: '오늘 마감인 과제가 있어요!',
+            })
+          } else if (type === '이내') {
+            notificationList.push({
+              title: contents?.courseList[course_id]?.title || '콩알',
+              message: '곧 마감되는 과제가 있어요!',
+            })
+          }
+        }
       }
     }
   }
 
+  chrome.runtime.sendMessage({ type: 'NOTI', notification: notificationList })
   updateFn('contents', prev => {
     const newCourseDetail = { ...prev.courseDetail }
     for (const courseId in newBoardList) {
