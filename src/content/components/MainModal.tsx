@@ -31,7 +31,7 @@ export const MainModal = () => {
   }, [activeType])
 
   const notiTest = () => {
-    chrome.runtime.sendMessage({ type: 'NOTI' })
+    chrome.runtime.sendMessage({ type: 'NOTI', title: '테스트입니다.', content: '과제가 있어요' })
   }
 
   return (
@@ -46,7 +46,7 @@ export const MainModal = () => {
     >
       <div className="flex h-full flex-col">
         {ActiveContent}
-        <BottomNavBar activeType={activeType} setActiveType={notiTest} />
+        <BottomNavBar activeType={activeType} setActiveType={setActiveType} />
         <ToastComponent />
       </div>
     </motion.div>
