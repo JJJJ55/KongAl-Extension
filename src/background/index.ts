@@ -47,6 +47,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         priority: 2,
       })
     })
+    chrome.action.setBadgeText({ text: '!' })
+    chrome.action.setBadgeBackgroundColor({ color: '#FF0000' })
 
     // 알림 테스트
     // const items = [
@@ -75,6 +77,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     //     items: item,
     //   })
     // }
+  } else if (message.type === 'CLEAN_BADGE') {
+    chrome.action.setBadgeText({ text: '' })
   }
 })
 
