@@ -111,8 +111,11 @@ export const UpdateIssue = ({ contents, updateAt, itemData, updateFn }: UpdateDa
       }
     }
   }
+  if (notificationList.length > 0) {
+    updateFn('info', prev => ({ ...prev, noti: true }))
+    chrome.runtime.sendMessage({ type: 'NOTI', notification: notificationList })
+  }
 
-  chrome.runtime.sendMessage({ type: 'NOTI', notification: notificationList })
   updateFn('contents', prev => {
     const newCourseDetail = { ...prev.courseDetail }
     for (const courseId in newBoardList) {
