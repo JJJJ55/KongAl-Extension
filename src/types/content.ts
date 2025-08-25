@@ -67,7 +67,7 @@ export type CourseItem = {
 export type PlayItem = {
   title: string
   isComplete: boolean
-  isAttendance: boolean | null
+  isAttendance: string | null
   dueAt: string | null
 }
 

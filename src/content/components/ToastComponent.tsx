@@ -16,7 +16,7 @@ export const ToastComponent = () => {
       transition={Flip}
       closeButton={false}
       className="w-[300px] font-bold text-black"
-      style={{ marginBottom: '60px' }}
+      style={{ bottom: '60px', left: '50%', transform: 'translateX(-50%)' }}
       toastClassName={context => {
         const base = 'w-[300px] text-[13px] font-bold h-[40px] flex justify-center items-center rounded-xl'
         const variants = {

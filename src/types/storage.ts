@@ -11,7 +11,7 @@ export type StorageData = {
     siteToken: string | null
     xToken: string | null
     version: string
-    updateAt: string
+    updateAt: string | null
     fetchCycle: number | null
     image: string
   }

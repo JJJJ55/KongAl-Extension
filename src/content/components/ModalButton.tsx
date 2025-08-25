@@ -1,6 +1,5 @@
 import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
-import type { CourseItem, IssueItem, Noti } from '@/types'
 import { UpdateIssue, UpdateSubject } from '@/utils/UpdateData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
@@ -22,21 +21,30 @@ const CloseOverlay = () => (
 )
 
 export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) => {
-  const { contents, settings, updateData } = useStoragestore()
+  const { contents, settings, info, updateData } = useStoragestore()
   const { shouldRefresh } = useRefreshCheck()
+
+  const handleModalOpen = () => {
+    if (!isOpen && info.noti) {
+      chrome.runtime.sendMessage({ type: 'CLEAN_BADGE' })
+      updateData('info', prev => ({ ...prev, noti: false }))
+    }
+    onClick()
+  }
 
   useEffect(() => {
     console.log('업데이트 체크')
     console.log(shouldRefresh)
+    if (info.noti) toast.success('학습, 공지, 과제 알림이 있어요!', { icon: false })
     if (shouldRefresh) {
       console.log('정보가져온당')
       chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
-        // console.log(subjectRes.success, subjectRes.data)
         if (subjectRes.success) {
           const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
           chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
             if (issueRes.success) {
-              UpdateIssue({ itemData: issueRes.data, updateFn: updateData })
+              UpdateIssue({ contents, itemData: issueRes.data, updateAt: settings.updateAt, updateFn: updateData })
+              // 여기에 위 함수에서 리턴 받은 것 가지고 NOTI를 울리면 되지 않을까?
               toast.success('정보가 업데이트 됐어요!', { icon: false })
             } else {
               toast.error('이슈 업데이트에 실패했어요.', { icon: false })
@@ -46,6 +54,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
           toast.error('과목 업데이트에 실패했어요.', { icon: false })
         }
       })
+
       // console.log('업데이트 시작')
       // chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
       //   if (subjectRes.success) {
@@ -156,7 +165,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
   }, [shouldRefresh])
   return (
     <div
-      onClick={onClick}
+      onClick={handleModalOpen}
       className="fixed z-500 h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat"
       style={{
         bottom: '25px',
@@ -166,6 +175,14 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
       }}
     >
       <AnimatePresence> {isOpen && <CloseOverlay />}</AnimatePresence>
+      {info.noti && (
+        <div
+          className="bg-negative absolute flex h-[20px] w-[20px] items-center justify-center rounded-full font-bold text-white"
+          style={{ bottom: '32px', left: '32px' }}
+        >
+          !
+        </div>
+      )}
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { TopNavBar } from './TopNavbar'
 import { useStoragestore } from '@/store/useStorageStore'
 import { AnimatePresence } from 'framer-motion'
 import { SubjectDetailPage } from './detail/SubjectDetailPage'
-import type { CourseItem, IssueItem, Noti } from '@/types'
+import type { CourseItem } from '@/types'
 import { UpdateIssue } from '@/utils/UpdateData'
 
 export const SubjectPage = () => {
@@ -28,7 +28,7 @@ export const SubjectPage = () => {
     const ids = Object.keys(contents.courseList)
     chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
       if (response.success) {
-        UpdateIssue({ contents, itemData: response.data, updateFn: updateData })
+        UpdateIssue({ contents, itemData: response.data, updateAt: settings.updateAt, updateFn: updateData })
       } else {
         window.alert('실패')
       }

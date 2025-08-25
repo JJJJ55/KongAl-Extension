@@ -5,6 +5,7 @@ import { BottomNavBar } from './subject/BottomNavbar'
 import { SettingPage } from './setting/SettingPage'
 import { useMemo, useState } from 'react'
 import { ToastComponent } from './ToastComponent'
+import { useStoragestore } from '@/store/useStorageStore'
 
 const modalVariants: Variants = {
   hidden: {
@@ -25,10 +26,15 @@ const modalVariants: Variants = {
 
 export const MainModal = () => {
   const [activeType, setActiveType] = useState<'subjects' | 'settings'>('subjects')
-
+  const { updateData } = useStoragestore()
   const ActiveContent = useMemo(() => {
     return activeType === 'subjects' ? <SubjectPage /> : <SettingPage />
   }, [activeType])
+
+  const notiTest = () => {
+    updateData('info', prev => ({ ...prev, noti: true }))
+    chrome.runtime.sendMessage({ type: 'NOTI', notification: [] })
+  }
 
   return (
     <motion.div
