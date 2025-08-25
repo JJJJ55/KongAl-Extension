@@ -5,12 +5,15 @@ import { ImageCropModal } from './ImageCropModal'
 import { AnimatePresence } from 'framer-motion'
 import { useStoragestore } from '@/store/useStorageStore'
 import { toast } from 'react-toastify'
+import clsx from 'clsx'
 
 export const SettingPage = () => {
   const [isImgCropOpen, setIsImgCrppOpen] = useState<boolean>(false)
   const [img, setImg] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { settings, info, updateData, resetStore } = useStoragestore()
+  const [theme, setTheme] = useState<'sys' | 'light' | 'dark'>('sys')
+  const [beef, setBeef] = useState<boolean>(true)
 
   const handleImgReset = useCallback(async () => {
     updateData('settings', prev => ({ ...prev, image: chrome.runtime.getURL('/kongal_Logo.png') }))
@@ -46,14 +49,14 @@ export const SettingPage = () => {
   }
 
   return (
-    <div className="scrollbar-hidden relative flex flex-1 flex-col items-center gap-3 overflow-auto pt-8">
+    <div className="relative flex flex-col items-center flex-1 gap-3 pt-6 overflow-auto scrollbar-hidden">
       <div
-        className="mb-3 flex h-[140px] w-[300px] items-center justify-center gap-1 rounded-xl bg-white"
+        className="mb-1 flex h-[140px] w-[300px] items-center justify-center gap-1 rounded-xl bg-white"
         style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       >
         <div className="relative h-[120px] w-[120px] overflow-hidden rounded-full">
-          <img src={settings.image} alt="프로필 사진" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 flex h-full w-full items-center justify-center gap-2 rounded-full bg-black/25">
+          <img src={settings.image} alt="프로필 사진" className="object-cover w-full h-full" />
+          <div className="absolute inset-0 flex items-center justify-center w-full h-full gap-2 rounded-full bg-black/25">
             <div
               onClick={() => inputRef.current?.click()}
               className="bg-gray1 group relative flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full opacity-70 hover:opacity-100"
@@ -87,12 +90,51 @@ export const SettingPage = () => {
       </div>
 
       <div className="text-[15px] font-bold">
-        <Text>데이터 새로고침 간격</Text>
-        <select name="1" id="" className="mt-1 h-[40px] w-[300px] cursor-pointer rounded-xl bg-white px-4">
-          <option value="1">6시간</option>
-          <option value="2">9시간</option>
-          <option value="3">12시간</option>
-        </select>
+        <Text>화면 테마</Text>
+        <div className="text-gray4 mt-1 mb-2 flex w-[300px] justify-center px-4 text-center text-[13px] font-medium">
+          <span
+            className={clsx(
+              'w-[100px] cursor-pointer',
+              theme === 'sys' ? 'text-positive font-bold' : 'text-gray4 font-medium',
+            )}
+            onClick={() => setTheme('sys')}
+          >
+            시스템 설정
+          </span>
+          <span
+            className={clsx(
+              'w-[100px] cursor-pointer',
+              theme === 'light' ? 'text-positive font-bold' : 'text-gray4 font-medium',
+            )}
+            onClick={() => setTheme('light')}
+          >
+            라이트
+          </span>
+          <span
+            className={clsx(
+              'w-[100px] cursor-pointer',
+              theme === 'dark' ? 'text-positive font-bold' : 'text-gray4 font-medium',
+            )}
+            onClick={() => setTheme('dark')}
+          >
+            다크
+          </span>
+        </div>
+        <Text>알림음 여부</Text>
+        <div className="text-gray4 my-1 flex w-[300px] justify-center px-4 text-center text-[13px] font-medium">
+          <span
+            className={clsx('w-[100px] cursor-pointer', beef ? 'text-positive font-bold' : 'text-gray4 font-medium')}
+            onClick={() => setBeef(true)}
+          >
+            설 정
+          </span>
+          <span
+            className={clsx('w-[100px] cursor-pointer', !beef ? 'text-positive font-bold' : 'text-gray4 font-medium')}
+            onClick={() => setBeef(false)}
+          >
+            해 제
+          </span>
+        </div>
       </div>
       <div className="text-[15px] font-bold">
         <Text>토큰 정보</Text>
@@ -102,7 +144,7 @@ export const SettingPage = () => {
       </div>
       <BasicButton onClick={handleLogout}>서비스 로그아웃 (토큰 삭제)</BasicButton>
       <BasicButton onClick={handleHelp}>문의 & 버그 제보</BasicButton>
-      <footer className="mt-4 text-center text-[12px]">
+      <footer className="text-center text-[11px]">
         <Text>공주대학교 LMS 알리미</Text>
         <Text>{`콩알 v${settings.version}`}</Text>
       </footer>
