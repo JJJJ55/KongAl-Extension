@@ -1,6 +1,6 @@
 import { BasicButton, Text } from '@/components'
 import { Camera, Undo2 } from 'lucide-react'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ImageCropModal } from './ImageCropModal'
 import { AnimatePresence } from 'framer-motion'
 import { useStoragestore } from '@/store/useStorageStore'
@@ -11,9 +11,7 @@ export const SettingPage = () => {
   const [isImgCropOpen, setIsImgCrppOpen] = useState<boolean>(false)
   const [img, setImg] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { settings, info, updateData, resetStore } = useStoragestore()
-  const [theme, setTheme] = useState<'sys' | 'light' | 'dark'>('sys')
-  const [beef, setBeef] = useState<boolean>(true)
+  const { system, settings, info, updateData, resetStore } = useStoragestore()
 
   const handleImgReset = useCallback(async () => {
     updateData('settings', prev => ({ ...prev, image: chrome.runtime.getURL('/kongal_Logo.png') }))
@@ -35,6 +33,10 @@ export const SettingPage = () => {
     window.location.href = 'https://www.naver.com'
   }
 
+  const handleTheme = (theme: 'sys' | 'light' | 'dark') => {
+    updateData('system', prev => ({ ...prev, theme }))
+  }
+
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const file = e.target.files[0]
@@ -50,6 +52,9 @@ export const SettingPage = () => {
 
   return (
     <div className="relative flex flex-col items-center flex-1 gap-3 pt-6 overflow-auto scrollbar-hidden">
+      <div className="text-black transition-colors duration-500 bg-white dark:bg-black dark:text-white">
+        Tailwind v4 다크모드!
+      </div>
       <div
         className="mb-1 flex h-[140px] w-[300px] items-center justify-center gap-1 rounded-xl bg-white"
         style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
@@ -95,27 +100,27 @@ export const SettingPage = () => {
           <span
             className={clsx(
               'w-[100px] cursor-pointer',
-              theme === 'sys' ? 'text-positive font-bold' : 'text-gray4 font-medium',
+              system.theme === 'sys' ? 'text-positive font-bold' : 'text-gray4 font-medium',
             )}
-            onClick={() => setTheme('sys')}
+            onClick={() => handleTheme('sys')}
           >
             시스템 설정
           </span>
           <span
             className={clsx(
               'w-[100px] cursor-pointer',
-              theme === 'light' ? 'text-positive font-bold' : 'text-gray4 font-medium',
+              system.theme === 'light' ? 'text-positive font-bold' : 'text-gray4 font-medium',
             )}
-            onClick={() => setTheme('light')}
+            onClick={() => handleTheme('light')}
           >
             라이트
           </span>
           <span
             className={clsx(
               'w-[100px] cursor-pointer',
-              theme === 'dark' ? 'text-positive font-bold' : 'text-gray4 font-medium',
+              system.theme === 'dark' ? 'text-positive font-bold' : 'text-gray4 font-medium',
             )}
-            onClick={() => setTheme('dark')}
+            onClick={() => handleTheme('dark')}
           >
             다크
           </span>
@@ -123,14 +128,20 @@ export const SettingPage = () => {
         <Text>알림음 여부</Text>
         <div className="text-gray4 my-1 flex w-[300px] justify-center px-4 text-center text-[13px] font-medium">
           <span
-            className={clsx('w-[100px] cursor-pointer', beef ? 'text-positive font-bold' : 'text-gray4 font-medium')}
-            onClick={() => setBeef(true)}
+            className={clsx(
+              'w-[100px] cursor-pointer',
+              system.notiBeep ? 'text-positive font-bold' : 'text-gray4 font-medium',
+            )}
+            onClick={() => updateData('system', prev => ({ ...prev, notiBeep: true }))}
           >
             설 정
           </span>
           <span
-            className={clsx('w-[100px] cursor-pointer', !beef ? 'text-positive font-bold' : 'text-gray4 font-medium')}
-            onClick={() => setBeef(false)}
+            className={clsx(
+              'w-[100px] cursor-pointer',
+              !system.notiBeep ? 'text-positive font-bold' : 'text-gray4 font-medium',
+            )}
+            onClick={() => updateData('system', prev => ({ ...prev, notiBeep: false }))}
           >
             해 제
           </span>
