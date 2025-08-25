@@ -3,7 +3,7 @@ import type { Variants } from 'framer-motion'
 import { SubjectPage } from './subject/SubjectPage'
 import { BottomNavBar } from './subject/BottomNavbar'
 import { SettingPage } from './setting/SettingPage'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ToastComponent } from './ToastComponent'
 import { useStoragestore } from '@/store/useStorageStore'
 
@@ -26,7 +26,7 @@ const modalVariants: Variants = {
 
 export const MainModal = () => {
   const [activeType, setActiveType] = useState<'subjects' | 'settings'>('subjects')
-  const { updateData } = useStoragestore()
+  const { system, updateData } = useStoragestore()
   const ActiveContent = useMemo(() => {
     return activeType === 'subjects' ? <SubjectPage /> : <SettingPage />
   }, [activeType])
@@ -35,6 +35,19 @@ export const MainModal = () => {
     updateData('info', prev => ({ ...prev, noti: true }))
     chrome.runtime.sendMessage({ type: 'NOTI', notification: [] })
   }
+
+  const mainRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!mainRef.current) return
+
+    const root = mainRef.current
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    if (system.theme === 'dark' || (system.theme === 'sys' && systemDark)) {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+  }, [system.theme])
 
   return (
     <motion.div
@@ -46,7 +59,7 @@ export const MainModal = () => {
       className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
       style={{ boxShadow: ' 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)', bottom: '96px', right: '25px' }}
     >
-      <div className="flex h-full flex-col">
+      <div ref={mainRef} className="flex flex-col h-full">
         {ActiveContent}
         <BottomNavBar activeType={activeType} setActiveType={setActiveType} />
         <ToastComponent />
