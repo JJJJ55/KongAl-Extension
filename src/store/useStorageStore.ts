@@ -11,6 +11,10 @@ interface StorageStore extends StorageData {
 }
 
 const initialStorageData: StorageData = {
+  system: {
+    theme: 'sys',
+    notiBeep: true,
+  },
   info: {
     studentId: 12345,
     userId: '12345',
@@ -32,6 +36,7 @@ const initialStorageData: StorageData = {
 }
 
 const mergeData = (initial: StorageData, stored: Partial<StorageData>): StorageData => ({
+  system: { ...initial.system, ...stored.system },
   info: { ...initial.info, ...stored.info },
   settings: { ...initial.settings, ...stored.settings, version: pkg.version },
   contents: { ...initial.contents, ...stored.contents },
