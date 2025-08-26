@@ -13,7 +13,7 @@ export const SubjectPage = () => {
   const [data, setData] = useState<[string, CourseItem] | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { settings, contents, updateData } = useStoragestore()
+  const { system, settings, contents, updateData } = useStoragestore()
 
   const ToggleModal = () => {
     setIsOpen(prev => !prev)
@@ -26,7 +26,11 @@ export const SubjectPage = () => {
 
   const notiTest = () => {
     updateData('info', prev => ({ ...prev, noti: true }))
-    chrome.runtime.sendMessage({ type: 'NOTI', notification: [{ title: '비프음 테스트', message: '아아' }] })
+    chrome.runtime.sendMessage({
+      type: 'NOTI',
+      beep: system.notiBeep,
+      notification: [{ title: '비프음 테스트', msg: '아아' }],
+    })
   }
 
   const testGetIssue = () => {
