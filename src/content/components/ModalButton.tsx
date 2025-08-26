@@ -21,7 +21,7 @@ const CloseOverlay = () => (
 )
 
 export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) => {
-  const { contents, settings, info, updateData } = useStoragestore()
+  const { system, contents, settings, info, updateData } = useStoragestore()
   const { shouldRefresh } = useRefreshCheck()
 
   const handleModalOpen = () => {
@@ -44,7 +44,13 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
           const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
           chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
             if (issueRes.success) {
-              UpdateIssue({ contents, itemData: issueRes.data, updateAt: settings.updateAt, updateFn: updateData })
+              UpdateIssue({
+                isBeep: system.notiBeep,
+                contents,
+                itemData: issueRes.data,
+                updateAt: settings.updateAt,
+                updateFn: updateData,
+              })
               // 여기에 위 함수에서 리턴 받은 것 가지고 NOTI를 울리면 되지 않을까?
               toast.success('정보가 업데이트 됐어요!', { icon: false })
             } else {

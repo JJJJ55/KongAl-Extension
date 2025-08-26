@@ -6,6 +6,7 @@ type UpdateDataProps = {
   contents?: Contents
   id?: string
   updateAt?: string | null
+  isBeep?: boolean
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
 }
 
@@ -32,7 +33,7 @@ export const UpdateSubject = ({ itemData, updateFn }: UpdateDataProps) => {
   return Object.keys(newCourseList)
 }
 
-export const UpdateIssue = ({ contents, updateAt, itemData, updateFn }: UpdateDataProps) => {
+export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: UpdateDataProps) => {
   const newBoardList: Record<string, Record<string, IssueItem>> = {}
   const newReportList: Record<string, Record<string, IssueItem>> = {}
   const newNoti: Record<string, Noti> = {}
@@ -113,7 +114,7 @@ export const UpdateIssue = ({ contents, updateAt, itemData, updateFn }: UpdateDa
   }
   if (notificationList.length > 0) {
     updateFn('info', prev => ({ ...prev, noti: true }))
-    chrome.runtime.sendMessage({ type: 'NOTI', notification: notificationList })
+    chrome.runtime.sendMessage({ type: 'NOTI', beep: isBeep, notification: notificationList })
   }
 
   updateFn('contents', prev => {
