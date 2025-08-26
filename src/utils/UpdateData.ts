@@ -58,7 +58,7 @@ export const UpdateIssue = ({ contents, updateAt, itemData, updateFn }: UpdateDa
           console.log('알림예정')
           notificationList.push({
             title: contents?.courseList[course_id]?.title || '콩알',
-            message: '새로운 공지가 있어요!',
+            msg: '새로운 공지가 있어요!',
           })
         }
       }
@@ -85,13 +85,13 @@ export const UpdateIssue = ({ contents, updateAt, itemData, updateFn }: UpdateDa
         if (updateAt === null) {
           notificationList.push({
             title: contents?.courseList[course_id]?.title || '콩알',
-            message: '새로운 과제가 있어요!',
+            msg: '새로운 과제가 있어요!',
           })
         } else {
           if (CompareUpdateAt(plannable.created_at, updateAt)) {
             notificationList.push({
               title: contents?.courseList[course_id]?.title || '콩알',
-              message: '새로운 과제가 있어요!',
+              msg: '새로운 과제가 있어요!',
             })
           }
           const type = CompareDueAt(plannable_date, updateAt)
@@ -99,12 +99,12 @@ export const UpdateIssue = ({ contents, updateAt, itemData, updateFn }: UpdateDa
           if (type === '오늘') {
             notificationList.push({
               title: contents?.courseList[course_id]?.title || '콩알',
-              message: '오늘 마감인 과제가 있어요!',
+              msg: '오늘 마감인 과제가 있어요!',
             })
           } else if (type === '이내') {
             notificationList.push({
               title: contents?.courseList[course_id]?.title || '콩알',
-              message: '곧 마감되는 과제가 있어요!',
+              msg: '곧 마감되는 과제가 있어요!',
             })
           }
         }
