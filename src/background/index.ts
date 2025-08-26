@@ -45,6 +45,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         title,
         message,
         priority: 2,
+        silent: false,
       })
     })
     chrome.action.setBadgeText({ text: '!' })
