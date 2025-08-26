@@ -24,6 +24,11 @@ export const SubjectPage = () => {
     ToggleModal()
   }
 
+  const notiTest = () => {
+    updateData('info', prev => ({ ...prev, noti: true }))
+    chrome.runtime.sendMessage({ type: 'NOTI', notification: [{ title: '비프음 테스트', message: '아아' }] })
+  }
+
   const testGetIssue = () => {
     const ids = Object.keys(contents.courseList)
     chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
@@ -67,8 +72,8 @@ export const SubjectPage = () => {
         <SubjectDetailPage data={data} onClick={() => ToggleModal()} />
       ) : (
         <>
-          <TopNavBar onClick={handleGetSubject} onIssueTest={testGetIssue} />
-          <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">
+          <TopNavBar onClick={handleGetSubject} onIssueTest={notiTest} />
+          <div className="flex flex-col items-center flex-1 gap-3 py-3 overflow-auto scrollbar-hidden">
             {isLoading ? (
               <LoadingSkeleton />
             ) : Object.keys(contents.courseList).length ? (
