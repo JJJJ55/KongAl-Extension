@@ -52,9 +52,6 @@ export const SettingPage = () => {
 
   return (
     <div className="relative flex flex-col items-center flex-1 gap-3 pt-6 overflow-auto scrollbar-hidden">
-      <div className="text-black transition-colors duration-500 bg-white dark:bg-black dark:text-white">
-        Tailwind v4 다크모드!
-      </div>
       <div
         className="mb-1 flex h-[140px] w-[300px] items-center justify-center gap-1 rounded-xl bg-white"
         style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
