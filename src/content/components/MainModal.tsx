@@ -59,7 +59,7 @@ export const MainModal = () => {
       className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
       style={{ boxShadow: ' 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)', bottom: '96px', right: '25px' }}
     >
-      <div ref={mainRef} className="flex flex-col h-full transition-colors duration-500 dark:bg-black">
+      <div ref={mainRef} className="flex flex-col h-full transition-colors duration-500 dark:bg-dark">
         {ActiveContent}
         <BottomNavBar activeType={activeType} setActiveType={setActiveType} />
         <ToastComponent />
