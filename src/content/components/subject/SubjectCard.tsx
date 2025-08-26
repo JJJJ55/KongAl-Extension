@@ -24,12 +24,12 @@ export const SubjectCard = ({ index, color, data, onClick }: SubjectProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
     >
-      <div className="flex h-[60px] w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-3">
+      <div className="dark:bg-dark12 flex h-[60px] w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-3 transition-colors duration-500">
         <div>
-          <Text className="text-[15px] font-bold">{data.title}</Text>
+          <Text className="text-[15px] font-bold dark:text-white">{data.title}</Text>
         </div>
         <div className="flex items-center justify-between">
-          <Text className="text-[12px]">{`${data.teacher} 교수`}</Text>
+          <Text className="text-[12px] font-medium dark:text-white">{`${data.teacher} 교수`}</Text>
           <div className="flex gap-1">
             {data.isReport > 0 && <ReportIssue />}
             {data.isPlay > 0 && <ClassIssue />}

@@ -26,16 +26,21 @@ export const PlayCard = ({ index, data, onLink }: PlayProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
     >
-      <div className="flex h-[60px] w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5">
+      <div className="dark:bg-dark12 flex h-[60px] w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5 transition-colors duration-500">
         <div className="flex items-center justify-between">
-          <Text className={clsx('truncate text-[13px] font-bold', data.isAttendance !== null ? 'w-[220px]' : 'w-full')}>
+          <Text
+            className={clsx(
+              'truncate text-[13px] font-medium dark:text-white',
+              data.isAttendance !== null ? 'w-[220px]' : 'w-full',
+            )}
+          >
             {data.title}
           </Text>
           {data.isAttendance !== null ? data.isAttendance !== 'none' ? <CheckIssue /> : <UnCheckIssue /> : ''}
         </div>
-        <div className="flex items-center">
-          <TimeIcon className="h-[16px] w-[16px]" />
-          <Text className="ml-1 text-[12px] font-bold">{ChangeDutAt(data.dueAt)}</Text>
+        <div className="flex items-center dark:text-white">
+          <TimeIcon className="dark:text-gray2 h-[16px] w-[16px]" />
+          <Text className="ml-1 text-[12px] font-medium">{ChangeDutAt(data.dueAt)}</Text>
         </div>
       </div>
     </motion.div>

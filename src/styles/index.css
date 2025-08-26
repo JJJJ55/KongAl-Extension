@@ -25,6 +25,11 @@
   --color-gray3: #a6a6a6;
   --color-gray4: #757575;
   --color-gray5: #757575;
+  --color-dark: #121212;
+  --color-dark5: #1e1e1e;
+  --color-dark8: #252525;
+  --color-dark12: #2e2e2e;
+  --color-SkeletonDark: #4d4d4d;
   --font-pretendard: 'Pretendard-Regular';
 }
 

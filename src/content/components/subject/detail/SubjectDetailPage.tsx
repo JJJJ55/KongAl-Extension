@@ -60,9 +60,9 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
       animate="visible"
       exit="exit"
       transition={{ duration: 0.3 }}
-      className="bg-bgColor fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
+      className="bg-bgColor dark:bg-dark fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm transition-colors duration-500"
     >
-      <main className="flex h-full flex-col">
+      <main className="flex flex-col h-full">
         <DetailTopNav
           title={data![1].title}
           teacher={data![1].teacher}

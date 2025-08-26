@@ -53,7 +53,7 @@ export const SettingPage = () => {
   return (
     <div className="relative flex flex-col items-center flex-1 gap-3 pt-6 overflow-auto scrollbar-hidden">
       <div
-        className="mb-1 flex h-[140px] w-[300px] items-center justify-center gap-1 rounded-xl bg-white"
+        className="dark:bg-dark12 mb-1 flex h-[140px] w-[300px] items-center justify-center gap-1 rounded-xl bg-white transition-colors duration-500"
         style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       >
         <div className="relative h-[120px] w-[120px] overflow-hidden rounded-full">
@@ -86,13 +86,13 @@ export const SettingPage = () => {
           </div>
         </div>
         <div className="w-[165px] text-center text-[15px] font-bold">
-          <Text>{`${info.username} 님`}</Text>
-          <Text>{`(${info.userId})`}</Text>
+          <Text className="dark:text-white">{`${info.username} 님`}</Text>
+          <Text className="dark:text-white">{`(${info.userId})`}</Text>
         </div>
       </div>
 
       <div className="text-[15px] font-bold">
-        <Text>화면 테마</Text>
+        <Text className="dark:text-white">화면 테마</Text>
         <div className="text-gray4 mt-1 mb-2 flex w-[300px] justify-center px-4 text-center text-[13px] font-medium">
           <span
             className={clsx(
@@ -122,7 +122,7 @@ export const SettingPage = () => {
             다크
           </span>
         </div>
-        <Text>알림음 여부</Text>
+        <Text className="dark:text-white">알림음 여부</Text>
         <div className="text-gray4 my-1 flex w-[300px] justify-center px-4 text-center text-[13px] font-medium">
           <span
             className={clsx(
@@ -145,16 +145,16 @@ export const SettingPage = () => {
         </div>
       </div>
       <div className="text-[15px] font-bold">
-        <Text>토큰 정보</Text>
-        <div className="bg-gray2 text-gray4 mt-1 h-[40px] w-[300px] truncate rounded-xl px-4 leading-[40px]">
+        <Text className="dark:text-white">토큰 정보</Text>
+        <div className="dark:bg-dark5 bg-gray2 text-gray4 mt-1 h-[40px] w-[300px] truncate rounded-xl px-4 leading-[40px] transition-colors duration-500">
           {settings.siteToken ? settings.siteToken : '토큰이 존재하지 않습니다.'}
         </div>
       </div>
       <BasicButton onClick={handleLogout}>서비스 로그아웃 (토큰 삭제)</BasicButton>
       <BasicButton onClick={handleHelp}>문의 & 버그 제보</BasicButton>
       <footer className="text-center text-[11px]">
-        <Text>공주대학교 LMS 알리미</Text>
-        <Text>{`콩알 v${settings.version}`}</Text>
+        <Text className="font-medium dark:text-white">공주대학교 LMS 알리미</Text>
+        <Text className="font-medium dark:text-white">{`콩알 v${settings.version}`}</Text>
       </footer>
 
       <input type="file" ref={inputRef} hidden onChange={handleChangeFile} />
