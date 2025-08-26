@@ -52,7 +52,7 @@ export const ChangeDutAt = (dutAt: string | null | undefined) => {
   } else if (diffDays === 0) {
     return `오늘 ${timeStr} 마감`
   } else {
-    return '마감'
+    return '마 감'
   }
 }
 
