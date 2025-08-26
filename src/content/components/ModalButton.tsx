@@ -12,7 +12,7 @@ const CloseOverlay = () => (
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     transition={{ duration: 0.2 }}
-    className="bg-opacity-10 absolute inset-0 rounded-2xl bg-black/20 backdrop-blur-xs"
+    className="absolute inset-0 bg-opacity-10 rounded-2xl bg-black/20 backdrop-blur-xs"
   >
     <div className="absolute inset-0 flex items-center justify-center text-white">
       <X size={24} />
@@ -25,6 +25,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
   const { shouldRefresh } = useRefreshCheck()
 
   const handleModalOpen = () => {
+    if (info.noti) toast.success('학습, 공지, 과제 알림이 있어요!', { icon: false })
     if (!isOpen && info.noti) {
       chrome.runtime.sendMessage({ type: 'CLEAN_BADGE' })
       updateData('info', prev => ({ ...prev, noti: false }))
@@ -35,9 +36,9 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
   useEffect(() => {
     console.log('업데이트 체크')
     console.log(shouldRefresh)
-    if (info.noti) toast.success('학습, 공지, 과제 알림이 있어요!', { icon: false })
     if (shouldRefresh) {
       console.log('정보가져온당')
+
       chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
         if (subjectRes.success) {
           const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
@@ -162,7 +163,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
       //   }
       // })
     }
-  }, [shouldRefresh])
+  }, [shouldRefresh, info.noti])
   return (
     <div
       onClick={handleModalOpen}
