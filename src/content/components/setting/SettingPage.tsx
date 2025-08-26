@@ -127,18 +127,18 @@ export const SettingPage = () => {
           <span
             className={clsx(
               'w-[100px] cursor-pointer',
-              system.notiBeep ? 'text-positive font-bold' : 'text-gray4 font-medium',
+              !system.notiBeep ? 'text-positive font-bold' : 'text-gray4 font-medium',
             )}
-            onClick={() => updateData('system', prev => ({ ...prev, notiBeep: true }))}
+            onClick={() => updateData('system', prev => ({ ...prev, notiBeep: false }))}
           >
             설 정
           </span>
           <span
             className={clsx(
               'w-[100px] cursor-pointer',
-              !system.notiBeep ? 'text-positive font-bold' : 'text-gray4 font-medium',
+              system.notiBeep ? 'text-positive font-bold' : 'text-gray4 font-medium',
             )}
-            onClick={() => updateData('system', prev => ({ ...prev, notiBeep: false }))}
+            onClick={() => updateData('system', prev => ({ ...prev, notiBeep: true }))}
           >
             해 제
           </span>

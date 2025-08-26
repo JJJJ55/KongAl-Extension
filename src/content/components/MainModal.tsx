@@ -31,11 +31,6 @@ export const MainModal = () => {
     return activeType === 'subjects' ? <SubjectPage /> : <SettingPage />
   }, [activeType])
 
-  const notiTest = () => {
-    updateData('info', prev => ({ ...prev, noti: true }))
-    chrome.runtime.sendMessage({ type: 'NOTI', notification: [] })
-  }
-
   const mainRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!mainRef.current) return
