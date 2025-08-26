@@ -16,13 +16,13 @@ export const DetailBottomNav = ({ dId, activeType, setActiveType }: BottomNavPro
   const { contents } = useStoragestore()
   return (
     <div
-      className="flex justify-around rounded-2xl bg-white"
+      className="flex justify-around transition-colors duration-500 bg-white dark:bg-dark12 rounded-2xl"
       style={{ boxShadow: '0 -5px 5px -5px rgba(0,0,0,0.3)', height: '70px' }}
     >
       <button
         className={clsx(
           'relative flex flex-1 cursor-pointer flex-col items-center justify-center px-[16px] py-[12px] text-[12px]',
-          activeType === 'play' ? 'text-knuBlue' : 'text-gray4',
+          activeType === 'play' ? 'text-knuBlue dark:text-positive' : 'text-gray4',
         )}
         onClick={() => setActiveType('play')}
       >
@@ -34,7 +34,7 @@ export const DetailBottomNav = ({ dId, activeType, setActiveType }: BottomNavPro
       <button
         className={clsx(
           'relative flex flex-1 cursor-pointer flex-col items-center justify-center px-[16px] py-[12px] text-[12px]',
-          activeType === 'board' ? 'text-knuBlue' : 'text-gray4',
+          activeType === 'board' ? 'text-knuBlue dark:text-positive' : 'text-gray4',
         )}
         onClick={() => setActiveType('board')}
       >
@@ -46,7 +46,7 @@ export const DetailBottomNav = ({ dId, activeType, setActiveType }: BottomNavPro
       <button
         className={clsx(
           'relative flex flex-1 cursor-pointer flex-col items-center justify-center px-[16px] py-[12px] text-[12px]',
-          activeType === 'report' ? 'text-knuBlue' : 'text-gray4',
+          activeType === 'report' ? 'text-knuBlue dark:text-positive' : 'text-gray4',
         )}
         onClick={() => setActiveType('report')}
       >
