@@ -14,19 +14,19 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
   }
 
   return (
-    <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">
+    <div className="flex flex-col items-center flex-1 gap-3 py-3 overflow-auto scrollbar-hidden">
       {Object.keys(playList).length ? (
         weeks.map(week => {
           const weekData = playList[week]
           return (
             <>
-              <LineText className="w-[60px] text-[13px] font-bold">{`${week}주차`}</LineText>
+              <LineText className="w-[60px] text-[13px] font-bold dark:text-white">{`${week}주차`}</LineText>
               {weekData ? (
                 Object.entries(weekData).map(([pid, p], idx) => (
                   <PlayCard key={pid} index={idx} data={p} onLink={handleLink} />
                 ))
               ) : (
-                <Text className="text-[12px]">학습이 존재하지 않습니다.</Text>
+                <Text className="text-[12px] dark:text-white">학습이 존재하지 않습니다.</Text>
               )}
             </>
           )

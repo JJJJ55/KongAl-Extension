@@ -38,13 +38,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.type === 'NOTI') {
     console.log('받은 알림 목록', message.notification)
-    message.notification.forEach(({ title, message }: NotificationItem) => {
+    message.notification.forEach(({ title, msg }: NotificationItem) => {
       chrome.notifications.create({
         type: 'basic',
         iconUrl: chrome.runtime.getURL('kongal_Logo.png'), // public 폴더에 icon.png 넣어두세요
         title,
-        message,
+        message: msg,
         priority: 2,
+        silent: message.beep,
       })
     })
     chrome.action.setBadgeText({ text: '!' })

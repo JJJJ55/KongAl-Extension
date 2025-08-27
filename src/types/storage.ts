@@ -1,6 +1,10 @@
 import type { Contents } from './content'
 
 export type StorageData = {
+  system: {
+    theme: 'sys' | 'light' | 'dark'
+    notiBeep: boolean
+  }
   info: {
     studentId: number
     userId: string

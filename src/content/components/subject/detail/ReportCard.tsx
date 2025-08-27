@@ -38,15 +38,15 @@ export const ReportCard = ({ index, data, onStatus }: ReportProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
     >
-      <div className="flex h-full w-[295px] flex-col justify-center gap-2 overflow-hidden rounded-xl bg-white px-3 py-5">
+      <div className="dark:bg-dark12 flex h-full w-[295px] flex-col justify-center gap-2 overflow-hidden rounded-xl bg-white px-3 py-5 transition-colors duration-500">
         <div className="flex items-center justify-between">
-          <Text className="w-[213px] truncate text-[14px] font-bold">{data.title}</Text>
+          <Text className="w-[213px] truncate text-[13px] font-medium dark:text-white">{data.title}</Text>
           {data.isChange ? <UserSubmitIssue /> : data.isOk ? <SubmitIssue /> : <UnSubmitIssue />}
         </div>
         <div className="flex items-end justify-between">
           <div className="flex items-center">
-            <TimeIcon className="h-[16px] w-[16px]" />
-            <Text className="ml-1 text-[12px] font-bold">{ChangeDutAt(data.dueAt)}</Text>
+            <TimeIcon className="h-[16px] w-[16px] dark:text-white" />
+            <Text className="ml-1 text-[12px] font-medium dark:text-white">{ChangeDutAt(data.dueAt)}</Text>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@ export const ReportCard = ({ index, data, onStatus }: ReportProps) => {
             data.isChange ? 'bg-kongju' : 'bg-positive',
           )}
         >
-          <div className="h-full w-[10px] rounded-r-xl bg-white" />
+          <div className="dark:bg-dark12 h-full w-[10px] rounded-r-xl bg-white" />
           <div
             className="flex w-[55px] flex-col items-center justify-center"
             onClick={e => {

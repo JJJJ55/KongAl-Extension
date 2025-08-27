@@ -13,7 +13,7 @@ export const SubjectPage = () => {
   const [data, setData] = useState<[string, CourseItem] | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { settings, contents, updateData } = useStoragestore()
+  const { system, settings, contents, updateData } = useStoragestore()
 
   const ToggleModal = () => {
     setIsOpen(prev => !prev)
@@ -22,6 +22,15 @@ export const SubjectPage = () => {
   const handleDetailModal = (value: [string, CourseItem] | null) => {
     setData(value)
     ToggleModal()
+  }
+
+  const notiTest = () => {
+    updateData('info', prev => ({ ...prev, noti: true }))
+    chrome.runtime.sendMessage({
+      type: 'NOTI',
+      beep: system.notiBeep,
+      notification: [{ title: '비프음 테스트', msg: '아아' }],
+    })
   }
 
   const testGetIssue = () => {
@@ -67,8 +76,8 @@ export const SubjectPage = () => {
         <SubjectDetailPage data={data} onClick={() => ToggleModal()} />
       ) : (
         <>
-          <TopNavBar onClick={handleGetSubject} onIssueTest={testGetIssue} />
-          <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">
+          <TopNavBar onClick={handleGetSubject} onIssueTest={notiTest} />
+          <div className="flex flex-col items-center flex-1 gap-3 py-3 overflow-auto scrollbar-hidden">
             {isLoading ? (
               <LoadingSkeleton />
             ) : Object.keys(contents.courseList).length ? (

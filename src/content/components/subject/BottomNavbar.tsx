@@ -9,13 +9,13 @@ type BottomNavProps = {
 export const BottomNavBar = ({ activeType, setActiveType }: BottomNavProps) => {
   return (
     <div
-      className="flex justify-around rounded-2xl bg-white"
+      className="flex justify-around transition-colors duration-500 bg-white dark:bg-dark12 rounded-2xl"
       style={{ boxShadow: '0 -5px 5px -5px rgba(0,0,0,0.3)', height: '70px' }}
     >
       <button
         className={clsx(
           'flex flex-1 cursor-pointer flex-col items-center justify-center px-[16px] py-[12px] text-[12px]',
-          activeType === 'subjects' ? 'text-knuBlue' : 'text-gray4',
+          activeType === 'subjects' ? 'text-knuBlue dark:text-positive' : 'text-gray4',
         )}
         onClick={() => setActiveType('subjects')}
       >
@@ -25,7 +25,7 @@ export const BottomNavBar = ({ activeType, setActiveType }: BottomNavProps) => {
       <button
         className={clsx(
           'flex flex-1 cursor-pointer flex-col items-center justify-center px-[16px] py-[12px] text-[12px]',
-          activeType === 'settings' ? 'text-knuBlue' : 'text-gray4',
+          activeType === 'settings' ? 'text-knuBlue dark:text-positive' : 'text-gray4',
         )}
         onClick={() => setActiveType('settings')}
       >
