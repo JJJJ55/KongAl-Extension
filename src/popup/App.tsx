@@ -38,7 +38,13 @@ export default function App() {
           }
         })
         updateData('settings', prev => ({ ...prev, siteToken: token }))
-        updateData('info', prev => ({ ...prev, studentId: response.data.id, username: info[1], userId: info[2] }))
+        updateData('info', prev => ({
+          ...prev,
+          fullName: response.data.name,
+          studentId: response.data.id,
+          username: info[1],
+          userId: info[2],
+        }))
       } else {
         toast.error('올바른 토큰이 아닙니다. 다시 확인해주세요.', { icon: false })
       }

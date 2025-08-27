@@ -36,9 +36,10 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
   useEffect(() => {
     console.log('업데이트 체크')
     console.log(shouldRefresh)
+
+    chrome.runtime.sendMessage({ type: 'test' })
     if (shouldRefresh) {
       console.log('정보가져온당')
-
       chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
         if (subjectRes.success) {
           const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
