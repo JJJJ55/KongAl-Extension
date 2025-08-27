@@ -2,16 +2,7 @@ import type { NotificationItem } from '@/types'
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'USER_INFO') {
-    fetch(import.meta.env.VITE_USER_INFO, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        Authorization: `Bearer ${message.token}`,
-      },
-    })
-      .then(response => response.json())
-      .then(res => sendResponse({ success: true, data: res }))
-      .catch(error => sendResponse({ success: false, data: error.message }))
+    getUserInfo(message.token).then(result => sendResponse(result))
 
     return true
   } else if (message.type === 'USER_SUBJECT') {
@@ -24,6 +15,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return true
   } else if (message.type === 'SUBJECT_LIST') {
+    // 주차학습 불러오기
     fetch(`${import.meta.env.VITE_XTOKEN_URL}courses/${message.id}/modules?include_detail=true`, {
       method: 'GET',
       credentials: 'include',
@@ -83,13 +75,42 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 })
 
+const getCsrfToken = (): Promise<string | null> => {
+  return new Promise(resolve => {
+    chrome.cookies.getAll({ domain: `${import.meta.env.VITE_TOKEN_URL}`, name: '_csrf_token' }, cookies => {
+      if (cookies.length > 0) resolve(cookies[0].value)
+      else resolve(null)
+    })
+  })
+}
+
+const getUserInfo = async (token: string) => {
+  const value = await getCsrfToken()
+  return await fetch(import.meta.env.VITE_USER_INFO, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'x-csrf-token': decodeURIComponent(value || ''),
+    },
+  })
+    .then(response => response.json())
+    .then(result => {
+      return { success: true, data: result }
+    })
+    .catch(error => {
+      return { success: false, data: error.message }
+    })
+}
+
 const getSubject = async (token: string) => {
-  // return { success: true, data: '성공' }
+  const value = await getCsrfToken()
   return await fetch(`${import.meta.env.VITE_SITETOKEN_URL}users/self/favorites/courses?include[]=teachers`, {
     method: 'GET',
     credentials: 'include',
     headers: {
       Authorization: `Bearer ${token}`,
+      'x-csrf-token': decodeURIComponent(value || ''),
     },
   })
     .then(response => response.json())
@@ -103,8 +124,8 @@ const getSubject = async (token: string) => {
 
 const getSubjectIssue = async (token: string, ids: string[]) => {
   const IssueItems = []
-
-  let url = new URL(`${import.meta.env.VITE_SITETOKEN_URL}/planner/items`)
+  const value = await getCsrfToken()
+  let url = new URL(`${import.meta.env.VITE_SITETOKEN_URL}planner/items`)
   url.searchParams.set('per_page', '100')
   ids.forEach(id => url.searchParams.append('context_codes[]', `course_${id}`))
 
@@ -114,6 +135,7 @@ const getSubjectIssue = async (token: string, ids: string[]) => {
       credentials: 'include',
       headers: {
         Authorization: `Bearer ${token}`,
+        'x-csrf-token': decodeURIComponent(value || ''),
       },
     })
 
