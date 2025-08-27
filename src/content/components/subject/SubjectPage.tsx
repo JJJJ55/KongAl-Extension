@@ -76,7 +76,7 @@ export const SubjectPage = () => {
         <SubjectDetailPage data={data} onClick={() => ToggleModal()} />
       ) : (
         <>
-          <TopNavBar onClick={handleGetSubject} onIssueTest={notiTest} />
+          <TopNavBar onClick={handleGetSubject} onIssueTest={testGetIssue} />
           <div className="flex flex-col items-center flex-1 gap-3 py-3 overflow-auto scrollbar-hidden">
             {isLoading ? (
               <LoadingSkeleton />
