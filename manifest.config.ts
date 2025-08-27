@@ -25,5 +25,5 @@ export default defineManifest({
     },
   ],
   host_permissions: ['https://kncu.kongju.ac.kr/*', 'https://knulms.kongju.ac.kr/*', 'https://www.naver.com/'],
-  permissions: ['storage', 'unlimitedStorage', 'tabs', 'scripting', 'alarms', 'notifications'],
+  permissions: ['storage', 'unlimitedStorage', 'tabs', 'scripting', 'alarms', 'notifications', 'cookies'],
 })
