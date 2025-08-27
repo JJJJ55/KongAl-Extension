@@ -13,7 +13,7 @@ interface StorageStore extends StorageData {
 const initialStorageData: StorageData = {
   system: {
     theme: 'sys',
-    notiBeep: true,
+    notiBeep: false,
   },
   info: {
     studentId: 12345,
