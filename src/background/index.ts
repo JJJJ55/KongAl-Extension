@@ -2,16 +2,7 @@ import type { NotificationItem } from '@/types'
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'USER_INFO') {
-    fetch(import.meta.env.VITE_USER_INFO, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        Authorization: `Bearer ${message.token}`,
-      },
-    })
-      .then(response => response.json())
-      .then(res => sendResponse({ success: true, data: res }))
-      .catch(error => sendResponse({ success: false, data: error.message }))
+    getUserInfo(message.token).then(result => sendResponse(result))
 
     return true
   } else if (message.type === 'USER_SUBJECT') {
@@ -82,10 +73,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.type === 'CLEAN_BADGE') {
     chrome.action.setBadgeText({ text: '' })
   }
-  // else if (message.type === 'test') {
-  //   const value = await getCsrfToken()
-  //   console.log(value)
-  // }
 })
 
 const getCsrfToken = (): Promise<string | null> => {
@@ -97,13 +84,33 @@ const getCsrfToken = (): Promise<string | null> => {
   })
 }
 
+const getUserInfo = async (token: string) => {
+  const value = await getCsrfToken()
+  return await fetch(import.meta.env.VITE_USER_INFO, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'x-csrf-token': decodeURIComponent(value || ''),
+    },
+  })
+    .then(response => response.json())
+    .then(result => {
+      return { success: true, data: result }
+    })
+    .catch(error => {
+      return { success: false, data: error.message }
+    })
+}
+
 const getSubject = async (token: string) => {
-  // return { success: true, data: '성공' }
+  const value = await getCsrfToken()
   return await fetch(`${import.meta.env.VITE_SITETOKEN_URL}users/self/favorites/courses?include[]=teachers`, {
     method: 'GET',
     credentials: 'include',
     headers: {
       Authorization: `Bearer ${token}`,
+      'x-csrf-token': decodeURIComponent(value || ''),
     },
   })
     .then(response => response.json())
@@ -117,7 +124,7 @@ const getSubject = async (token: string) => {
 
 const getSubjectIssue = async (token: string, ids: string[]) => {
   const IssueItems = []
-
+  const value = await getCsrfToken()
   let url = new URL(`${import.meta.env.VITE_SITETOKEN_URL}planner/items`)
   url.searchParams.set('per_page', '100')
   ids.forEach(id => url.searchParams.append('context_codes[]', `course_${id}`))
@@ -128,6 +135,7 @@ const getSubjectIssue = async (token: string, ids: string[]) => {
       credentials: 'include',
       headers: {
         Authorization: `Bearer ${token}`,
+        'x-csrf-token': decodeURIComponent(value || ''),
       },
     })
 
