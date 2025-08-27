@@ -17,6 +17,7 @@ const initialStorageData: StorageData = {
   },
   info: {
     studentId: 12345,
+    fullName: '홍길동(12345)',
     userId: '12345',
     username: '홍길동',
     noti: false,

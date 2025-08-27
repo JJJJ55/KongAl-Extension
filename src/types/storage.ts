@@ -8,6 +8,7 @@ export type StorageData = {
   info: {
     studentId: number
     userId: string
+    fullName: string
     username: string
     noti: boolean
   }
