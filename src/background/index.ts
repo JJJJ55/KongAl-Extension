@@ -24,6 +24,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return true
   } else if (message.type === 'SUBJECT_LIST') {
+    // 주차학습 불러오기
     fetch(`${import.meta.env.VITE_XTOKEN_URL}courses/${message.id}/modules?include_detail=true`, {
       method: 'GET',
       credentials: 'include',
@@ -81,7 +82,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.type === 'CLEAN_BADGE') {
     chrome.action.setBadgeText({ text: '' })
   }
+  // else if (message.type === 'test') {
+  //   const value = await getCsrfToken()
+  //   console.log(value)
+  // }
 })
+
+const getCsrfToken = (): Promise<string | null> => {
+  return new Promise(resolve => {
+    chrome.cookies.getAll({ domain: `${import.meta.env.VITE_TOKEN_URL}`, name: '_csrf_token' }, cookies => {
+      if (cookies.length > 0) resolve(cookies[0].value)
+      else resolve(null)
+    })
+  })
+}
 
 const getSubject = async (token: string) => {
   // return { success: true, data: '성공' }
@@ -104,7 +118,7 @@ const getSubject = async (token: string) => {
 const getSubjectIssue = async (token: string, ids: string[]) => {
   const IssueItems = []
 
-  let url = new URL(`${import.meta.env.VITE_SITETOKEN_URL}/planner/items`)
+  let url = new URL(`${import.meta.env.VITE_SITETOKEN_URL}planner/items`)
   url.searchParams.set('per_page', '100')
   ids.forEach(id => url.searchParams.append('context_codes[]', `course_${id}`))
 
