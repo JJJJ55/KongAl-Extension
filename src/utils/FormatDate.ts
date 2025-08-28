@@ -27,7 +27,7 @@ export const CompareDueAt = (dueAt: string | null | undefined, updateAt: string 
     return '오늘'
   } else if (diffDays > 0 && diffDays <= 3) {
     return '이내'
-  } else if (diffDays > 3) {
+  } else if (diffDays > 3 || diffDays < 0) {
     return '-'
   }
 }
