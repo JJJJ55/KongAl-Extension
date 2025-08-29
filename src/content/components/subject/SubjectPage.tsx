@@ -44,10 +44,11 @@ export const SubjectPage = () => {
     })
   }
 
-  const handleGetSubject = () => {
-    setIsLoading(true)
-    chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, response => {
+  const handleGetSubject = async () => {
+    chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, async response => {
       if (response.success) {
+        setIsLoading(true)
+        // await new Promise(resolve => setTimeout(resolve, 3000))
         const newCourseList: Record<string, CourseItem> = {}
         for (const data of response.data) {
           const { id, name, teachers } = data
@@ -61,13 +62,14 @@ export const SubjectPage = () => {
           }
         }
         updateData('contents', prev => ({ ...prev, courseList: { ...newCourseList } }))
+        setIsLoading(false)
       } else {
         window.alert('올바른 토큰이 아닙니다. 다시 확인해주세요.')
         console.log(response)
         //토스트 메세지
       }
     })
-    setIsLoading(false)
+    console.log('eee')
   }
 
   return (
