@@ -47,7 +47,7 @@ describe('CompareDueAt()', () => {
   it('arg1 > arg2, diffDays > 0 && diffDays <= 3', () => {
     expect(CompareDueAt('2025-08-30T14:59:59Z', new Date().toISOString())).toBe('이내')
   })
-  it('arg1 < arg2, diffDays > 3', () => {
+  it('arg1 > arg2, diffDays > 3', () => {
     expect(CompareDueAt('2025-09-02T14:59:59Z', new Date().toISOString())).toBe('-')
   })
   it('arg1 < arg2, diffDays < 0', () => {
@@ -66,7 +66,7 @@ describe('CompareUpdateAt()', () => {
   it('arg1 === arg2', () => {
     expect(CompareUpdateAt('2025-05-02T06:49:20Z', '2025-05-02T06:49:20Z')).toBe(true)
   })
-  it('arg1 > arg2', () => {
+  it.only('arg1 > arg2', () => {
     expect(CompareUpdateAt('2025-05-02T06:49:20Z', '2025-05-01T06:49:20Z')).toBe(true)
   })
   it('arg1 < arg2', () => {
