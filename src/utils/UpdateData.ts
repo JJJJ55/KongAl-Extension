@@ -38,8 +38,17 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
   const newReportList: Record<string, Record<string, IssueItem>> = {}
   const newNoti: Record<string, Noti> = {}
   const notificationList: NotificationItem[] = []
+  const seen: Set<string> = new Set()
   console.log(itemData)
   console.log(updateAt)
+
+  const pushNotification = (title: string, msg: string) => {
+    const key = `${title}-${msg}`
+    if (!seen.has(key)) {
+      seen.add(key)
+      notificationList.push({ title, msg })
+    }
+  }
 
   for (const data of itemData) {
     const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
@@ -56,11 +65,7 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
       if (plannable.read_state !== 'read') {
         newNoti[course_id].isBoard = newNoti[course_id].isBoard! + 1
         if (CompareUpdateAt(plannable.created_at, updateAt)) {
-          console.log('알림예정')
-          notificationList.push({
-            title: contents?.courseList[course_id]?.title || '콩알',
-            msg: '새로운 공지가 있어요!',
-          })
+          pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 공지가 있어요!')
         }
       }
     } else {
@@ -80,33 +85,20 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
       if (
         !newReportList[course_id][plannable_id].isOk &&
         !newReportList[course_id][plannable_id].isChange &&
-        ChangeDutAt(plannable_date) !== '마감'
+        ChangeDutAt(plannable_date) !== '마 감'
       ) {
         newNoti[course_id].isReport = newNoti[course_id].isReport! + 1
         if (updateAt === null) {
-          notificationList.push({
-            title: contents?.courseList[course_id]?.title || '콩알',
-            msg: '새로운 과제가 있어요!',
-          })
+          pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 과제가 있어요!')
         } else {
-          if (CompareUpdateAt(plannable.created_at, updateAt)) {
-            notificationList.push({
-              title: contents?.courseList[course_id]?.title || '콩알',
-              msg: '새로운 과제가 있어요!',
-            })
-          }
           const type = CompareDueAt(plannable_date, updateAt)
           console.log('과제 결과', type, newReportList[course_id][plannable_id])
           if (type === '오늘') {
-            notificationList.push({
-              title: contents?.courseList[course_id]?.title || '콩알',
-              msg: '오늘 마감인 과제가 있어요!',
-            })
+            pushNotification(contents?.courseList[course_id]?.title || '콩알', '오늘 마감인 과제가 있어요!')
           } else if (type === '이내') {
-            notificationList.push({
-              title: contents?.courseList[course_id]?.title || '콩알',
-              msg: '곧 마감되는 과제가 있어요!',
-            })
+            pushNotification(contents?.courseList[course_id]?.title || '콩알', '곧 마감되는 과제가 있어요!')
+          } else if (CompareUpdateAt(plannable.created_at, updateAt)) {
+            pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 과제가 있어요!')
           }
         }
       }
