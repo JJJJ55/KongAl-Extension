@@ -1,4 +1,13 @@
-import type { Contents, CourseItem, IssueItem, Noti, NotificationItem, PlayItem, StorageData } from '@/types'
+import type {
+  Contents,
+  CourseItem,
+  DetailItem,
+  IssueItem,
+  Noti,
+  NotificationItem,
+  PlayItem,
+  StorageData,
+} from '@/types'
 import { ChangeDutAt, CompareDueAt, CompareUpdateAt } from './FormatDate'
 
 type UpdateDataProps = {
@@ -10,7 +19,7 @@ type UpdateDataProps = {
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
 }
 
-const Item = {
+const DetailItem: DetailItem = {
   PlayList: {},
   BoardList: {},
   ReportList: {},
@@ -27,6 +36,7 @@ export const UpdateSubject = ({ itemData, updateFn }: UpdateDataProps) => {
       isReport: 0,
       isPlay: 0,
       isBoard: 0,
+      updateAt: null,
     }
   }
   updateFn('contents', prev => ({ ...prev, courseList: { ...newCourseList } }))
@@ -112,7 +122,7 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
   updateFn('contents', prev => {
     const newCourseDetail = { ...prev.courseDetail }
     for (const courseId in newBoardList) {
-      const currentDetail = newCourseDetail[courseId] || Item
+      const currentDetail = newCourseDetail[courseId] || DetailItem
       newCourseDetail[courseId] = {
         ...currentDetail,
         BoardList: {
@@ -123,7 +133,7 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
     }
 
     for (const courseId in newReportList) {
-      const currentDetail = newCourseDetail[courseId] || Item
+      const currentDetail = newCourseDetail[courseId] || DetailItem
       newCourseDetail[courseId] = {
         ...currentDetail,
         ReportList: {
@@ -154,7 +164,9 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
 
 export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps) => {
   const newPlayList: Record<string, Record<string, PlayItem>> = {}
-  const currentDetail = contents!.courseDetail[id!] || Item
+  const currentDetail = contents!.courseDetail[id!] || DetailItem
+
+  const currentList = contents!.courseList[id!]
 
   for (const data of itemData) {
     const { position } = data
@@ -178,6 +190,7 @@ export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps
   }
   updateFn('contents', prev => {
     const newCourseDetail = { ...prev.courseDetail }
+    const newCourseList = { ...prev.courseList }
     newCourseDetail[id!] = {
       ...currentDetail,
       PlayList: {
@@ -185,6 +198,11 @@ export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps
       },
     }
 
-    return { ...prev, courseDetail: newCourseDetail }
+    newCourseList[id!] = {
+      ...currentList,
+      updateAt: new Date().toISOString(),
+    }
+
+    return { ...prev, courseDetail: newCourseDetail, courseList: newCourseList }
   })
 }
