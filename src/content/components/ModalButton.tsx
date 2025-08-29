@@ -57,6 +57,8 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
               toast.error('이슈 업데이트에 실패했어요.', { icon: false })
             }
           })
+          // 여기에는 과목리스트의 updateAt 값을 보고 주차학습 부분별 업데이트 진행
+          // 데이터는 업데이트하고 한꺼번에 zustand에 넣으면 좋겠는데..
         } else {
           toast.error('과목 업데이트에 실패했어요.', { icon: false })
         }
