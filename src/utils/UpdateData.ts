@@ -19,7 +19,7 @@ type UpdateDataProps = {
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
 }
 
-const DetailItem: DetailItem = {
+const Detail: DetailItem = {
   PlayList: {},
   BoardList: {},
   ReportList: {},
@@ -129,7 +129,7 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
   updateFn('contents', prev => {
     const newCourseDetail = { ...prev.courseDetail }
     for (const courseId in newBoardList) {
-      const currentDetail = newCourseDetail[courseId] || DetailItem
+      const currentDetail = newCourseDetail[courseId] || Detail
       newCourseDetail[courseId] = {
         ...currentDetail,
         BoardList: {
@@ -140,7 +140,7 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
     }
 
     for (const courseId in newReportList) {
-      const currentDetail = newCourseDetail[courseId] || DetailItem
+      const currentDetail = newCourseDetail[courseId] || Detail
       newCourseDetail[courseId] = {
         ...currentDetail,
         ReportList: {
@@ -169,12 +169,9 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
   updateFn('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
 }
 
-export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps) => {
+export const UpdatePlay = ({ itemData, id, updateFn }: UpdateDataProps) => {
   // 학습 업데이트 (단일)
   const newPlayList: Record<string, Record<string, PlayItem>> = {}
-  const currentDetail = contents!.courseDetail[id!] || DetailItem
-
-  const currentList = contents!.courseList
 
   for (const data of itemData) {
     const { position } = data
@@ -197,20 +194,24 @@ export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps
     }
   }
   updateFn('contents', prev => {
-    const newCourseDetail = { ...prev.courseDetail }
+    const currentDetail = prev.courseDetail[id!] ?? Detail
     const newCourseList = { ...prev.courseList }
-    newCourseDetail[id!] = {
-      ...currentDetail,
-      PlayList: {
-        ...newPlayList,
-      },
-    }
-
     newCourseList[id!] = {
       ...prev.courseList[id!],
       updateAt: new Date().toISOString(),
     }
-
-    return { ...prev, courseDetail: newCourseDetail, courseList: newCourseList }
+    return {
+      ...prev,
+      courseList: newCourseList,
+      courseDetail: {
+        ...prev.courseDetail,
+        [id!]: {
+          ...currentDetail, // 기존 BoardList/ReportList 보존
+          PlayList: {
+            ...newPlayList,
+          },
+        },
+      },
+    }
   })
 }

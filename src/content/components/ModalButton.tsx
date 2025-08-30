@@ -13,7 +13,7 @@ const CloseOverlay = () => (
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     transition={{ duration: 0.2 }}
-    className="absolute inset-0 bg-opacity-10 rounded-2xl bg-black/20 backdrop-blur-xs"
+    className="bg-opacity-10 absolute inset-0 rounded-2xl bg-black/20 backdrop-blur-xs"
   >
     <div className="absolute inset-0 flex items-center justify-center text-white">
       <X size={24} />
@@ -59,10 +59,19 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
             }
           })
           for (const id of ids) {
-            if (contents.courseList[id].updateAt === null || CheckPlayUpdate(contents.courseList[id].updateAt)) {
+            if (
+              contents.courseList[id] === undefined ||
+              contents.courseList[id].updateAt === null ||
+              CheckPlayUpdate(contents.courseList[id].updateAt)
+            ) {
               chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
                 if (response.success) {
                   UpdatePlay({ itemData: response.data, contents, id, updateFn: updateData })
+                  //근데 여기서는 새로운 과목이 생기는건 문제 없는데 과목이 삭제된 경우에 삭제가 안됨 => detail 안 없어지는거와 같은 문제
+                  //근데 생각해보니까 이건 자동 패칭이니까 업데이트할때마다 그냥 detail와 list를 초기화하면 되잖아?
+                  //를 하기에는 위에 주차학습 업데이트할 때 이전 데이터 필요하고 알림 문제가 발생함 ㅋㅋㅋㅋ
+                  //그러면 과목 리스트는 항상 최신판이니까, 그냥 덮어쓰되 마지막에 필터링하면 될 것 같은데? 그러면 과목 리스트에 있는건
+                  //그대로 저장되고 없는건 자연스레 필터링 되니깐?
                 }
               })
             }

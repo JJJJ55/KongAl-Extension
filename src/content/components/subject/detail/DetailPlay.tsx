@@ -3,9 +3,11 @@ import { PlayCard } from './PlayCard'
 import { useStoragestore } from '@/store/useStorageStore'
 import { NotFound } from '../NotFound'
 import { useEffect } from 'react'
+import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
+import { UpdatePlay } from '@/utils/UpdateData'
 
 export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
-  const { contents } = useStoragestore()
+  const { contents, updateData } = useStoragestore()
 
   const weeks = Array.from({ length: 15 }, (_, i) => String(i + 1))
   const playList = contents.courseDetail[courseId]?.PlayList || {}
@@ -16,10 +18,20 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
 
   useEffect(() => {
     console.log('학습주차')
+    if (contents.courseList[courseId].updateAt === null || CheckPlayUpdate(contents.courseList[courseId].updateAt)) {
+      console.log('학습 업데이트')
+      chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id: courseId }, response => {
+        if (response.success) {
+          UpdatePlay({ itemData: response.data, contents, id: courseId, updateFn: updateData })
+        }
+      })
+    } else {
+      console.log('학습 업데이트 안함')
+    }
   }, [])
 
   return (
-    <div className="flex flex-col items-center flex-1 gap-3 py-3 overflow-auto scrollbar-hidden">
+    <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">
       {Object.keys(playList).length ? (
         weeks.map(week => {
           const weekData = playList[week]

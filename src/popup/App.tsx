@@ -40,7 +40,6 @@ export default function App() {
                 }
               })
             }
-            // 여기는 과목 전체 업데이트 (초기에는 upateAt이 다 null 이니까)
           } else {
             toast.error('과목 업데이트에 실패했어요.', { icon: false })
           }
