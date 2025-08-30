@@ -1,6 +1,7 @@
 import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
-import { UpdateIssue, UpdateSubject } from '@/utils/UpdateData'
+import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
+import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useEffect } from 'react'
@@ -41,7 +42,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
       console.log('정보가져온당')
       chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
         if (subjectRes.success) {
-          const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
+          const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
           chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
             if (issueRes.success) {
               UpdateIssue({
@@ -57,6 +58,15 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
               toast.error('이슈 업데이트에 실패했어요.', { icon: false })
             }
           })
+          for (const id of ids) {
+            if (contents.courseList[id].updateAt === null || CheckPlayUpdate(contents.courseList[id].updateAt)) {
+              chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
+                if (response.success) {
+                  UpdatePlay({ itemData: response.data, contents, id, updateFn: updateData })
+                }
+              })
+            }
+          }
           // 여기에는 과목리스트의 updateAt 값을 보고 주차학습 부분별 업데이트 진행
           // 데이터는 업데이트하고 한꺼번에 zustand에 넣으면 좋겠는데..
         } else {

@@ -2,6 +2,7 @@ import { LineText, Text } from '@/components'
 import { PlayCard } from './PlayCard'
 import { useStoragestore } from '@/store/useStorageStore'
 import { NotFound } from '../NotFound'
+import { useEffect } from 'react'
 
 export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
   const { contents } = useStoragestore()
@@ -12,6 +13,10 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
   const handleLink = () => {
     window.location.href = `https://knulms.kongju.ac.kr/courses/${courseId}/external_tools/62`
   }
+
+  useEffect(() => {
+    console.log('학습주차')
+  }, [])
 
   return (
     <div className="flex flex-col items-center flex-1 gap-3 py-3 overflow-auto scrollbar-hidden">

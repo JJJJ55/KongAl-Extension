@@ -2,7 +2,7 @@ import '@/styles/index.css'
 import { PopupNav, TokenLoading, TopContent } from './components'
 import { useState } from 'react'
 import { useStoragestore } from '@/store/useStorageStore'
-import { UpdateIssue, UpdateSubject } from '@/utils/UpdateData'
+import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
 import { ToastComponent } from '@/content/components/ToastComponent'
 
@@ -23,7 +23,7 @@ export default function App() {
         const info = response.data.name.match(regex)
         chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token }, subjectRes => {
           if (subjectRes.success) {
-            const ids = UpdateSubject({ itemData: subjectRes.data, updateFn: updateData })
+            const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
             console.log('목록 : ', ids)
             chrome.runtime.sendMessage({ type: 'USER_ISSUE', token, ids }, issueRes => {
               if (issueRes.success) {
@@ -33,6 +33,13 @@ export default function App() {
                 toast.error('이슈 업데이트에 실패했어요.', { icon: false })
               }
             })
+            for (const id of ids) {
+              chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
+                if (response.success) {
+                  UpdatePlay({ itemData: response.data, contents, id, updateFn: updateData })
+                }
+              })
+            }
             // 여기는 과목 전체 업데이트 (초기에는 upateAt이 다 null 이니까)
           } else {
             toast.error('과목 업데이트에 실패했어요.', { icon: false })

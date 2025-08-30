@@ -12,7 +12,7 @@ import { ChangeDutAt, CompareDueAt, CompareUpdateAt } from './FormatDate'
 
 type UpdateDataProps = {
   itemData: any
-  contents?: Contents
+  contents: Contents
   id?: string
   updateAt?: string | null
   isBeep?: boolean
@@ -25,18 +25,25 @@ const DetailItem: DetailItem = {
   ReportList: {},
 }
 
-export const UpdateSubject = ({ itemData, updateFn }: UpdateDataProps) => {
+export const UpdateSubject = ({ contents, itemData, updateFn }: UpdateDataProps) => {
   console.log(itemData)
+  const currentList = contents.courseList
   const newCourseList: Record<string, CourseItem> = {}
   for (const data of itemData) {
     const { id, name, teachers } = data
-    newCourseList[id] = {
-      title: name,
-      teacher: teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
-      isReport: 0,
-      isPlay: 0,
-      isBoard: 0,
-      updateAt: null,
+    if (currentList[id] !== undefined) {
+      console.log('1', currentList[id])
+      newCourseList[id] = { ...currentList[id] }
+    } else {
+      console.log('2', currentList[id])
+      newCourseList[id] = {
+        title: name,
+        teacher: teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
+        isReport: 0,
+        isPlay: 0,
+        isBoard: 0,
+        updateAt: null,
+      }
     }
   }
   updateFn('contents', prev => ({ ...prev, courseList: { ...newCourseList } }))
@@ -163,10 +170,11 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
 }
 
 export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps) => {
+  // 학습 업데이트 (단일)
   const newPlayList: Record<string, Record<string, PlayItem>> = {}
   const currentDetail = contents!.courseDetail[id!] || DetailItem
 
-  const currentList = contents!.courseList[id!]
+  const currentList = contents!.courseList
 
   for (const data of itemData) {
     const { position } = data
@@ -199,7 +207,7 @@ export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps
     }
 
     newCourseList[id!] = {
-      ...currentList,
+      ...prev.courseList[id!],
       updateAt: new Date().toISOString(),
     }
 
