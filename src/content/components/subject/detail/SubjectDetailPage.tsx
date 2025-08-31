@@ -37,7 +37,6 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
       if (response.success) {
         UpdatePlay({
           itemData: response.data,
-          isBeep: system.notiBeep,
           contents,
           id,
           updateAt: contents.courseList[id].updateAt,

@@ -25,6 +25,17 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
   const { system, contents, settings, info, updateData } = useStoragestore()
   const { shouldRefresh } = useRefreshCheck()
 
+  type SendMessageProps = {
+    success: boolean
+    data: any
+  }
+
+  const sendMessageAsync = (message: any): Promise<SendMessageProps> => {
+    return new Promise<SendMessageProps>(resolve => {
+      chrome.runtime.sendMessage(message, resolve)
+    })
+  }
+
   const handleModalOpen = () => {
     if (info.noti) toast.success('학습, 공지, 과제 알림이 있어요!', { icon: false })
     if (!isOpen && info.noti) {
@@ -34,54 +45,97 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
     onClick()
   }
 
+  const UpdateSubjectData = async () => {
+    const subjectRes = await sendMessageAsync({ type: 'USER_SUBJECT', token: settings.siteToken })
+    if (!subjectRes.success) {
+      toast.error('과목 업데이트에 실패했어요.', { icon: false })
+      return
+    }
+
+    const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
+    console.log('목록 : ', ids)
+
+    const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token: settings.siteToken, ids })
+    if (issueRes.success) {
+      UpdateIssue({
+        isBeep: system.notiBeep,
+        contents,
+        itemData: issueRes.data,
+        updateAt: settings.updateAt,
+        updateFn: updateData,
+      })
+      toast.success('정보가 업데이트 됐어요!', { icon: false })
+    } else {
+      toast.error('이슈 업데이트에 실패했어요.', { icon: false })
+    }
+
+    // 순차적으로 UpdatePlay 실행
+    for (const id of ids) {
+      const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id })
+      if (res.success) {
+        UpdatePlay({
+          itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+          isBeep: system.notiBeep,
+          contents,
+          id,
+          updateAt: contents.courseList[id]?.updateAt,
+          updateFn: updateData,
+        })
+      }
+    }
+  }
+
   useEffect(() => {
     console.log('업데이트 체크')
     console.log(shouldRefresh)
 
     if (shouldRefresh) {
       console.log('정보가져온당')
-      chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
-        if (subjectRes.success) {
-          const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
-          chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
-            if (issueRes.success) {
-              UpdateIssue({
-                isBeep: system.notiBeep,
-                contents,
-                itemData: issueRes.data,
-                updateAt: settings.updateAt,
-                updateFn: updateData,
-              })
-              toast.success('정보가 업데이트 됐어요!', { icon: false })
-            } else {
-              toast.error('이슈 업데이트에 실패했어요.', { icon: false })
-            }
-          })
-          for (const id of ids) {
-            if (
-              contents.courseList[id] === undefined ||
-              contents.courseList[id].updateAt === null ||
-              CheckPlayUpdate(contents.courseList[id].updateAt)
-            ) {
-              chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
-                if (response.success) {
-                  UpdatePlay({
-                    itemData: response.data,
-                    isBeep: system.notiBeep,
-                    contents,
-                    id,
-                    updateAt: contents.courseList[id].updateAt,
-                    updateFn: updateData,
-                  })
-                }
-              })
-            }
-          }
-          // newUpdateList({ ids, updateFn: updateData })
-        } else {
-          toast.error('과목 업데이트에 실패했어요.', { icon: false })
-        }
-      })
+
+      UpdateSubjectData()
+
+      // chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
+      //   if (subjectRes.success) {
+      //     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
+      //     chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
+      //       if (issueRes.success) {
+      //         UpdateIssue({
+      //           isBeep: system.notiBeep,
+      //           contents,
+      //           itemData: issueRes.data,
+      //           updateAt: settings.updateAt,
+      //           updateFn: updateData,
+      //         })
+      //         toast.success('정보가 업데이트 됐어요!', { icon: false })
+      //       } else {
+      //         toast.error('이슈 업데이트에 실패했어요.', { icon: false })
+      //       }
+      //     })
+      //     for (const id of ids) {
+      //       if (
+      //         contents.courseList[id] === undefined ||
+      //         contents.courseList[id].updateAt === null ||
+      //         CheckPlayUpdate(contents.courseList[id].updateAt)
+      //       ) {
+      //         chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
+      //           if (response.success) {
+      //             UpdatePlay({
+      //               itemData: response.data,
+      //               isBeep: system.notiBeep,
+      //               contents,
+      //               id,
+      //               updateAt: contents.courseList[id]?.updateAt,
+      //               updateFn: updateData,
+      //             })
+      //           }
+      //         })
+      //       }
+      //     }
+      //     // newUpdateList({ ids, updateFn: updateData })
+      //   } else {
+      //     toast.error('과목 업데이트에 실패했어요.', { icon: false })
+      //   }
+      // })
 
       // console.log('업데이트 시작')
       // chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {

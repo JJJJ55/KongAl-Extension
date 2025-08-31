@@ -202,7 +202,7 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
         title,
         isComplete: completed,
         isAttendance: null,
-        dueAt: null,
+        dueAt: d.content_data.due_at,
       }
       if (content_type === 'attendance_item') {
         const { use_attendance, omit_progress } = d.content_data
@@ -212,7 +212,8 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
             //출석 또는 결석은 알림을 안울림
             if (ChangeDutAt(d.content_data.due_at) !== '마 감') {
               newNoti[id!].isPlay = newNoti[id!].isPlay! + 1
-              if (updateAt === null) {
+              if (isBeep === undefined) continue
+              if (updateAt === null || updateAt === undefined) {
                 pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차학습이 있어요!')
               } else {
                 // const type = CompareDueAt(d.content_data.due_at, updateAt)
@@ -229,9 +230,11 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
           }
         }
       }
-      newPlayList[position][module_item_id].dueAt = d.content_data.due_at
     }
   }
+
+  console.log('넣을 것', newPlayList)
+  console.log('들어온 id', id)
 
   if (notificationList.length > 0) {
     updateFn('info', prev => ({ ...prev, noti: true }))
@@ -239,17 +242,20 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
   }
 
   updateFn('contents', prev => {
-    const currentDetail = prev.courseDetail[id!] ?? Detail
+    const currentDetail = prev.courseDetail[id!] || Detail
     const newCourseList = { ...prev.courseList }
     newCourseList[id!] = {
       ...prev.courseList[id!],
-      updateAt: new Date().toISOString(),
       ...newNoti[id!],
+      updateAt: new Date().toISOString(),
     }
+
+    console.log('원래 있는 것', newCourseList)
+    console.log('업뎃', newCourseList[id!])
 
     return {
       ...prev,
-      courseList: newCourseList,
+      courseList: { ...newCourseList },
       courseDetail: {
         ...prev.courseDetail,
         [id!]: {

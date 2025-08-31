@@ -5,9 +5,10 @@ import { NotFound } from '../NotFound'
 import { useEffect } from 'react'
 import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
 import { UpdatePlay } from '@/utils/UpdateData'
+import { toast } from 'react-toastify'
 
 export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
-  const { contents, updateData } = useStoragestore()
+  const { system, contents, updateData } = useStoragestore()
 
   const weeks = Array.from({ length: 15 }, (_, i) => String(i + 1))
   const playList = contents.courseDetail[courseId]?.PlayList || {}
@@ -22,7 +23,15 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
       console.log('학습 업데이트')
       chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id: courseId }, response => {
         if (response.success) {
-          UpdatePlay({ itemData: response.data, contents, id: courseId, updateFn: updateData })
+          // 비프 제외하여 알림 x
+          UpdatePlay({
+            itemData: response.data,
+            contents,
+            id: courseId,
+            updateAt: contents.courseList[courseId].updateAt,
+            updateFn: updateData,
+          })
+          toast.success('주차 학습이 업데이트 됐어요!', { icon: false })
         }
       })
     } else {
