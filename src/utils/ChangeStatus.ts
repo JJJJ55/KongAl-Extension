@@ -59,7 +59,7 @@ export const ChangeReportStatus = ({ courseId, itemId, isFlag, updateFn }: Chang
           },
         },
       }
-      if (ChangeDutAt(ReportInfo.dueAt) !== '마감') {
+      if (ChangeDutAt(ReportInfo.dueAt) !== '마 감') {
         mergedCourseList[courseId] = {
           ...mergedCourseList[courseId],
           isReport: mergedCourseList[courseId].isReport + 1,
@@ -77,7 +77,7 @@ export const ChangeReportStatus = ({ courseId, itemId, isFlag, updateFn }: Chang
           },
         },
       }
-      if (ChangeDutAt(ReportInfo.dueAt) !== '마감') {
+      if (ChangeDutAt(ReportInfo.dueAt) !== '마 감') {
         mergedCourseList[courseId] = {
           ...mergedCourseList[courseId],
           isReport: mergedCourseList[courseId].isReport - 1,
