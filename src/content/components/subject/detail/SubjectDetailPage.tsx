@@ -31,11 +31,18 @@ const modalVariants: Variants = {
 export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem] | null; onClick: () => void }) => {
   const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('play')
 
-  const { contents, updateData } = useStoragestore()
+  const { system, contents, updateData } = useStoragestore()
   const handleGetPlay = (id: string) => {
     chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
       if (response.success) {
-        UpdatePlay({ itemData: response.data, contents, id, updateFn: updateData })
+        UpdatePlay({
+          itemData: response.data,
+          isBeep: system.notiBeep,
+          contents,
+          id,
+          updateAt: contents.courseList[id].updateAt,
+          updateFn: updateData,
+        })
         toast.success('학습 정보를 가져왔어요!', { icon: false })
       } else {
         toast.error('학습 정보 업데이트를 실패했어요.', { icon: false })
@@ -62,7 +69,7 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
       transition={{ duration: 0.3 }}
       className="bg-bgColor dark:bg-dark fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm transition-colors duration-500"
     >
-      <main className="flex flex-col h-full">
+      <main className="flex h-full flex-col">
         <DetailTopNav
           title={data![1].title}
           teacher={data![1].teacher}

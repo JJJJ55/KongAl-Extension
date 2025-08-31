@@ -1,6 +1,8 @@
 import type {
   Contents,
+  Course,
   CourseItem,
+  Detail,
   DetailItem,
   IssueItem,
   Noti,
@@ -16,6 +18,11 @@ type UpdateDataProps = {
   id?: string
   updateAt?: string | null
   isBeep?: boolean
+  updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
+}
+
+type NewUpdateProps = {
+  ids: string[]
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
 }
 
@@ -108,7 +115,8 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
         if (updateAt === null) {
           pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 과제가 있어요!')
         } else {
-          const type = CompareDueAt(plannable_date, updateAt)
+          // const type = CompareDueAt(plannable_date, updateAt)
+          const type = CompareDueAt(plannable_date, new Date().toISOString())
           console.log('과제 결과', type, newReportList[course_id][plannable_id])
           if (type === '오늘') {
             pushNotification(contents?.courseList[course_id]?.title || '콩알', '오늘 마감인 과제가 있어요!')
@@ -169,10 +177,22 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
   updateFn('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
 }
 
-export const UpdatePlay = ({ itemData, id, updateFn }: UpdateDataProps) => {
+export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn }: UpdateDataProps) => {
   // 학습 업데이트 (단일)
   const newPlayList: Record<string, Record<string, PlayItem>> = {}
+  const newNoti: Record<string, Noti> = {}
+  const notificationList: NotificationItem[] = []
+  const seen: Set<string> = new Set()
 
+  const pushNotification = (title: string, msg: string) => {
+    const key = `${title}-${msg}`
+    if (!seen.has(key)) {
+      seen.add(key)
+      notificationList.push({ title, msg })
+    }
+  }
+
+  if (!newNoti[id!]) newNoti[id!] = { isPlay: 0 }
   for (const data of itemData) {
     const { position } = data
     for (const d of data.module_items) {
@@ -188,18 +208,45 @@ export const UpdatePlay = ({ itemData, id, updateFn }: UpdateDataProps) => {
         const { use_attendance, omit_progress } = d.content_data
         if (use_attendance === true && omit_progress === false) {
           newPlayList[position][module_item_id].isAttendance = d.attendance_status
+          if (d.attendance_status !== 'attendance' || d.attendance_status !== 'absent') {
+            //출석 또는 결석은 알림을 안울림
+            if (ChangeDutAt(d.content_data.due_at) !== '마 감') {
+              newNoti[id!].isPlay = newNoti[id!].isPlay! + 1
+              if (updateAt === null) {
+                pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차학습이 있어요!')
+              } else {
+                // const type = CompareDueAt(d.content_data.due_at, updateAt)
+                const type = CompareDueAt('2025-09-02T12:37:05.515Z', new Date().toISOString())
+                if (type === '오늘') {
+                  pushNotification(contents?.courseList[id!]?.title || '콩알', '오늘 마감인 학습이 있어요!')
+                } else if (type === '이내') {
+                  pushNotification(contents?.courseList[id!]?.title || '콩알', '곧 마감되는 학습이 있어요!')
+                } else if (CompareUpdateAt(d.content_data.created_at, updateAt)) {
+                  pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차1학습이 있어요!')
+                }
+              }
+            }
+          }
         }
       }
       newPlayList[position][module_item_id].dueAt = d.content_data.due_at
     }
   }
+
+  if (notificationList.length > 0) {
+    updateFn('info', prev => ({ ...prev, noti: true }))
+    chrome.runtime.sendMessage({ type: 'NOTI', beep: isBeep, notification: notificationList })
+  }
+
   updateFn('contents', prev => {
     const currentDetail = prev.courseDetail[id!] ?? Detail
     const newCourseList = { ...prev.courseList }
     newCourseList[id!] = {
       ...prev.courseList[id!],
       updateAt: new Date().toISOString(),
+      ...newNoti[id!],
     }
+
     return {
       ...prev,
       courseList: newCourseList,
@@ -213,5 +260,23 @@ export const UpdatePlay = ({ itemData, id, updateFn }: UpdateDataProps) => {
         },
       },
     }
+  })
+}
+
+export const newUpdateList = ({ ids, updateFn }: NewUpdateProps) => {
+  console.log('중복 제거')
+  updateFn('contents', prev => {
+    const currentList = prev.courseList
+    const currentDetail = prev.courseDetail
+
+    const newCourseList: Course = {}
+    const newCourseDetail: Detail = {}
+
+    ids.forEach((id, _) => {
+      newCourseList[id] = currentList[id]
+      newCourseDetail[id] = currentDetail[id]
+    })
+
+    return { ...prev, courseList: newCourseList, courseDetail: newCourseDetail }
   })
 }

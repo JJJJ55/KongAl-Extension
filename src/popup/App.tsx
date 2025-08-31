@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 import { ToastComponent } from '@/content/components/ToastComponent'
 
 export default function App() {
-  const { contents, settings, info, updateData } = useStoragestore()
+  const { system, contents, settings, info, updateData } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleAddToken = async (token: string | null) => {
@@ -27,7 +27,13 @@ export default function App() {
             console.log('목록 : ', ids)
             chrome.runtime.sendMessage({ type: 'USER_ISSUE', token, ids }, issueRes => {
               if (issueRes.success) {
-                UpdateIssue({ contents, itemData: issueRes.data, updateAt: settings.updateAt, updateFn: updateData })
+                UpdateIssue({
+                  isBeep: system.notiBeep,
+                  contents,
+                  itemData: issueRes.data,
+                  updateAt: settings.updateAt,
+                  updateFn: updateData,
+                })
                 toast.success('정보가 업데이트 됐어요!', { icon: false })
               } else {
                 toast.error('이슈 업데이트에 실패했어요.', { icon: false })
@@ -36,7 +42,14 @@ export default function App() {
             for (const id of ids) {
               chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
                 if (response.success) {
-                  UpdatePlay({ itemData: response.data, contents, id, updateFn: updateData })
+                  UpdatePlay({
+                    itemData: response.data,
+                    isBeep: system.notiBeep,
+                    contents,
+                    id,
+                    updateAt: contents.courseList[id].updateAt,
+                    updateFn: updateData,
+                  })
                 }
               })
             }

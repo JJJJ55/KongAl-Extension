@@ -1,7 +1,7 @@
 import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
 import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
-import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
+import { newUpdateList, UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useEffect } from 'react'
@@ -52,7 +52,6 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
                 updateAt: settings.updateAt,
                 updateFn: updateData,
               })
-              // 여기에 위 함수에서 리턴 받은 것 가지고 NOTI를 울리면 되지 않을까?
               toast.success('정보가 업데이트 됐어요!', { icon: false })
             } else {
               toast.error('이슈 업데이트에 실패했어요.', { icon: false })
@@ -66,18 +65,19 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
             ) {
               chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
                 if (response.success) {
-                  UpdatePlay({ itemData: response.data, contents, id, updateFn: updateData })
-                  //근데 여기서는 새로운 과목이 생기는건 문제 없는데 과목이 삭제된 경우에 삭제가 안됨 => detail 안 없어지는거와 같은 문제
-                  //근데 생각해보니까 이건 자동 패칭이니까 업데이트할때마다 그냥 detail와 list를 초기화하면 되잖아?
-                  //를 하기에는 위에 주차학습 업데이트할 때 이전 데이터 필요하고 알림 문제가 발생함 ㅋㅋㅋㅋ
-                  //그러면 과목 리스트는 항상 최신판이니까, 그냥 덮어쓰되 마지막에 필터링하면 될 것 같은데? 그러면 과목 리스트에 있는건
-                  //그대로 저장되고 없는건 자연스레 필터링 되니깐?
+                  UpdatePlay({
+                    itemData: response.data,
+                    isBeep: system.notiBeep,
+                    contents,
+                    id,
+                    updateAt: contents.courseList[id].updateAt,
+                    updateFn: updateData,
+                  })
                 }
               })
             }
           }
-          // 여기에는 과목리스트의 updateAt 값을 보고 주차학습 부분별 업데이트 진행
-          // 데이터는 업데이트하고 한꺼번에 zustand에 넣으면 좋겠는데..
+          // newUpdateList({ ids, updateFn: updateData })
         } else {
           toast.error('과목 업데이트에 실패했어요.', { icon: false })
         }
