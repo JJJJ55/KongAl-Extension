@@ -59,6 +59,7 @@ export type Course = {
 export type CourseItem = {
   title: string
   teacher: string
+  updateAt: string | null
   isReport: number
   isPlay: number
   isBoard: number

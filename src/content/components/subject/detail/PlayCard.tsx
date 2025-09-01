@@ -11,6 +11,7 @@ type PlayProps = {
 }
 const UnCheckIssue = () => <span className="bg-kongju rounded-2xl px-1 text-[10px] text-white">미 출 석</span>
 const CheckIssue = () => <span className="bg-knuGreen rounded-2xl px-2 text-[10px] text-white">출 석</span>
+const AbSentIssue = () => <span className="bg-kongju rounded-2xl px-2 text-[10px] text-white">결 석</span>
 
 export const PlayCard = ({ index, data, onLink }: PlayProps) => {
   return (
@@ -36,7 +37,19 @@ export const PlayCard = ({ index, data, onLink }: PlayProps) => {
           >
             {data.title}
           </Text>
-          {data.isAttendance !== null ? data.isAttendance !== 'none' ? <CheckIssue /> : <UnCheckIssue /> : ''}
+          {data.isAttendance !== null ? (
+            data.isAttendance !== 'none' ? (
+              data.isAttendance === 'attendance' ? (
+                <CheckIssue />
+              ) : (
+                <AbSentIssue />
+              )
+            ) : (
+              <UnCheckIssue />
+            )
+          ) : (
+            ''
+          )}
         </div>
         <div className="flex items-center dark:text-white">
           <TimeIcon className="dark:text-gray2 h-[16px] w-[16px]" />

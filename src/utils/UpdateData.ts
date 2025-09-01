@@ -1,45 +1,79 @@
-import type { Contents, CourseItem, IssueItem, Noti, NotificationItem, PlayItem, StorageData } from '@/types'
+import type {
+  Contents,
+  Course,
+  CourseItem,
+  Detail,
+  DetailItem,
+  IssueItem,
+  Noti,
+  NotificationItem,
+  PlayItem,
+  StorageData,
+} from '@/types'
 import { ChangeDutAt, CompareDueAt, CompareUpdateAt } from './FormatDate'
 
 type UpdateDataProps = {
   itemData: any
-  contents?: Contents
+  contents: Contents
   id?: string
+  ids?: string[]
   updateAt?: string | null
   isBeep?: boolean
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
 }
 
-const Item = {
+type NewUpdateProps = {
+  ids: string[]
+  updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
+}
+
+const courseDetailItems: DetailItem = {
   PlayList: {},
   BoardList: {},
   ReportList: {},
 }
 
-export const UpdateSubject = ({ itemData, updateFn }: UpdateDataProps) => {
+export const UpdateSubject = ({ contents, itemData, updateFn }: UpdateDataProps) => {
   console.log(itemData)
+  const currentList = contents.courseList
   const newCourseList: Record<string, CourseItem> = {}
   for (const data of itemData) {
     const { id, name, teachers } = data
-    newCourseList[id] = {
-      title: name,
-      teacher: teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
-      isReport: 0,
-      isPlay: 0,
-      isBoard: 0,
+    if (currentList[id] !== undefined) {
+      console.log('1', currentList[id])
+      newCourseList[id] = { ...currentList[id] }
+    } else {
+      console.log('2', currentList[id])
+      newCourseList[id] = {
+        title: name,
+        teacher: teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
+        isReport: 0,
+        isPlay: 0,
+        isBoard: 0,
+        updateAt: null,
+      }
     }
   }
   updateFn('contents', prev => ({ ...prev, courseList: { ...newCourseList } }))
   return Object.keys(newCourseList)
 }
 
-export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: UpdateDataProps) => {
+export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateFn }: UpdateDataProps) => {
   const newBoardList: Record<string, Record<string, IssueItem>> = {}
   const newReportList: Record<string, Record<string, IssueItem>> = {}
   const newNoti: Record<string, Noti> = {}
   const notificationList: NotificationItem[] = []
+  const seen: Set<string> = new Set()
   console.log(itemData)
   console.log(updateAt)
+
+  const pushNotification = (title: string, msg: string) => {
+    const key = `${title}-${msg}`
+    if (!seen.has(key)) {
+      seen.add(key)
+      notificationList.push({ title, msg })
+    }
+  }
 
   for (const data of itemData) {
     const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
@@ -56,11 +90,7 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
       if (plannable.read_state !== 'read') {
         newNoti[course_id].isBoard = newNoti[course_id].isBoard! + 1
         if (CompareUpdateAt(plannable.created_at, updateAt)) {
-          console.log('알림예정')
-          notificationList.push({
-            title: contents?.courseList[course_id]?.title || '콩알',
-            msg: '새로운 공지가 있어요!',
-          })
+          pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 공지가 있어요!')
         }
       }
     } else {
@@ -80,33 +110,21 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
       if (
         !newReportList[course_id][plannable_id].isOk &&
         !newReportList[course_id][plannable_id].isChange &&
-        ChangeDutAt(plannable_date) !== '마감'
+        ChangeDutAt(plannable_date) !== '마 감'
       ) {
         newNoti[course_id].isReport = newNoti[course_id].isReport! + 1
         if (updateAt === null) {
-          notificationList.push({
-            title: contents?.courseList[course_id]?.title || '콩알',
-            msg: '새로운 과제가 있어요!',
-          })
+          pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 과제가 있어요!')
         } else {
-          if (CompareUpdateAt(plannable.created_at, updateAt)) {
-            notificationList.push({
-              title: contents?.courseList[course_id]?.title || '콩알',
-              msg: '새로운 과제가 있어요!',
-            })
-          }
-          const type = CompareDueAt(plannable_date, updateAt)
+          // const type = CompareDueAt(plannable_date, updateAt)
+          const type = CompareDueAt(plannable_date, new Date().toISOString())
           console.log('과제 결과', type, newReportList[course_id][plannable_id])
           if (type === '오늘') {
-            notificationList.push({
-              title: contents?.courseList[course_id]?.title || '콩알',
-              msg: '오늘 마감인 과제가 있어요!',
-            })
+            pushNotification(contents?.courseList[course_id]?.title || '콩알', '오늘 마감인 과제가 있어요!')
           } else if (type === '이내') {
-            notificationList.push({
-              title: contents?.courseList[course_id]?.title || '콩알',
-              msg: '곧 마감되는 과제가 있어요!',
-            })
+            pushNotification(contents?.courseList[course_id]?.title || '콩알', '곧 마감되는 과제가 있어요!')
+          } else if (CompareUpdateAt(plannable.created_at, updateAt)) {
+            pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 과제가 있어요!')
           }
         }
       }
@@ -118,9 +136,34 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
   }
 
   updateFn('contents', prev => {
-    const newCourseDetail = { ...prev.courseDetail }
+    // const newCourseDetail = { ...prev.courseDetail }
+    // for (const courseId in newBoardList) {
+    //   const currentDetail = newCourseDetail[courseId] || Detail
+    //   newCourseDetail[courseId] = {
+    //     ...currentDetail,
+    //     BoardList: {
+    //       ...currentDetail.BoardList,
+    //       ...newBoardList[courseId],
+    //     },
+    //   }
+    // }
+
+    // for (const courseId in newReportList) {
+    //   const currentDetail = newCourseDetail[courseId] || Detail
+    //   newCourseDetail[courseId] = {
+    //     ...currentDetail,
+    //     ReportList: {
+    //       ...currentDetail.ReportList,
+    //       ...newReportList[courseId],
+    //     },
+    //   }
+    // }
+    const currentCourseDetail = { ...prev.courseDetail }
+    const newCourseDetail: Detail = {}
+    ids!.forEach((id, _) => (newCourseDetail[id] = courseDetailItems))
+
     for (const courseId in newBoardList) {
-      const currentDetail = newCourseDetail[courseId] || Item
+      const currentDetail = currentCourseDetail[courseId] || courseDetailItems
       newCourseDetail[courseId] = {
         ...currentDetail,
         BoardList: {
@@ -131,7 +174,7 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
     }
 
     for (const courseId in newReportList) {
-      const currentDetail = newCourseDetail[courseId] || Item
+      const currentDetail = currentCourseDetail[courseId] || courseDetailItems
       newCourseDetail[courseId] = {
         ...currentDetail,
         ReportList: {
@@ -153,17 +196,29 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
 
     return {
       ...prev,
-      courseDetail: newCourseDetail,
+      courseDetail: newCourseDetail || courseDetailItems,
       courseList: mergedCourseList,
     }
   })
   updateFn('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
 }
 
-export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps) => {
+export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn }: UpdateDataProps) => {
+  // 학습 업데이트 (단일)
   const newPlayList: Record<string, Record<string, PlayItem>> = {}
-  const currentDetail = contents!.courseDetail[id!] || Item
+  const newNoti: Record<string, Noti> = {}
+  const notificationList: NotificationItem[] = []
+  const seen: Set<string> = new Set()
 
+  const pushNotification = (title: string, msg: string) => {
+    const key = `${title}-${msg}`
+    if (!seen.has(key)) {
+      seen.add(key)
+      notificationList.push({ title, msg })
+    }
+  }
+
+  if (!newNoti[id!]) newNoti[id!] = { isPlay: 0 }
   for (const data of itemData) {
     const { position } = data
     for (const d of data.module_items) {
@@ -173,26 +228,87 @@ export const UpdatePlay = ({ itemData, contents, id, updateFn }: UpdateDataProps
         title,
         isComplete: completed,
         isAttendance: null,
-        dueAt: null,
+        dueAt: d.content_data.due_at,
       }
       if (content_type === 'attendance_item') {
         const { use_attendance, omit_progress } = d.content_data
         if (use_attendance === true && omit_progress === false) {
           newPlayList[position][module_item_id].isAttendance = d.attendance_status
+          if (d.attendance_status !== 'attendance' || d.attendance_status !== 'absent') {
+            //출석 또는 결석은 알림을 안울림
+            if (ChangeDutAt(d.content_data.due_at) !== '마 감') {
+              newNoti[id!].isPlay = newNoti[id!].isPlay! + 1
+              if (isBeep === undefined) continue
+              if (updateAt === null || updateAt === undefined) {
+                pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차학습이 있어요!')
+              } else {
+                // const type = CompareDueAt(d.content_data.due_at, updateAt)
+                const type = CompareDueAt('2025-09-02T12:37:05.515Z', new Date().toISOString())
+                if (type === '오늘') {
+                  pushNotification(contents?.courseList[id!]?.title || '콩알', '오늘 마감인 학습이 있어요!')
+                } else if (type === '이내') {
+                  pushNotification(contents?.courseList[id!]?.title || '콩알', '곧 마감되는 학습이 있어요!')
+                } else if (CompareUpdateAt(d.content_data.created_at, updateAt)) {
+                  pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차1학습이 있어요!')
+                }
+              }
+            }
+          }
         }
       }
-      newPlayList[position][module_item_id].dueAt = d.content_data.due_at
     }
   }
+
+  console.log('넣을 것', newPlayList)
+  console.log('들어온 id', id)
+
+  if (notificationList.length > 0) {
+    updateFn('info', prev => ({ ...prev, noti: true }))
+    chrome.runtime.sendMessage({ type: 'NOTI', beep: isBeep, notification: notificationList })
+  }
+
   updateFn('contents', prev => {
-    const newCourseDetail = { ...prev.courseDetail }
-    newCourseDetail[id!] = {
-      ...currentDetail,
-      PlayList: {
-        ...newPlayList,
-      },
+    const currentDetail = prev.courseDetail[id!] || courseDetailItems
+    const newCourseList = { ...prev.courseList }
+    newCourseList[id!] = {
+      ...prev.courseList[id!],
+      ...newNoti[id!],
+      updateAt: new Date().toISOString(),
     }
 
-    return { ...prev, courseDetail: newCourseDetail }
+    console.log('원래 있는 것', newCourseList)
+    console.log('업뎃', newCourseList[id!])
+
+    return {
+      ...prev,
+      courseList: { ...newCourseList },
+      courseDetail: {
+        ...prev.courseDetail,
+        [id!]: {
+          ...currentDetail, // 기존 BoardList/ReportList 보존
+          PlayList: {
+            ...newPlayList,
+          },
+        },
+      },
+    }
+  })
+}
+
+export const newUpdateList = ({ ids, updateFn }: NewUpdateProps) => {
+  console.log('중복 제거')
+  updateFn('contents', prev => {
+    const currentList = prev.courseList
+    const currentDetail = prev.courseDetail
+
+    const newCourseList: Course = {}
+    const newCourseDetail: Detail = {}
+
+    ids.forEach((id, _) => {
+      newCourseList[id] = currentList[id]
+      newCourseDetail[id] = currentDetail[id]
+    })
+
+    return { ...prev, courseList: newCourseList, courseDetail: newCourseDetail }
   })
 }
