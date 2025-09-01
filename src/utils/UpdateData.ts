@@ -16,6 +16,7 @@ type UpdateDataProps = {
   itemData: any
   contents: Contents
   id?: string
+  ids?: string[]
   updateAt?: string | null
   isBeep?: boolean
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
@@ -26,7 +27,7 @@ type NewUpdateProps = {
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
 }
 
-const Detail: DetailItem = {
+const courseDetailItems: DetailItem = {
   PlayList: {},
   BoardList: {},
   ReportList: {},
@@ -57,7 +58,7 @@ export const UpdateSubject = ({ contents, itemData, updateFn }: UpdateDataProps)
   return Object.keys(newCourseList)
 }
 
-export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: UpdateDataProps) => {
+export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateFn }: UpdateDataProps) => {
   const newBoardList: Record<string, Record<string, IssueItem>> = {}
   const newReportList: Record<string, Record<string, IssueItem>> = {}
   const newNoti: Record<string, Noti> = {}
@@ -135,9 +136,34 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
   }
 
   updateFn('contents', prev => {
-    const newCourseDetail = { ...prev.courseDetail }
+    // const newCourseDetail = { ...prev.courseDetail }
+    // for (const courseId in newBoardList) {
+    //   const currentDetail = newCourseDetail[courseId] || Detail
+    //   newCourseDetail[courseId] = {
+    //     ...currentDetail,
+    //     BoardList: {
+    //       ...currentDetail.BoardList,
+    //       ...newBoardList[courseId],
+    //     },
+    //   }
+    // }
+
+    // for (const courseId in newReportList) {
+    //   const currentDetail = newCourseDetail[courseId] || Detail
+    //   newCourseDetail[courseId] = {
+    //     ...currentDetail,
+    //     ReportList: {
+    //       ...currentDetail.ReportList,
+    //       ...newReportList[courseId],
+    //     },
+    //   }
+    // }
+    const currentCourseDetail = { ...prev.courseDetail }
+    const newCourseDetail: Detail = {}
+    ids!.forEach((id, _) => (newCourseDetail[id] = courseDetailItems))
+
     for (const courseId in newBoardList) {
-      const currentDetail = newCourseDetail[courseId] || Detail
+      const currentDetail = currentCourseDetail[courseId] || courseDetailItems
       newCourseDetail[courseId] = {
         ...currentDetail,
         BoardList: {
@@ -148,7 +174,7 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
     }
 
     for (const courseId in newReportList) {
-      const currentDetail = newCourseDetail[courseId] || Detail
+      const currentDetail = currentCourseDetail[courseId] || courseDetailItems
       newCourseDetail[courseId] = {
         ...currentDetail,
         ReportList: {
@@ -170,7 +196,7 @@ export const UpdateIssue = ({ isBeep, contents, updateAt, itemData, updateFn }: 
 
     return {
       ...prev,
-      courseDetail: newCourseDetail,
+      courseDetail: newCourseDetail || courseDetailItems,
       courseList: mergedCourseList,
     }
   })
@@ -242,7 +268,7 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
   }
 
   updateFn('contents', prev => {
-    const currentDetail = prev.courseDetail[id!] || Detail
+    const currentDetail = prev.courseDetail[id!] || courseDetailItems
     const newCourseList = { ...prev.courseList }
     newCourseList[id!] = {
       ...prev.courseList[id!],

@@ -34,14 +34,16 @@ export const SubjectPage = () => {
   }
 
   const testGetIssue = () => {
-    const ids = Object.keys(contents.courseList)
-    chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
-      if (response.success) {
-        UpdateIssue({ contents, itemData: response.data, updateAt: settings.updateAt, updateFn: updateData })
-      } else {
-        window.alert('실패')
-      }
-    })
+    // const ids = Object.keys(contents.courseList)
+    // chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
+    //   if (response.success) {
+    //     UpdateIssue({ contents, itemData: response.data, updateAt: settings.updateAt, updateFn: updateData })
+    //   } else {
+    //     window.alert('실패')
+    //   }
+    // })
+    // updateData('settings', prev => ({ ...prev, updateAt: '2025-08-27T06:21:26.861Z' }))
+    updateData('settings', prev => ({ ...prev, updateAt: '2025-08-25T06:21:26.861Z' }))
   }
 
   const handleGetSubject = async () => {

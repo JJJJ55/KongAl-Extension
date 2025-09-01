@@ -4,7 +4,7 @@ import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
 import { newUpdateList, UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { toast } from 'react-toastify'
 
 const CloseOverlay = () => (
@@ -13,7 +13,7 @@ const CloseOverlay = () => (
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     transition={{ duration: 0.2 }}
-    className="bg-opacity-10 absolute inset-0 rounded-2xl bg-black/20 backdrop-blur-xs"
+    className="absolute inset-0 bg-opacity-10 rounded-2xl bg-black/20 backdrop-blur-xs"
   >
     <div className="absolute inset-0 flex items-center justify-center text-white">
       <X size={24} />
@@ -60,6 +60,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
       UpdateIssue({
         isBeep: system.notiBeep,
         contents,
+        ids,
         itemData: issueRes.data,
         updateAt: settings.updateAt,
         updateFn: updateData,
@@ -71,25 +72,33 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
 
     // 순차적으로 UpdatePlay 실행
     for (const id of ids) {
-      const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id })
-      if (res.success) {
-        UpdatePlay({
-          itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-          isBeep: system.notiBeep,
-          contents,
-          id,
-          updateAt: contents.courseList[id]?.updateAt,
-          updateFn: updateData,
-        })
+      if (
+        contents.courseList[id] === undefined ||
+        contents.courseList[id].updateAt === null ||
+        CheckPlayUpdate(contents.courseList[id].updateAt)
+      ) {
+        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id })
+        if (res.success) {
+          UpdatePlay({
+            itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+            isBeep: system.notiBeep,
+            contents,
+            id,
+            updateAt: contents.courseList[id]?.updateAt,
+            updateFn: updateData,
+          })
+        }
       }
     }
   }
 
+  const didRun = useRef(false)
   useEffect(() => {
     console.log('업데이트 체크')
     console.log(shouldRefresh)
 
-    if (shouldRefresh) {
+    if (shouldRefresh && !didRun.current) {
+      didRun.current = true
       console.log('정보가져온당')
 
       UpdateSubjectData()

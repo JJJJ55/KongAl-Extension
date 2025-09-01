@@ -51,6 +51,7 @@ export default function App() {
       UpdateIssue({
         isBeep: system.notiBeep,
         contents,
+        ids,
         itemData: issueRes.data,
         updateAt: settings.updateAt,
         updateFn: updateData,
