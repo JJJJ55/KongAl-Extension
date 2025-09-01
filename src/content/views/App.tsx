@@ -14,7 +14,6 @@ function App() {
 
   useEffect(() => {
     if (!isInit) return
-
     const images: NodeListOf<HTMLImageElement> = document.querySelectorAll('div.fs-exclude img')
     const altTexts = Array.from(images).map(img => img.alt)
     console.log('test', altTexts)
@@ -27,7 +26,7 @@ function App() {
       console.log(document.cookie.split(';'))
       console.log('x토큰 값 : ', xToken)
     }
-  }, [isInit])
+  }, [isInit, info.fullName])
   return <CommonContainer>{settings.siteToken && settings.siteToken!.length === 64 && <Content />}</CommonContainer>
 }
 

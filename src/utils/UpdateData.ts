@@ -200,7 +200,6 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
       courseList: mergedCourseList,
     }
   })
-  updateFn('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
 }
 
 export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn }: UpdateDataProps) => {

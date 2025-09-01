@@ -13,7 +13,7 @@ const CloseOverlay = () => (
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     transition={{ duration: 0.2 }}
-    className="absolute inset-0 bg-opacity-10 rounded-2xl bg-black/20 backdrop-blur-xs"
+    className="bg-opacity-10 absolute inset-0 rounded-2xl bg-black/20 backdrop-blur-xs"
   >
     <div className="absolute inset-0 flex items-center justify-center text-white">
       <X size={24} />
@@ -65,6 +65,8 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
         updateAt: settings.updateAt,
         updateFn: updateData,
       })
+      updateData('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
+      // 바뀐 날짜 업데이트
       toast.success('정보가 업데이트 됐어요!', { icon: false })
     } else {
       toast.error('이슈 업데이트에 실패했어요.', { icon: false })
@@ -77,7 +79,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
         contents.courseList[id].updateAt === null ||
         CheckPlayUpdate(contents.courseList[id].updateAt)
       ) {
-        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id })
+        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
         if (res.success) {
           UpdatePlay({
             itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data

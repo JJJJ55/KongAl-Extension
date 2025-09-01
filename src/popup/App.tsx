@@ -1,6 +1,6 @@
 import '@/styles/index.css'
 import { PopupNav, TokenLoading, TopContent } from './components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStoragestore } from '@/store/useStorageStore'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
@@ -9,11 +9,12 @@ import { ToastComponent } from '@/content/components/ToastComponent'
 export default function App() {
   const { system, contents, settings, info, updateData } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
+  const [courseIds, setCourseIds] = useState<string[]>([])
 
   const handleAddToken = async (token: string | null) => {
-    setIsLoading(true)
+    // setIsLoading(true)
     await getInfo(token)
-    setIsLoading(false)
+    // setIsLoading(false)
   }
 
   type SendMessageProps = {
@@ -44,6 +45,7 @@ export default function App() {
     }
 
     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
+    setCourseIds(ids)
     console.log('목록 : ', ids)
 
     const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token, ids })
@@ -62,22 +64,25 @@ export default function App() {
     }
 
     // 순차적으로 UpdatePlay 실행
-    for (const id of ids) {
-      const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id })
-      if (res.success) {
-        UpdatePlay({
-          itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-          isBeep: system.notiBeep,
-          contents,
-          id,
-          updateAt: contents.courseList[id]?.updateAt,
-          updateFn: updateData,
-        })
-      }
-    }
 
-    // info, settings 업데이트
-    await updateData('settings', prev => ({ ...prev, siteToken: token }))
+    // for (const id of ids) {
+    //   const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: import.meta.env.VITE_TEST_TOKEN })
+    //   if (res.success) {
+    //     UpdatePlay({
+    //       itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+    //       isBeep: system.notiBeep,
+    //       contents,
+    //       id,
+    //       updateAt: contents.courseList[id]?.updateAt,
+    //       updateFn: updateData,
+    //     })
+    //   }
+    // }
+
+    // // info, settings 업데이트
+    await updateData('settings', prev => ({ ...prev, siteToken: token, updateAt: new Date().toISOString() }))
+    // 여기에 날짜를 업데이트 하면 이슈에서 업데이트 이전의 이슈들을 잘 챙길 수 있을까?
+    // 아래 useEffect 때문에 날짜 업데이트가 안먹어서 updateIssue 내부 마지막에서 여기로 옮기긴함
     await updateData('info', prev => ({
       ...prev,
       fullName: response.data.name,
@@ -85,6 +90,8 @@ export default function App() {
       username: info[1],
       userId: info[2],
     }))
+    // 아래는 옛날 코드
+
     // chrome.runtime.sendMessage({ type: 'USER_INFO', token: token }, response => {
     //   if (response.success) {
     //     const regex = /^([^\(]+)\(([^)]+)\)$/
@@ -139,6 +146,30 @@ export default function App() {
     //   }
     // })
   }
+
+  // useEffect(() => {
+  //   console.log('아이씨', settings.xToken)
+  //   if (settings.xToken === null || courseIds.length === 0) return
+  //   const getPlay = async () => {
+  //     for (const id of courseIds) {
+  //       const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
+  //       if (res.success) {
+  //         UpdatePlay({
+  //           itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+  //           isBeep: system.notiBeep,
+  //           contents,
+  //           id,
+  //           updateAt: contents.courseList[id]?.updateAt,
+  //           updateFn: updateData,
+  //         })
+  //       }
+  //     }
+  //   }
+  //   setIsLoading(true)
+  //   getPlay()
+  //   setIsLoading(false)
+  // }, [settings.xToken, courseIds])
+
   return (
     <div className="flex h-[350px] w-[350px] flex-col items-center justify-around">
       {isLoading ? (
