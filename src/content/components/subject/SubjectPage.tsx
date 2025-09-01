@@ -34,20 +34,23 @@ export const SubjectPage = () => {
   }
 
   const testGetIssue = () => {
-    const ids = Object.keys(contents.courseList)
-    chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
-      if (response.success) {
-        UpdateIssue({ contents, itemData: response.data, updateAt: settings.updateAt, updateFn: updateData })
-      } else {
-        window.alert('실패')
-      }
-    })
+    // const ids = Object.keys(contents.courseList)
+    // chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, response => {
+    //   if (response.success) {
+    //     UpdateIssue({ contents, itemData: response.data, updateAt: settings.updateAt, updateFn: updateData })
+    //   } else {
+    //     window.alert('실패')
+    //   }
+    // })
+    // updateData('settings', prev => ({ ...prev, updateAt: '2025-08-27T06:21:26.861Z' }))
+    updateData('settings', prev => ({ ...prev, updateAt: '2025-08-25T06:21:26.861Z' }))
   }
 
-  const handleGetSubject = () => {
-    setIsLoading(true)
-    chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, response => {
+  const handleGetSubject = async () => {
+    chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, async response => {
       if (response.success) {
+        setIsLoading(true)
+        // await new Promise(resolve => setTimeout(resolve, 3000))
         const newCourseList: Record<string, CourseItem> = {}
         for (const data of response.data) {
           const { id, name, teachers } = data
@@ -58,16 +61,40 @@ export const SubjectPage = () => {
             isReport: 0,
             isPlay: 0,
             isBoard: 0,
+            updateAt: null,
           }
         }
         updateData('contents', prev => ({ ...prev, courseList: { ...newCourseList } }))
+        setIsLoading(false)
+        // const currentList = contents.courseList
+        // const newCourseList: Record<string, CourseItem> = {}
+        // for (const data of response.data) {
+        //   const { id, name, teachers } = data
+        //   if (currentList[id] !== undefined) {
+        //     console.log('1', currentList[id])
+        //     newCourseList[id] = { ...currentList[id] }
+        //     console.log('1', newCourseList[id])
+        //   } else {
+        //     console.log('2', currentList[id])
+        //     newCourseList[id] = {
+        //       title: name,
+        //       teacher:
+        //         teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
+        //       isReport: 0,
+        //       isPlay: 0,
+        //       isBoard: 0,
+        //       updateAt: null,
+        //     }
+        //     console.log('2', newCourseList[id])
+        //   }
+        // }
       } else {
         window.alert('올바른 토큰이 아닙니다. 다시 확인해주세요.')
         console.log(response)
         //토스트 메세지
       }
     })
-    setIsLoading(false)
+    console.log('eee')
   }
 
   return (
