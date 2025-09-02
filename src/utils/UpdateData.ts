@@ -241,14 +241,13 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
               if (updateAt === null || updateAt === undefined) {
                 pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차학습이 있어요!')
               } else {
-                // const type = CompareDueAt(d.content_data.due_at, updateAt)
-                const type = CompareDueAt('2025-09-02T12:37:05.515Z', new Date().toISOString())
+                const type = CompareDueAt(d.content_data.due_at, updateAt)
                 if (type === '오늘') {
                   pushNotification(contents?.courseList[id!]?.title || '콩알', '오늘 마감인 학습이 있어요!')
                 } else if (type === '이내') {
                   pushNotification(contents?.courseList[id!]?.title || '콩알', '곧 마감되는 학습이 있어요!')
                 } else if (CompareUpdateAt(d.content_data.created_at, updateAt)) {
-                  pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차1학습이 있어요!')
+                  pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차학습이 있어요!')
                 }
               }
             }
