@@ -65,7 +65,6 @@ export default function App() {
 
     const lmsRes = await getLmsWebInfo(response.data.name)
     if (!lmsRes.success || lmsRes.xToken === null) {
-      await resetStore()
       toast.error('LMS 로그인 정보와 토큰 사용자가 달라요.', { icon: false })
       return
     }
