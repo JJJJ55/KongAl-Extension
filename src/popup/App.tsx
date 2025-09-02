@@ -1,14 +1,15 @@
 import '@/styles/index.css'
 import { PopupNav, TokenLoading, TopContent } from './components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useStoragestore } from '@/store/useStorageStore'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
 import { ToastComponent } from '@/content/components/ToastComponent'
 
 export default function App() {
-  const { system, contents, settings, info, updateData } = useStoragestore()
+  const { system, contents, settings, info, updateData, resetStore } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
+  // const [courseIds, setCourseIds] = useState<string[]>([])
 
   const handleAddToken = async (token: string | null) => {
     setIsLoading(true)
@@ -21,9 +22,25 @@ export default function App() {
     data: any
   }
 
+  type LMSWebInfoProps = {
+    success: boolean
+    lmsUser: string
+    xToken: string
+  }
+
   const sendMessageAsync = (message: any): Promise<SendMessageProps> => {
     return new Promise<SendMessageProps>(resolve => {
       chrome.runtime.sendMessage(message, resolve)
+    })
+  }
+
+  const getLmsWebInfo = (userName: string): Promise<LMSWebInfoProps> => {
+    return new Promise<LMSWebInfoProps>(resolve => {
+      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        if (tabs[0].id) {
+          chrome.tabs.sendMessage(tabs[0].id, { type: 'GET_LMS', userName }, resolve)
+        }
+      })
     })
   }
 
@@ -37,6 +54,22 @@ export default function App() {
     const regex = /^([^\(]+)\(([^)]+)\)$/
     const info = response.data.name.match(regex)
 
+    // await updateData('settings', prev => ({ ...prev, siteToken: token, updateAt: new Date().toISOString() }))
+    // await updateData('info', prev => ({
+    //   ...prev,
+    //   fullName: response.data.name,
+    //   studentId: response.data.id,
+    //   username: info[1],
+    //   userId: info[2],
+    // }))
+
+    const lmsRes = await getLmsWebInfo(response.data.name)
+    if (!lmsRes.success || lmsRes.xToken === null) {
+      await resetStore()
+      toast.error('LMS 로그인 정보와 토큰 사용자가 달라요.', { icon: false })
+      return
+    }
+
     const subjectRes = await sendMessageAsync({ type: 'USER_SUBJECT', token })
     if (!subjectRes.success) {
       toast.error('과목 업데이트에 실패했어요.', { icon: false })
@@ -44,6 +77,7 @@ export default function App() {
     }
 
     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
+    // setCourseIds(ids)
     console.log('목록 : ', ids)
 
     const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token, ids })
@@ -62,8 +96,11 @@ export default function App() {
     }
 
     // 순차적으로 UpdatePlay 실행
+
     for (const id of ids) {
-      const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id })
+      const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: lmsRes.xToken })
+      const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
+      console.log('지연시간', delay)
       if (res.success) {
         UpdatePlay({
           itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
@@ -73,11 +110,17 @@ export default function App() {
           updateAt: contents.courseList[id]?.updateAt,
           updateFn: updateData,
         })
+        await new Promise(resolve => setTimeout(resolve, delay))
       }
     }
 
-    // info, settings 업데이트
-    await updateData('settings', prev => ({ ...prev, siteToken: token }))
+    // // info, settings 업데이트
+    await updateData('settings', prev => ({
+      ...prev,
+      siteToken: token,
+      updateAt: new Date().toISOString(),
+      xToken: lmsRes.xToken,
+    }))
     await updateData('info', prev => ({
       ...prev,
       fullName: response.data.name,
@@ -85,6 +128,8 @@ export default function App() {
       username: info[1],
       userId: info[2],
     }))
+    // 아래는 옛날 코드
+
     // chrome.runtime.sendMessage({ type: 'USER_INFO', token: token }, response => {
     //   if (response.success) {
     //     const regex = /^([^\(]+)\(([^)]+)\)$/
@@ -139,6 +184,33 @@ export default function App() {
     //   }
     // })
   }
+
+  // useEffect(() => {
+  //   console.log('아이씨', settings.xToken)
+  //   if (settings.xToken === null || courseIds.length === 0) return
+  //   const getPlay = async () => {
+  //     setIsLoading(true)
+  //     for (const id of courseIds) {
+  //       const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
+  //       console.log('지연시간', delay)
+  //       const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
+  //       if (res.success) {
+  //         UpdatePlay({
+  //           itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+  //           isBeep: system.notiBeep,
+  //           contents,
+  //           id,
+  //           updateAt: contents.courseList[id]?.updateAt,
+  //           updateFn: updateData,
+  //         })
+  //         await new Promise(resolve => setTimeout(resolve, delay))
+  //       }
+  //     }
+  //     setIsLoading(false)
+  //   }
+  //   getPlay()
+  // }, [settings.xToken, courseIds])
+
   return (
     <div className="flex h-[350px] w-[350px] flex-col items-center justify-around">
       {isLoading ? (

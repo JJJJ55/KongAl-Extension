@@ -16,16 +16,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true
   } else if (message.type === 'SUBJECT_LIST') {
     // 주차학습 불러오기
-    fetch(`${import.meta.env.VITE_XTOKEN_URL}courses/${message.id}/modules?include_detail=true`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_TEST_TOKEN}`,
-      },
-    })
-      .then(response => response.json())
-      .then(res => sendResponse({ success: true, data: res }))
-      .catch(error => sendResponse({ success: false, data: error.message }))
+    // fetch(`${import.meta.env.VITE_XTOKEN_URL}courses/${message.id}/modules?include_detail=true`, {
+    //   method: 'GET',
+    //   credentials: 'include',
+    //   headers: {
+    //     Authorization: `Bearer ${import.meta.env.VITE_TEST_TOKEN}`,
+    //   },
+    // })
+    //   .then(response => response.json())
+    //   .then(res => sendResponse({ success: true, data: res }))
+    //   .catch(error => sendResponse({ success: false, data: error.message }))
+
+    const { token, id } = message
+    getPlayList(id, token).then(result => sendResponse(result))
 
     return true
   } else if (message.type === 'NOTI') {
@@ -157,4 +160,21 @@ const getSubjectIssue = async (token: string, ids: string[]) => {
     }
   }
   return { success: true, data: IssueItems }
+}
+
+const getPlayList = async (id: string, token: string) => {
+  return await fetch(`${import.meta.env.VITE_XTOKEN_URL}courses/${id}/modules?include_detail=true`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then(response => response.json())
+    .then(result => {
+      return { success: true, data: result }
+    })
+    .catch(error => {
+      return { success: false, data: error.message }
+    })
 }

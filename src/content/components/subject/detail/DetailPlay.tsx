@@ -8,7 +8,7 @@ import { UpdatePlay } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
 
 export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
-  const { system, contents, updateData } = useStoragestore()
+  const { settings, contents, updateData } = useStoragestore()
 
   const weeks = Array.from({ length: 15 }, (_, i) => String(i + 1))
   const playList = contents.courseDetail[courseId]?.PlayList || {}
@@ -21,7 +21,7 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
     console.log('학습주차')
     if (contents.courseList[courseId].updateAt === null || CheckPlayUpdate(contents.courseList[courseId].updateAt)) {
       console.log('학습 업데이트')
-      chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id: courseId }, response => {
+      chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id: courseId, token: settings.xToken }, response => {
         if (response.success) {
           // 비프 제외하여 알림 x
           UpdatePlay({
@@ -32,6 +32,8 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
             updateFn: updateData,
           })
           toast.success('주차 학습이 업데이트 됐어요!', { icon: false })
+        } else {
+          toast.error('주차 학습 업데이트에 오류가 발생했어요.', { icon: false })
         }
       })
     } else {

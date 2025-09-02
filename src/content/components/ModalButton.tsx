@@ -65,6 +65,8 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
         updateAt: settings.updateAt,
         updateFn: updateData,
       })
+      updateData('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
+      // 바뀐 날짜 업데이트
       toast.success('정보가 업데이트 됐어요!', { icon: false })
     } else {
       toast.error('이슈 업데이트에 실패했어요.', { icon: false })
@@ -72,22 +74,39 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
 
     // 순차적으로 UpdatePlay 실행
     for (const id of ids) {
-      if (
-        contents.courseList[id] === undefined ||
-        contents.courseList[id].updateAt === null ||
-        CheckPlayUpdate(contents.courseList[id].updateAt)
-      ) {
-        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id })
-        if (res.success) {
-          UpdatePlay({
-            itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-            isBeep: system.notiBeep,
-            contents,
-            id,
-            updateAt: contents.courseList[id]?.updateAt,
-            updateFn: updateData,
-          })
-        }
+      // if (
+      //   contents.courseList[id] === undefined ||
+      //   contents.courseList[id].updateAt === null ||
+      //   CheckPlayUpdate(contents.courseList[id].updateAt)
+      // ) {
+      //   const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
+      //   console.log('지연시간', delay)
+      //   const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
+      //   if (res.success) {
+      //     UpdatePlay({
+      //       itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+      //       isBeep: system.notiBeep,
+      //       contents,
+      //       id,
+      //       updateAt: contents.courseList[id]?.updateAt,
+      //       updateFn: updateData,
+      //     })
+      //     await new Promise(resolve => setTimeout(resolve, delay))
+      //   }
+      // }
+      const delay = Math.floor(Math.random() * (1500 - 500 + 1)) + 500
+      console.log('지연시간', delay)
+      const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
+      if (res.success) {
+        UpdatePlay({
+          itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+          isBeep: system.notiBeep,
+          contents,
+          id,
+          updateAt: contents.courseList[id]?.updateAt,
+          updateFn: updateData,
+        })
+        await new Promise(resolve => setTimeout(resolve, delay))
       }
     }
   }
