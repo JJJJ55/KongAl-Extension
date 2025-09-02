@@ -9,15 +9,23 @@ import { ToastComponent } from '@/content/components/ToastComponent'
 export default function App() {
   const { system, contents, settings, info, updateData, resetStore } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
-  const [courseIds, setCourseIds] = useState<string[]>([])
+  // const [courseIds, setCourseIds] = useState<string[]>([])
 
   const handleAddToken = async (token: string | null) => {
+    setIsLoading(true)
     await getInfo(token)
+    setIsLoading(false)
   }
 
   type SendMessageProps = {
     success: boolean
     data: any
+  }
+
+  type LMSWebInfoProps = {
+    success: boolean
+    lmsUser: string
+    xToken: string
   }
 
   const sendMessageAsync = (message: any): Promise<SendMessageProps> => {
@@ -26,11 +34,11 @@ export default function App() {
     })
   }
 
-  const isCheckLmsUser = (): Promise<{ lmsUser: string }> => {
-    return new Promise<{ lmsUser: string }>(resolve => {
+  const getLmsWebInfo = (userName: string): Promise<LMSWebInfoProps> => {
+    return new Promise<LMSWebInfoProps>(resolve => {
       chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         if (tabs[0].id) {
-          chrome.tabs.sendMessage(tabs[0].id, { type: 'GET_NAME' }, resolve)
+          chrome.tabs.sendMessage(tabs[0].id, { type: 'GET_LMS', userName }, resolve)
         }
       })
     })
@@ -46,19 +54,19 @@ export default function App() {
     const regex = /^([^\(]+)\(([^)]+)\)$/
     const info = response.data.name.match(regex)
 
-    await updateData('settings', prev => ({ ...prev, siteToken: token, updateAt: new Date().toISOString() }))
-    await updateData('info', prev => ({
-      ...prev,
-      fullName: response.data.name,
-      studentId: response.data.id,
-      username: info[1],
-      userId: info[2],
-    }))
+    // await updateData('settings', prev => ({ ...prev, siteToken: token, updateAt: new Date().toISOString() }))
+    // await updateData('info', prev => ({
+    //   ...prev,
+    //   fullName: response.data.name,
+    //   studentId: response.data.id,
+    //   username: info[1],
+    //   userId: info[2],
+    // }))
 
-    const lmsRes = await isCheckLmsUser()
-    if (lmsRes.lmsUser !== response.data.name) {
+    const lmsRes = await getLmsWebInfo(response.data.name)
+    if (!lmsRes.success || lmsRes.xToken === null) {
       await resetStore()
-      toast.error('LMS 사이트의 유저 정보와 달라요.', { icon: false })
+      toast.error('LMS 로그인 정보와 토큰 사용자가 달라요.', { icon: false })
       return
     }
 
@@ -69,7 +77,7 @@ export default function App() {
     }
 
     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
-    setCourseIds(ids)
+    // setCourseIds(ids)
     console.log('목록 : ', ids)
 
     const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token, ids })
@@ -89,29 +97,37 @@ export default function App() {
 
     // 순차적으로 UpdatePlay 실행
 
-    // for (const id of ids) {
-    //   const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: import.meta.env.VITE_TEST_TOKEN })
-    //   if (res.success) {
-    //     UpdatePlay({
-    //       itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-    //       isBeep: system.notiBeep,
-    //       contents,
-    //       id,
-    //       updateAt: contents.courseList[id]?.updateAt,
-    //       updateFn: updateData,
-    //     })
-    //   }
-    // }
+    for (const id of ids) {
+      const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: lmsRes.xToken })
+      const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
+      console.log('지연시간', delay)
+      if (res.success) {
+        UpdatePlay({
+          itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+          isBeep: system.notiBeep,
+          contents,
+          id,
+          updateAt: contents.courseList[id]?.updateAt,
+          updateFn: updateData,
+        })
+        await new Promise(resolve => setTimeout(resolve, delay))
+      }
+    }
 
     // // info, settings 업데이트
-    // await updateData('settings', prev => ({ ...prev, siteToken: token, updateAt: new Date().toISOString() }))
-    // await updateData('info', prev => ({
-    //   ...prev,
-    //   fullName: response.data.name,
-    //   studentId: response.data.id,
-    //   username: info[1],
-    //   userId: info[2],
-    // }))
+    await updateData('settings', prev => ({
+      ...prev,
+      siteToken: token,
+      updateAt: new Date().toISOString(),
+      xToken: lmsRes.xToken,
+    }))
+    await updateData('info', prev => ({
+      ...prev,
+      fullName: response.data.name,
+      studentId: response.data.id,
+      username: info[1],
+      userId: info[2],
+    }))
     // 아래는 옛날 코드
 
     // chrome.runtime.sendMessage({ type: 'USER_INFO', token: token }, response => {
@@ -169,31 +185,31 @@ export default function App() {
     // })
   }
 
-  useEffect(() => {
-    console.log('아이씨', settings.xToken)
-    if (settings.xToken === null || courseIds.length === 0) return
-    const getPlay = async () => {
-      setIsLoading(true)
-      for (const id of courseIds) {
-        const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
-        console.log('지연시간', delay)
-        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
-        if (res.success) {
-          UpdatePlay({
-            itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-            isBeep: system.notiBeep,
-            contents,
-            id,
-            updateAt: contents.courseList[id]?.updateAt,
-            updateFn: updateData,
-          })
-          await new Promise(resolve => setTimeout(resolve, delay))
-        }
-      }
-      setIsLoading(false)
-    }
-    getPlay()
-  }, [settings.xToken, courseIds])
+  // useEffect(() => {
+  //   console.log('아이씨', settings.xToken)
+  //   if (settings.xToken === null || courseIds.length === 0) return
+  //   const getPlay = async () => {
+  //     setIsLoading(true)
+  //     for (const id of courseIds) {
+  //       const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
+  //       console.log('지연시간', delay)
+  //       const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
+  //       if (res.success) {
+  //         UpdatePlay({
+  //           itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+  //           isBeep: system.notiBeep,
+  //           contents,
+  //           id,
+  //           updateAt: contents.courseList[id]?.updateAt,
+  //           updateFn: updateData,
+  //         })
+  //         await new Promise(resolve => setTimeout(resolve, delay))
+  //       }
+  //     }
+  //     setIsLoading(false)
+  //   }
+  //   getPlay()
+  // }, [settings.xToken, courseIds])
 
   return (
     <div className="flex h-[350px] w-[350px] flex-col items-center justify-around">
