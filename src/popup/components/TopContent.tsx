@@ -1,4 +1,4 @@
-import { SmallButton, Text } from '@/components'
+import { BasicButton, Text } from '@/components'
 import { Guide } from '@/constants'
 import { useState } from 'react'
 
@@ -63,61 +63,32 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
                 value={value!}
                 onChange={e => setValue(e.target.value)}
               />
-              <SmallButton onClick={() => updateFn(value)} className="w-[80px]">
+              <BasicButton onClick={() => updateFn(value)} className="w-[80px]">
                 등 록
-              </SmallButton>
+              </BasicButton>
             </div>
           </>
         ) : (
           <div className="flex flex-col items-center justify-center">
             <Text className="mt-4 text-[15px] font-bold">LMS 사이트에서 로그인 후 등록할 수 있어요!</Text>
-            <a
-              className="text-14px text-knuBlue cursor-pointer font-bold"
-              href="https://knulms.kongju.ac.kr"
-              target="_blank"
-            >
-              LMS 바로가기
-            </a>
+            <div className="flex w-full justify-around">
+              <a
+                className="text-14px text-knuBlue cursor-pointer font-bold"
+                href="https://knulms.kongju.ac.kr"
+                target="_blank"
+              >
+                LMS 바로가기
+              </a>
+              <a
+                className="text-14px text-knuBlue cursor-pointer font-bold"
+                href="https://knulms.kongju.ac.kr/profile/settings"
+                target="_blank"
+              >
+                이용 가이드
+              </a>
+            </div>
           </div>
         ))}
-      {/* {site.includes('knulms.kongju.ac.kr') ? (
-        !token ? (
-          <>
-            <a
-              className="font-bold cursor-pointer text-14px text-knuBlue"
-              href="https://knulms.kongju.ac.kr/profile/settings"
-              target="_blank"
-            >
-              LMS 토큰 생성 바로가기
-            </a>
-            <div className="flex gap-2 mt-2">
-              <input
-                type="text"
-                className="border-gray4 h-[40px] w-[250px] rounded-xl border px-2 text-[12px] font-bold"
-                placeholder="토큰을 입력해주세요."
-                value={value!}
-                onChange={e => setValue(e.target.value)}
-              />
-              <SmallButton onClick={() => updateFn(value)} className="w-[80px]">
-                등 록
-              </SmallButton>
-            </div>
-          </>
-        ) : (
-          ''
-        )
-      ) : (
-        <div className="flex flex-col items-center justify-center">
-          <Text className="mt-4 text-[15px] font-bold">LMS 사이트에서 로그인 후 등록할 수 있어요!</Text>
-          <a
-            className="font-bold cursor-pointer text-14px text-knuBlue"
-            href="https://knulms.kongju.ac.kr"
-            target="_blank"
-          >
-            LMS 바로가기
-          </a>
-        </div>
-      )} */}
     </main>
   )
 }

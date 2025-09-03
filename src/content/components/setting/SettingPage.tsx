@@ -51,14 +51,14 @@ export const SettingPage = () => {
   }
 
   return (
-    <div className="relative flex flex-col items-center flex-1 gap-3 pt-6 overflow-auto scrollbar-hidden">
+    <div className="scrollbar-hidden relative flex flex-1 flex-col items-center gap-3 overflow-auto pt-6">
       <div
         className="dark:bg-dark12 mb-1 flex h-[140px] w-[300px] items-center justify-center gap-1 rounded-xl bg-white transition-colors duration-500"
         style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)' }}
       >
         <div className="relative h-[120px] w-[120px] overflow-hidden rounded-full">
-          <img src={settings.image} alt="프로필 사진" className="object-cover w-full h-full" />
-          <div className="absolute inset-0 flex items-center justify-center w-full h-full gap-2 rounded-full bg-black/25">
+          <img src={settings.image} alt="프로필 사진" className="h-full w-full object-cover" />
+          <div className="absolute inset-0 flex h-full w-full items-center justify-center gap-2 rounded-full bg-black/25">
             <div
               onClick={() => inputRef.current?.click()}
               className="bg-gray1 group relative flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full opacity-70 hover:opacity-100"
@@ -150,8 +150,12 @@ export const SettingPage = () => {
           {settings.siteToken ? settings.siteToken : '토큰이 존재하지 않습니다.'}
         </div>
       </div>
-      <BasicButton onClick={handleLogout}>서비스 로그아웃 (토큰 삭제)</BasicButton>
-      <BasicButton onClick={handleHelp}>문의 & 버그 제보</BasicButton>
+      <BasicButton className="w-[300px]" onClick={handleLogout}>
+        서비스 로그아웃 (토큰 삭제)
+      </BasicButton>
+      <BasicButton className="w-[300px]" onClick={handleHelp}>
+        문의 & 버그 제보
+      </BasicButton>
       <footer className="text-center text-[11px]">
         <Text className="font-medium dark:text-white">공주대학교 LMS 알리미</Text>
         <Text className="font-medium dark:text-white">{`콩알 v${settings.version}`}</Text>

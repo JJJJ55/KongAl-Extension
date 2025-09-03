@@ -1,15 +1,15 @@
-import '@/styles/index.css'
+// import '@/styles/index.css'
+import '@/styles/popup.css'
 import { PopupNav, TokenLoading, TopContent } from './components'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { useStoragestore } from '@/store/useStorageStore'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
-import { ToastComponent } from '@/content/components/ToastComponent'
+// import { ToastComponent } from '@/components/ToastComponent'
 
 export default function App() {
-  const { system, contents, settings, info, updateData, resetStore } = useStoragestore()
+  const { system, contents, settings, info, updateData } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
-  // const [courseIds, setCourseIds] = useState<string[]>([])
 
   const handleAddToken = async (token: string | null) => {
     setIsLoading(true)
@@ -54,15 +54,6 @@ export default function App() {
     const regex = /^([^\(]+)\(([^)]+)\)$/
     const info = response.data.name.match(regex)
 
-    // await updateData('settings', prev => ({ ...prev, siteToken: token, updateAt: new Date().toISOString() }))
-    // await updateData('info', prev => ({
-    //   ...prev,
-    //   fullName: response.data.name,
-    //   studentId: response.data.id,
-    //   username: info[1],
-    //   userId: info[2],
-    // }))
-
     const lmsRes = await getLmsWebInfo(response.data.name)
     if (!lmsRes.success || lmsRes.xToken === null) {
       toast.error('LMS 로그인 정보와 토큰 사용자가 달라요.', { icon: false })
@@ -76,9 +67,6 @@ export default function App() {
     }
 
     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
-    // setCourseIds(ids)
-    console.log('목록 : ', ids)
-
     const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token, ids })
     if (issueRes.success) {
       UpdateIssue({
@@ -184,32 +172,7 @@ export default function App() {
     // })
   }
 
-  // useEffect(() => {
-  //   console.log('아이씨', settings.xToken)
-  //   if (settings.xToken === null || courseIds.length === 0) return
-  //   const getPlay = async () => {
-  //     setIsLoading(true)
-  //     for (const id of courseIds) {
-  //       const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
-  //       console.log('지연시간', delay)
-  //       const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
-  //       if (res.success) {
-  //         UpdatePlay({
-  //           itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-  //           isBeep: system.notiBeep,
-  //           contents,
-  //           id,
-  //           updateAt: contents.courseList[id]?.updateAt,
-  //           updateFn: updateData,
-  //         })
-  //         await new Promise(resolve => setTimeout(resolve, delay))
-  //       }
-  //     }
-  //     setIsLoading(false)
-  //   }
-  //   getPlay()
-  // }, [settings.xToken, courseIds])
-
+  const ToastComponent = lazy(() => import('@/components/ToastComponent'))
   return (
     <div className="flex h-[350px] w-[350px] flex-col items-center justify-around">
       {isLoading ? (
@@ -217,7 +180,9 @@ export default function App() {
       ) : (
         <>
           <TopContent noti={info.noti} token={settings.siteToken} updateFn={handleAddToken} />
-          <ToastComponent />
+          <Suspense fallback={null}>
+            <ToastComponent />
+          </Suspense>
         </>
       )}
       <PopupNav />
