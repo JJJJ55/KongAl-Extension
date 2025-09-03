@@ -43,6 +43,7 @@ export const SubjectPage = () => {
     //   }
     // })
     // updateData('settings', prev => ({ ...prev, updateAt: '2025-08-27T06:21:26.861Z' }))
+    updateData('contents', prev => ({ courseDetail: {}, courseList: {} }))
     updateData('settings', prev => ({ ...prev, updateAt: '2025-08-25T06:21:26.861Z' }))
   }
 
