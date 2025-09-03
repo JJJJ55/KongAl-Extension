@@ -42,20 +42,20 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
   }
 
   return (
-    <main className="flex flex-col items-center mt-4">
+    <main className="mt-4 flex flex-col items-center">
       <Text className="mb-2 text-[20px] font-bold">공주대 LMS 알리미 - 콩알</Text>
       <PopUpMain />
       {!token &&
         (site.includes('knulms.kongju.ac.kr') ? (
           <>
             <a
-              className="font-bold cursor-pointer text-14px text-knuBlue"
+              className="text-14px text-knuBlue cursor-pointer font-bold"
               href="https://knulms.kongju.ac.kr/profile/settings"
               target="_blank"
             >
               LMS 토큰 생성 바로가기
             </a>
-            <div className="flex gap-2 mt-2">
+            <div className="mt-2 flex gap-2">
               <input
                 type="text"
                 className="border-gray4 h-[40px] w-[250px] rounded-xl border px-2 text-[12px] font-bold"
@@ -72,7 +72,7 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
           <div className="flex flex-col items-center justify-center">
             <Text className="mt-4 text-[15px] font-bold">LMS 사이트에서 로그인 후 등록할 수 있어요!</Text>
             <a
-              className="font-bold cursor-pointer text-14px text-knuBlue"
+              className="text-14px text-knuBlue cursor-pointer font-bold"
               href="https://knulms.kongju.ac.kr"
               target="_blank"
             >
