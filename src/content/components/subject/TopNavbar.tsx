@@ -4,7 +4,7 @@ export const TopNavBar = ({ onClick, onIssueTest }: { onClick: () => void; onIss
   return (
     <div
       // style={{ boxShadow: '0 0 30px rgba(0,0,0,0.3)' }}
-      className="flex flex-row items-center justify-start p-5 transition-colors duration-500 bg-white dark:bg-dark12 rounded-2xl"
+      className="dark:bg-dark12 flex flex-row items-center justify-start rounded-2xl bg-white p-5 transition-colors duration-500"
       style={{ boxShadow: '0 3px 3px rgba(0,0,0,0.2)', height: '60px' }}
     >
       <LogoIcon className="ml-1 h-[36px] w-[36px]" />
