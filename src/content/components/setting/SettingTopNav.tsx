@@ -19,12 +19,12 @@ export const SettingTopNav = ({ image, userName, userId, updateData }: SettingTo
 
   const handleImgReset = useCallback(async () => {
     updateData('settings', prev => ({ ...prev, image: chrome.runtime.getURL('/kongal_Logo.png') }))
-    toast.success('사진이 기본 이미지로 설정됐어요!', { icon: false })
+    toast.success('프로필 사진이 기본으로 설정됐어요!', { icon: false })
   }, [])
 
   const handleCropOk = useCallback(async (cropImg: string) => {
     updateData('settings', prev => ({ ...prev, image: cropImg }))
-    toast.success('사진이 변경됐어요!', { icon: false })
+    toast.success('프로필 사진이 변경됐어요!', { icon: false })
     setIsImgCrppOpen(false)
     setImg(null)
   }, [])
@@ -39,6 +39,10 @@ export const SettingTopNav = ({ image, userName, userId, updateData }: SettingTo
       reader.onload = () => {
         setImg(reader.result as string)
       }
+    }
+
+    if (inputRef.current) {
+      inputRef.current.value = ''
     }
   }, [])
 
