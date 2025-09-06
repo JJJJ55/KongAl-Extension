@@ -275,6 +275,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
   }, [shouldRefresh, info.noti])
   return (
     <div
+      data-testid="modal-button"
       onClick={handleModalOpen}
       className="fixed z-500 h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat"
       style={{
