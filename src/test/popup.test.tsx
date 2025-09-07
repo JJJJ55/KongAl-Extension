@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import App from '@/popup/App.tsx'
 import { Content } from '@/content/components/Content'
+import { act } from 'react'
 
 const { chrome } = global as any
 
@@ -40,8 +41,9 @@ describe('Popup', () => {
       return Promise.resolve({ success: true })
     })
 
-    render(<App />)
-
+    await act(async () => {
+      render(<App />)
+    })
     expect(await screen.findByText('LMS 토큰 생성 바로가기')).toBeInTheDocument()
   })
 })
