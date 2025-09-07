@@ -15,10 +15,10 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-        - name: Setup pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10 # 원하는 pnpm 버전 (안 적으면 최신)
+          version: 10
       - name: Install dependencies
         run: pnpm install
       - name: Runs Test
