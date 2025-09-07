@@ -40,15 +40,10 @@ export const SettingPage = () => {
         </div>
       </div>
       <div className="flex w-[300px] items-center justify-between">
-        <BasicButton className="w-[145px]" onClick={() => window.open('https://open.kakao.com/o/s9tYshQh', '_blank')}>
+        <BasicButton className="w-[145px]" onClick={() => window.open(`${import.meta.env.VITE_OPENCHAT}`, '_blank')}>
           문의 & 버그 제보
         </BasicButton>
-        <BasicButton
-          className="w-[145px]"
-          onClick={() =>
-            window.open('https://www.notion.so/Kong_Al-FAQ-263faec81a4280aa893fe8ea89a3d341?source=copy_link', '_blank')
-          }
-        >
+        <BasicButton className="w-[145px]" onClick={() => window.open(`${import.meta.env.VITE_GUIDE}`, '_blank')}>
           서비스 가이드
         </BasicButton>
       </div>
