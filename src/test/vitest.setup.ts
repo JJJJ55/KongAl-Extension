@@ -1,3 +1,84 @@
+// import '@testing-library/jest-dom'
+// import { cleanup } from '@testing-library/react'
+// import { vi } from 'vitest'
+// import 'jest-chrome'
+
+// beforeEach(() => {
+//   cleanup()
+// })
+
+// Object.defineProperty(window, 'matchMedia', {
+//   writable: true,
+//   value: vi.fn().mockImplementation(query => ({
+//     matches: false,
+//     media: query,
+//     onchange: null,
+//     addListener: vi.fn(),
+//     removeListener: vi.fn(),
+//     addEventListener: vi.fn(),
+//     removeEventListener: vi.fn(),
+//     dispatchEvent: vi.fn(),
+//   })),
+// })
+
+// const test = {
+//   runtime: {
+//     getURL: (path: string) => path,
+//     sendMessage: vi.fn((msg: any, cb?: (res: any) => void) => {
+//       const res = { success: true, data: {} }
+//       if (cb) cb(res)
+//       return Promise.resolve(res)
+//     }),
+//   },
+//   storage: {
+//     local: {
+//       get: vi.fn((_keys: any, cb?: (res: any) => void) => {
+//         const res = {}
+//         if (cb) cb(res)
+//         return Promise.resolve(res)
+//       }),
+//       set: vi.fn((_items: any, cb?: () => void) => {
+//         if (cb) cb()
+//         return Promise.resolve()
+//       }),
+//       remove: vi.fn((_keys: any, cb?: () => void) => {
+//         if (cb) cb()
+//         return Promise.resolve()
+//       }),
+//       clear: vi.fn((cb?: () => void) => {
+//         if (cb) cb()
+//         return Promise.resolve()
+//       }),
+//     },
+//   },
+//   tabs: {
+//     query: vi.fn((_queryInfo: any, cb?: (tabs: any[]) => void) => {
+//       const tabs = [{ id: 1 }]
+//       if (cb) cb(tabs)
+//       return Promise.resolve(tabs)
+//     }),
+//     sendMessage: vi.fn((_id: any, _msg: any, cb?: (res: any) => void) => {
+//       const res = { success: true, data: {} }
+//       if (cb) cb(res)
+//       return Promise.resolve(res)
+//     }),
+//   },
+// }
+
+// // @ts-ignore
+// global.chrome = test
+
+// vi.mock('@/store/chromeStorage', () => {
+//   return {
+//     chromeStorage: {
+//       getData: vi.fn(async () => ({})),
+//       setData: vi.fn(async _data => {}),
+//       updateDataByKey: vi.fn(async (_key, cb) => cb()),
+//       onStorageChanged: vi.fn(_cb => {}),
+//     },
+//   }
+// })
+
 import '@testing-library/jest-dom'
 import { cleanup } from '@testing-library/react'
 import { vi } from 'vitest'
@@ -53,14 +134,9 @@ const chromeMokup = {
     },
   },
   tabs: {
-    query: vi.fn((_q?: any, cb?: any) => {
-      cb?.([]) // 기본은 빈 배열
-      return Promise.resolve([])
-    }),
-    sendMessage: vi.fn((_id?: number, _msg?: any, cb?: any) => {
-      cb?.({ success: true })
-      return Promise.resolve({ success: true })
-    }),
+    // 각 테스트에서 mockImplementation으로 덮어쓸 예정
+    query: vi.fn(),
+    sendMessage: vi.fn(),
   },
 }
 
