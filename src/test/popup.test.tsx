@@ -29,17 +29,6 @@ describe('Popup', () => {
       return Promise.resolve([{ id: 1 }])
     })
 
-    chrome.tabs.sendMessage.mockImplementation((_id: number, msg: any, cb: any) => {
-      setTimeout(() => {
-        if (msg?.type === 'GET_LMS') {
-          cb({ success: true, lmsUser: '홍길동', xToken: 'token-123' })
-        } else {
-          cb({ success: true })
-        }
-      }, 0)
-      return Promise.resolve({ success: true })
-    })
-
     render(<App />)
 
     expect(await screen.findByText('LMS 토큰 생성 바로가기')).toBeInTheDocument()
