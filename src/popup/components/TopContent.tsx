@@ -46,11 +46,11 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
       <Text className="mb-2 text-[20px] font-bold">공주대 LMS 알리미 - 콩알</Text>
       <PopUpMain />
       {!token &&
-        (site.includes('knulms.kongju.ac.kr') ? (
+        (site.includes(import.meta.env.VITE_TOKEN_URL) ? (
           <>
             <a
               className="text-14px text-knuBlue cursor-pointer font-bold"
-              href="https://knulms.kongju.ac.kr/profile/settings"
+              href={`${import.meta.env.VITE_REDIRECT_URL}/profile/settings`}
               target="_blank"
             >
               LMS 토큰 생성 바로가기
@@ -74,14 +74,14 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
             <div className="flex w-full justify-around">
               <a
                 className="text-14px text-knuBlue cursor-pointer font-bold"
-                href="https://knulms.kongju.ac.kr"
+                href={`${import.meta.env.VITE_REDIRECT_URL}`}
                 target="_blank"
               >
                 LMS 바로가기
               </a>
               <a
                 className="text-14px text-knuBlue cursor-pointer font-bold"
-                href="https://www.notion.so/Kong_Al-FAQ-263faec81a4280aa893fe8ea89a3d341?source=copy_link"
+                href={`${import.meta.env.VITE_GUIDE}`}
                 target="_blank"
               >
                 이용 가이드

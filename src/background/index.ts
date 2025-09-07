@@ -15,18 +15,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return true
   } else if (message.type === 'SUBJECT_LIST') {
-    // 주차학습 불러오기
-    // fetch(`${import.meta.env.VITE_XTOKEN_URL}courses/${message.id}/modules?include_detail=true`, {
-    //   method: 'GET',
-    //   credentials: 'include',
-    //   headers: {
-    //     Authorization: `Bearer ${import.meta.env.VITE_TEST_TOKEN}`,
-    //   },
-    // })
-    //   .then(response => response.json())
-    //   .then(res => sendResponse({ success: true, data: res }))
-    //   .catch(error => sendResponse({ success: false, data: error.message }))
-
     const { token, id } = message
     getPlayList(id, token).then(result => sendResponse(result))
 
@@ -45,34 +33,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })
     chrome.action.setBadgeText({ text: '!' })
     chrome.action.setBadgeBackgroundColor({ color: '#FF0000' })
-
-    // 알림 테스트
-    // const items = [
-    //   { title: '새로운 공지', message: '' },
-    //   { title: '공지 2', message: '탄소시장과에너지저장장치 01분반' },
-    //   { title: '공지 3', message: '시험 일정 업데이트1' },
-    //   { title: '공지 4', message: '시험 일정 업데이트2' },
-    //   { title: '학습 1', message: '새로운 학습1' },
-    //   { title: '학습 2', message: '새로운 학습2' },
-    //   { title: '학습 3', message: '새로운 학습3' },
-    //   { title: '학습 4', message: '새로운 학습4' },
-    //   { title: '과제 1', message: '오늘 마감 과제1' },
-    //   { title: '과제 2', message: '오늘 마감 과제2' },
-    // ]
-
-    // for (let i = 0; i < items.length; i += 4) {
-    //   const item = items.slice(i, i + 4)
-
-    //   chrome.notifications.create({
-    //     type: 'list',
-    //     iconUrl: chrome.runtime.getURL('kongal_Logo.png'), // public 폴더에 icon.png 넣어두세요
-    //     title: `공주대 LMS 알리미 - 콩알`,
-    //     message: `${message.content}`,
-    //     contextMessage: '아아',
-    //     priority: 2,
-    //     items: item,
-    //   })
-    // }
   } else if (message.type === 'CLEAN_BADGE') {
     chrome.action.setBadgeText({ text: '' })
   }
@@ -108,7 +68,7 @@ const getUserInfo = async (token: string) => {
 
 const getSubject = async (token: string) => {
   const value = await getCsrfToken()
-  return await fetch(`${import.meta.env.VITE_SITETOKEN_URL}users/self/favorites/courses?include[]=teachers`, {
+  return await fetch(`${import.meta.env.VITE_USER_SUBJECT}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -128,7 +88,7 @@ const getSubject = async (token: string) => {
 const getSubjectIssue = async (token: string, ids: string[]) => {
   const IssueItems = []
   const value = await getCsrfToken()
-  let url = new URL(`${import.meta.env.VITE_SITETOKEN_URL}planner/items`)
+  let url = new URL(`${import.meta.env.VITE_USER_ISSUE}`)
   url.searchParams.set('per_page', '100')
   ids.forEach(id => url.searchParams.append('context_codes[]', `course_${id}`))
 
@@ -163,7 +123,7 @@ const getSubjectIssue = async (token: string, ids: string[]) => {
 }
 
 const getPlayList = async (id: string, token: string) => {
-  return await fetch(`${import.meta.env.VITE_XTOKEN_URL}courses/${id}/modules?include_detail=true`, {
+  return await fetch(`${import.meta.env.VITE_XTOKEN_URL}${id}${import.meta.env.VITE_PLAYSTRING}`, {
     method: 'GET',
     credentials: 'include',
     headers: {

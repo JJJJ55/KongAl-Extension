@@ -13,7 +13,7 @@ export const DetailBoard = ({ courseId }: { courseId: string | '' }) => {
     window.location.href = `${import.meta.env.VITE_REDIRECT_URL}${link}`
   }
   return (
-    <div className="flex flex-col items-center flex-1 gap-3 py-3 overflow-auto scrollbar-hidden">
+    <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">
       {Object.keys(contents.courseDetail[courseId].BoardList).length ? (
         Object.entries(contents.courseDetail[courseId].BoardList)
           .sort(([, a], [, b]) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime())

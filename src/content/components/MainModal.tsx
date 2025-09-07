@@ -26,7 +26,7 @@ const modalVariants: Variants = {
 
 export const MainModal = () => {
   const [activeType, setActiveType] = useState<'subjects' | 'settings'>('subjects')
-  const { system, updateData } = useStoragestore()
+  const { system } = useStoragestore()
   const ActiveContent = useMemo(() => {
     return activeType === 'subjects' ? <SubjectPage /> : <SettingPage />
   }, [activeType])
