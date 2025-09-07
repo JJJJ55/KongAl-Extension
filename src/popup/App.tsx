@@ -1,11 +1,9 @@
-// import '@/styles/index.css'
 import '@/styles/popup.css'
 import { PopupNav, TokenLoading, TopContent } from './components'
 import { lazy, Suspense, useState } from 'react'
 import { useStoragestore } from '@/store/useStorageStore'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
-// import { ToastComponent } from '@/components/ToastComponent'
 
 export default function App() {
   const { system, contents, settings, info, updateData } = useStoragestore()
@@ -14,7 +12,6 @@ export default function App() {
   const handleAddToken = async (token: string | null) => {
     setIsLoading(true)
     await getInfo(token)
-    // notiTest()
     setIsLoading(false)
   }
 
@@ -42,14 +39,6 @@ export default function App() {
           chrome.tabs.sendMessage(tabs[0].id, { type: 'GET_LMS', userName }, resolve)
         }
       })
-    })
-  }
-  const notiTest = () => {
-    updateData('info', prev => ({ ...prev, noti: true }))
-    chrome.runtime.sendMessage({
-      type: 'NOTI',
-      beep: system.notiBeep,
-      notification: [{ title: '비프음 테스트', msg: '아아' }],
     })
   }
 
@@ -91,12 +80,9 @@ export default function App() {
       toast.error('이슈 업데이트에 실패했어요.', { icon: false })
     }
 
-    // 순차적으로 UpdatePlay 실행
-
     for (const id of ids) {
       const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: lmsRes.xToken })
       const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
-      console.log('지연시간', delay)
       if (res.success) {
         UpdatePlay({
           itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
@@ -124,61 +110,6 @@ export default function App() {
       username: info[1],
       userId: info[2],
     }))
-    // 아래는 옛날 코드
-
-    // chrome.runtime.sendMessage({ type: 'USER_INFO', token: token }, response => {
-    //   if (response.success) {
-    //     const regex = /^([^\(]+)\(([^)]+)\)$/
-    //     const info = response.data.name.match(regex)
-    //     chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token }, subjectRes => {
-    //       if (subjectRes.success) {
-    //         const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
-    //         console.log('목록 : ', ids)
-    //         chrome.runtime.sendMessage({ type: 'USER_ISSUE', token, ids }, issueRes => {
-    //           if (issueRes.success) {
-    //             UpdateIssue({
-    //               isBeep: system.notiBeep,
-    //               contents,
-    //               itemData: issueRes.data,
-    //               updateAt: settings.updateAt,
-    //               updateFn: updateData,
-    //             })
-    //             toast.success('정보가 업데이트 됐어요!', { icon: false })
-    //           } else {
-    //             toast.error('이슈 업데이트에 실패했어요.', { icon: false })
-    //           }
-    //         })
-    //         for (const id of ids) {
-    //           console.log('실행', id)
-    //           chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
-    //             if (response.success) {
-    //               UpdatePlay({
-    //                 itemData: response.data,
-    //                 isBeep: system.notiBeep,
-    //                 contents,
-    //                 id,
-    //                 updateAt: contents.courseList[id]?.updateAt,
-    //                 updateFn: updateData,
-    //               })
-    //             }
-    //           })
-    //         }
-    //       } else {
-    //         toast.error('과목 업데이트에 실패했어요.', { icon: false })
-    //       }
-    //     })
-    //     updateData('settings', prev => ({ ...prev, siteToken: token }))
-    //     updateData('info', prev => ({
-    //       ...prev,
-    //       fullName: response.data.name,
-    //       studentId: response.data.id,
-    //       username: info[1],
-    //       userId: info[2],
-    //     }))
-    //   } else {
-    //     toast.error('올바른 토큰이 아닙니다. 다시 확인해주세요.', { icon: false })
-    //   }
-    // })
   }
 
   const ToastComponent = lazy(() => import('@/components/ToastComponent'))

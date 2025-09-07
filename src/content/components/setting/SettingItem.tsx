@@ -11,7 +11,6 @@ type SettingItemProps = {
 }
 
 export const SettingItem = ({ type, title, value, items, itemsName, onFunc }: SettingItemProps) => {
-  console.log('테마', value)
   return (
     <div>
       <Text className="dark:text-white">{title}</Text>

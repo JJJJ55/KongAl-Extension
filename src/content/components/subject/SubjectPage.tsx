@@ -43,7 +43,7 @@ export const SubjectPage = () => {
     //   }
     // })
     // updateData('settings', prev => ({ ...prev, updateAt: '2025-08-27T06:21:26.861Z' }))
-    updateData('contents', prev => ({ courseDetail: {}, courseList: {} }))
+    // updateData('contents', prev => ({ courseDetail: {}, courseList: {} }))
     updateData('settings', prev => ({ ...prev, updateAt: '2025-08-25T06:21:26.861Z' }))
   }
 
@@ -104,7 +104,7 @@ export const SubjectPage = () => {
         <SubjectDetailPage data={data} onClick={() => ToggleModal()} />
       ) : (
         <>
-          <TopNavBar onClick={handleGetSubject} onIssueTest={notiTest} />
+          <TopNavBar onClick={handleGetSubject} onIssueTest={testGetIssue} />
           <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">
             {isLoading ? (
               <LoadingSkeleton />

@@ -31,9 +31,9 @@ const modalVariants: Variants = {
 export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem] | null; onClick: () => void }) => {
   const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('play')
 
-  const { system, contents, updateData } = useStoragestore()
+  const { settings, contents, updateData } = useStoragestore()
   const handleGetPlay = (id: string) => {
-    chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
+    chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id, token: settings.xToken }, response => {
       if (response.success) {
         UpdatePlay({
           itemData: response.data,

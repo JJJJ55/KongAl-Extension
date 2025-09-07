@@ -1,7 +1,7 @@
 import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
 import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
-import { newUpdateList, UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
+import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useEffect, useRef } from 'react'
@@ -74,40 +74,40 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
 
     // 순차적으로 UpdatePlay 실행
     for (const id of ids) {
-      // if (
-      //   contents.courseList[id] === undefined ||
-      //   contents.courseList[id].updateAt === null ||
-      //   CheckPlayUpdate(contents.courseList[id].updateAt)
-      // ) {
-      //   const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
-      //   console.log('지연시간', delay)
-      //   const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
-      //   if (res.success) {
-      //     UpdatePlay({
-      //       itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-      //       isBeep: system.notiBeep,
-      //       contents,
-      //       id,
-      //       updateAt: contents.courseList[id]?.updateAt,
-      //       updateFn: updateData,
-      //     })
-      //     await new Promise(resolve => setTimeout(resolve, delay))
-      //   }
-      // }
-      const delay = Math.floor(Math.random() * (1500 - 500 + 1)) + 500
-      console.log('지연시간', delay)
-      const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
-      if (res.success) {
-        UpdatePlay({
-          itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-          isBeep: system.notiBeep,
-          contents,
-          id,
-          updateAt: contents.courseList[id]?.updateAt,
-          updateFn: updateData,
-        })
-        await new Promise(resolve => setTimeout(resolve, delay))
+      if (
+        contents.courseList[id] === undefined ||
+        contents.courseList[id].updateAt === null ||
+        CheckPlayUpdate(contents.courseList[id].updateAt)
+      ) {
+        const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
+        console.log('지연시간', delay)
+        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
+        if (res.success) {
+          UpdatePlay({
+            itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+            isBeep: system.notiBeep,
+            contents,
+            id,
+            updateAt: contents.courseList[id]?.updateAt,
+            updateFn: updateData,
+          })
+          await new Promise(resolve => setTimeout(resolve, delay))
+        }
       }
+      // const delay = Math.floor(Math.random() * (1500 - 500 + 1)) + 500
+      // console.log('지연시간', delay)
+      // const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
+      // if (res.success) {
+      //   UpdatePlay({
+      //     itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+      //     isBeep: system.notiBeep,
+      //     contents,
+      //     id,
+      //     updateAt: contents.courseList[id]?.updateAt,
+      //     updateFn: updateData,
+      //   })
+      //   await new Promise(resolve => setTimeout(resolve, delay))
+      // }
     }
   }
 
@@ -121,156 +121,6 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
       console.log('정보가져온당')
 
       UpdateSubjectData()
-
-      // chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
-      //   if (subjectRes.success) {
-      //     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
-      //     chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
-      //       if (issueRes.success) {
-      //         UpdateIssue({
-      //           isBeep: system.notiBeep,
-      //           contents,
-      //           itemData: issueRes.data,
-      //           updateAt: settings.updateAt,
-      //           updateFn: updateData,
-      //         })
-      //         toast.success('정보가 업데이트 됐어요!', { icon: false })
-      //       } else {
-      //         toast.error('이슈 업데이트에 실패했어요.', { icon: false })
-      //       }
-      //     })
-      //     for (const id of ids) {
-      //       if (
-      //         contents.courseList[id] === undefined ||
-      //         contents.courseList[id].updateAt === null ||
-      //         CheckPlayUpdate(contents.courseList[id].updateAt)
-      //       ) {
-      //         chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id }, response => {
-      //           if (response.success) {
-      //             UpdatePlay({
-      //               itemData: response.data,
-      //               isBeep: system.notiBeep,
-      //               contents,
-      //               id,
-      //               updateAt: contents.courseList[id]?.updateAt,
-      //               updateFn: updateData,
-      //             })
-      //           }
-      //         })
-      //       }
-      //     }
-      //     // newUpdateList({ ids, updateFn: updateData })
-      //   } else {
-      //     toast.error('과목 업데이트에 실패했어요.', { icon: false })
-      //   }
-      // })
-
-      // console.log('업데이트 시작')
-      // chrome.runtime.sendMessage({ type: 'USER_SUBJECT', token: settings.siteToken }, subjectRes => {
-      //   if (subjectRes.success) {
-      //     console.log(subjectRes.data)
-      //     const newCourseList: Record<string, CourseItem> = {}
-      //     for (const data of subjectRes.data) {
-      //       const { id, name, teachers } = data
-      //       newCourseList[id] = {
-      //         title: name,
-      //         teacher:
-      //           teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
-      //         isReport: 0,
-      //         isPlay: 0,
-      //         isBoard: 0,
-      //       }
-      //     }
-      //     updateData('contents', prev => ({ ...prev, courseList: { ...newCourseList } }))
-      //     const ids = Object.keys(newCourseList)
-      //     chrome.runtime.sendMessage({ type: 'USER_ISSUE', token: settings.siteToken, ids }, issueRes => {
-      //       if (issueRes.success) {
-      //         console.log(issueRes.data)
-      //         const newBoardList: Record<string, Record<string, IssueItem>> = {}
-      //         const newReportList: Record<string, Record<string, IssueItem>> = {}
-      //         const newNoti: Record<string, Noti> = {}
-      //         for (const data of issueRes.data) {
-      //           const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } =
-      //             data
-      //           if (!newNoti[course_id]) newNoti[course_id] = { isBoard: 0, isReport: 0 }
-      //           if (plannable_type === 'announcement') {
-      //             if (!newBoardList[course_id]) newBoardList[course_id] = {}
-      //             newBoardList[course_id][plannable_id] = {
-      //               title: plannable.title,
-      //               createAt: plannable.created_at,
-      //               html_url,
-      //               isOk: plannable.read_state === 'read' ? true : false,
-      //             }
-      //             if (plannable.read_state !== 'read') {
-      //               newNoti[course_id].isBoard = newNoti[course_id].isBoard! + 1
-      //             }
-      //           } else {
-      //             if (!newReportList[course_id]) newReportList[course_id] = {}
-      //             newReportList[course_id][plannable_id] = {
-      //               title: plannable.title,
-      //               createAt: plannable.created_at,
-      //               dueAt: plannable_date,
-      //               html_url,
-      //               isOk: submissions.submitted ?? false,
-      //             }
-      //             if (!newReportList[course_id][plannable_id].isOk) {
-      //               newNoti[course_id].isReport = newNoti[course_id].isReport! + 1
-      //             }
-      //           }
-      //         }
-      //         updateData('contents', prev => {
-      //           const newCourseDetail = { ...prev.courseDetail }
-      //           for (const courseId in newBoardList) {
-      //             const currentDetail = newCourseDetail[courseId] || {
-      //               PlayList: {},
-      //               BoardList: {},
-      //               ReportList: {},
-      //             }
-      //             newCourseDetail[courseId] = {
-      //               ...currentDetail,
-      //               BoardList: {
-      //                 ...currentDetail.BoardList,
-      //                 ...newBoardList[courseId],
-      //               },
-      //             }
-      //           }
-      //           for (const courseId in newReportList) {
-      //             const currentDetail = newCourseDetail[courseId] || {
-      //               PlayList: {},
-      //               BoardList: {},
-      //               ReportList: {},
-      //             }
-      //             newCourseDetail[courseId] = {
-      //               ...currentDetail,
-      //               ReportList: {
-      //                 ...currentDetail.ReportList,
-      //                 ...newReportList[courseId],
-      //               },
-      //             }
-      //           }
-      //           const mergedCourseList = { ...prev.courseList }
-      //           for (const courseId in newNoti) {
-      //             if (!mergedCourseList[courseId]) continue
-      //             mergedCourseList[courseId] = {
-      //               ...mergedCourseList[courseId],
-      //               ...newNoti[courseId],
-      //             }
-      //           }
-      //           return {
-      //             ...prev,
-      //             courseDetail: newCourseDetail,
-      //             courseList: mergedCourseList,
-      //           }
-      //         })
-      //         updateData('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
-      //       } else {
-      //         console.log('이슈 업데이트 실패')
-      //       }
-      //     })
-      //   } else {
-      //     console.log('과목 업데이트 실패')
-      //   }
-      // })
     }
   }, [shouldRefresh, info.noti])
   return (
