@@ -59,11 +59,17 @@ export const ChangeDutAt = (dutAt: string | null | undefined) => {
 export const ChangeCreateAt = (dutAt: string | null | undefined) => {
   if (dutAt === null || dutAt === undefined) return '-'
   const utcDate = new Date(dutAt)
-  const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000)
 
-  const year = kstDate.getFullYear()
-  const month = (kstDate.getMonth() + 1).toString().padStart(2, '0')
-  const day = kstDate.getDate().toString().padStart(2, '0')
+  const year = utcDate.getFullYear()
+  const month = (utcDate.getMonth() + 1).toString().padStart(2, '0')
+  const day = utcDate.getDate().toString().padStart(2, '0')
 
-  return `${year}-${month}-${day}`
+  let hours = utcDate.getHours()
+  const minutes = utcDate.getMinutes().toString().padStart(2, '0')
+  const ampm = hours >= 12 ? '오후' : '오전'
+  hours = hours % 12 || 12
+
+  const timeStr = `${ampm} ${hours}:${minutes}`
+
+  return `${year}-${month}-${day} ${timeStr}`
 }
