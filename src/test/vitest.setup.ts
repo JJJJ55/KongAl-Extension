@@ -53,9 +53,14 @@ const chromeMokup = {
     },
   },
   tabs: {
-    // 각 테스트에서 mockImplementation으로 덮어쓸 예정
-    query: vi.fn(),
-    sendMessage: vi.fn(),
+    query: vi.fn((_q?: any, cb?: any) => {
+      cb?.([]) // 기본은 빈 배열
+      return Promise.resolve([])
+    }),
+    sendMessage: vi.fn((_id?: number, _msg?: any, cb?: any) => {
+      cb?.({ success: true })
+      return Promise.resolve({ success: true })
+    }),
   },
 }
 
