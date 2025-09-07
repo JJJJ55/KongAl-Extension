@@ -104,8 +104,8 @@ export const SubjectPage = () => {
         <SubjectDetailPage data={data} onClick={() => ToggleModal()} />
       ) : (
         <>
-          <TopNavBar onClick={handleGetSubject} onIssueTest={testGetIssue} />
-          <div className="flex flex-col items-center flex-1 gap-3 py-3 overflow-auto scrollbar-hidden">
+          <TopNavBar onClick={handleGetSubject} onIssueTest={notiTest} />
+          <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">
             {isLoading ? (
               <LoadingSkeleton />
             ) : Object.keys(contents.courseList).length ? (

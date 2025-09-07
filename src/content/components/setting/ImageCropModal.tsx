@@ -37,10 +37,10 @@ export const ImageCropModal = ({ croppedImage, onCrop, onCancle }: ProfileImageP
       className="fixed inset-0 flex items-center justify-center bg-black/25"
     >
       <div className="flex h-[400px] w-[300px] flex-col gap-5 rounded-xl bg-white p-5">
-        {/* <div className="flex justify-between">
+        <div className="flex justify-between">
           <Text className="text-[14px] font-bold">프로필 사진 변경</Text>
           <X size={24} className="cursor-pointer" onClick={onCancle} />
-        </div> */}
+        </div>
         <div className="relative h-full w-full overflow-hidden rounded-xl">
           <div className="absolute inset-0 bg-white" />
           <Cropper

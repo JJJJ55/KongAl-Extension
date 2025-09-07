@@ -2,7 +2,7 @@ import { Text } from '@/components'
 
 export const NotFound = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full">
+    <div className="flex h-full flex-col items-center justify-center">
       <div
         className="h-[160px] w-[100px] bg-cover bg-center bg-no-repeat"
         style={{

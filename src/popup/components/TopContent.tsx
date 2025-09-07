@@ -70,7 +70,7 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center">
-            <Text className="mt-4 text-[15px] font-bold">LMS 사이트에서 로그인 후 등록할 수 있어요!</Text>
+            <Text className="mt-4 text-[15px] font-bold">LMS 사이트에서 로그인 후 진행해주세요!</Text>
             <div className="flex w-full justify-around">
               <a
                 className="text-14px text-knuBlue cursor-pointer font-bold"
@@ -81,7 +81,7 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
               </a>
               <a
                 className="text-14px text-knuBlue cursor-pointer font-bold"
-                href="https://knulms.kongju.ac.kr/profile/settings"
+                href="https://www.notion.so/Kong_Al-FAQ-263faec81a4280aa893fe8ea89a3d341?source=copy_link"
                 target="_blank"
               >
                 이용 가이드

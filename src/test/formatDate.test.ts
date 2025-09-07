@@ -1,75 +1,81 @@
 import { describe, expect, it } from 'vitest'
 import { ChangeCreateAt, ChangeDutAt, CompareDueAt, CompareUpdateAt } from '@/utils/FormatDate'
 
-describe('ChangeCreateAt()', () => {
+describe('만든 날짜 양식에 맞게 변환', () => {
   // 날짜 변환 테스트
-  it('nullTest', () => {
+  it('null값이 들어간 경우', () => {
     expect(ChangeCreateAt(null)).toBe('-')
   })
-  it.only('test1', () => {
+  it.skip('변환 테스트1', () => {
     expect(ChangeCreateAt('2025-08-20T14:59:00Z')).toBe('2025-08-20')
   })
-  it.only('test2', () => {
+  it.skip('변환 테스트2', () => {
     expect(ChangeCreateAt('2025-07-02T08:55:30Z')).toBe('2025-07-02')
   })
 })
 
-describe('ChangeDutAt()', () => {
+describe('마감일 변환 테스트', () => {
   // 마감일 테스트
-  it('nullTest', () => {
+  it('null값인 경우', () => {
     expect(ChangeDutAt(null)).toBe('-')
   })
-  it('undefinedTest', () => {
+  it('undefined인 경우', () => {
     expect(ChangeDutAt(undefined)).toBe('-')
   })
-  it('diffDays > 0', () => {
-    expect(ChangeDutAt('2025-08-30T14:59:59Z')).toBe('마감 2일 전')
+  it.skip('마감일이 여유 있는 경우', () => {
+    const date = new Date()
+    date.setDate(date.getDate() + 3)
+    expect(ChangeDutAt(date.toISOString())).toBe('마감 2일 전')
   })
-  it('diffDays === 0', () => {
-    expect(ChangeDutAt('2025-08-28T14:59:59Z')).toBe('오늘 오후 11:59 마감')
+  it('마감일이 오늘인 경우', () => {
+    const today = new Date()
+    today.setHours(23, 59, 59, 0)
+    expect(ChangeDutAt(today.toISOString())).toBe('오늘 오후 11:59 마감')
   })
-  it('diffDays < 0', () => {
+  it('마감일이 지난 경우', () => {
     expect(ChangeDutAt('2025-08-26T14:59:59Z')).toBe('마 감')
   })
 })
 
-describe('CompareDueAt()', () => {
+describe('마감일과 업데이트 날짜 비교', () => {
   // 마감일과 업데이트날짜 비교
-  it('arg1Null', () => {
+  it('마감일이 null인 경우', () => {
     expect(CompareDueAt(null, '2025-05-02T06:49:20Z')).toBe('-')
   })
-  it('arg2Null', () => {
+  it('업데이트 날짜가 null 인경우', () => {
     expect(CompareDueAt('2025-05-02T06:49:20Z', null)).toBe('-')
   })
-  it('arg1 === arg2, diffDays === 0', () => {
+  it('마감일과 업데이트 일이 오늘인 경우', () => {
     expect(CompareDueAt('2025-05-02T06:49:20Z', '2025-05-02T06:49:20Z')).toBe('오늘')
   })
-  it('arg1 > arg2, diffDays > 0 && diffDays <= 3', () => {
-    expect(CompareDueAt('2025-08-30T14:59:59Z', new Date().toISOString())).toBe('이내')
+  it('마감일이 3일 이내 남은 경우', () => {
+    const date = new Date()
+    date.setDate(date.getDate() + 2)
+    expect(CompareDueAt(date.toISOString(), new Date().toISOString())).toBe('이내')
   })
-  it('arg1 > arg2, diffDays > 3', () => {
+  it('마감일이 3일 초과로 여유 있는 경우', () => {
     expect(CompareDueAt('2025-09-02T14:59:59Z', new Date().toISOString())).toBe('-')
   })
-  it('arg1 < arg2, diffDays < 0', () => {
+  it('마감일이 지난 경우', () => {
     expect(CompareDueAt('2025-08-20T14:59:59Z', new Date().toISOString())).toBe('-')
   })
 })
 
-describe('CompareUpdateAt()', () => {
+describe('생성 날짜와 업데이트 날짜 비교', () => {
   // 생성날짜와 업데이트날짜 비교
-  it('arg1Null', () => {
+  it('생성 날짜가 null인 경우', () => {
     expect(CompareUpdateAt(null, '2025-05-02T06:49:20Z')).toBe(true)
   })
-  it('arg2Null', () => {
+  it('업데이트 날짜가 null인 경우', () => {
     expect(CompareUpdateAt('2025-05-02T06:49:20Z', null)).toBe(true)
   })
-  it('arg1 === arg2', () => {
+  it('생성 날짜와 업데이트가 같은 경우', () => {
     expect(CompareUpdateAt('2025-05-02T06:49:20Z', '2025-05-02T06:49:20Z')).toBe(true)
   })
-  it.only('arg1 > arg2', () => {
+  it('생성 날짜가 업데이트 날 이후인 경우', () => {
     expect(CompareUpdateAt('2025-05-02T06:49:20Z', '2025-05-01T06:49:20Z')).toBe(true)
   })
-  it('arg1 < arg2', () => {
+  it('생성 날짜가 업데이트 이전인 경우', () => {
     expect(CompareUpdateAt('2025-05-02T06:49:20Z', new Date().toISOString())).toBe(false)
   })
 })

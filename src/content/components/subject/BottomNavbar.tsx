@@ -9,7 +9,7 @@ type BottomNavProps = {
 export const BottomNavBar = ({ activeType, setActiveType }: BottomNavProps) => {
   return (
     <div
-      className="flex justify-around transition-colors duration-500 bg-white dark:bg-dark12 rounded-2xl"
+      className="dark:bg-dark12 flex justify-around rounded-2xl bg-white transition-colors duration-500"
       style={{ boxShadow: '0 -5px 5px -5px rgba(0,0,0,0.3)', height: '70px' }}
     >
       <button

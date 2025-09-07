@@ -14,6 +14,7 @@ export default function App() {
   const handleAddToken = async (token: string | null) => {
     setIsLoading(true)
     await getInfo(token)
+    // notiTest()
     setIsLoading(false)
   }
 
@@ -41,6 +42,14 @@ export default function App() {
           chrome.tabs.sendMessage(tabs[0].id, { type: 'GET_LMS', userName }, resolve)
         }
       })
+    })
+  }
+  const notiTest = () => {
+    updateData('info', prev => ({ ...prev, noti: true }))
+    chrome.runtime.sendMessage({
+      type: 'NOTI',
+      beep: system.notiBeep,
+      notification: [{ title: '비프음 테스트', msg: '아아' }],
     })
   }
 

@@ -2,7 +2,7 @@ import type { Contents } from './content'
 
 export type StorageData = {
   system: {
-    theme: 'sys' | 'light' | 'dark'
+    theme: string
     notiBeep: boolean
   }
   info: {

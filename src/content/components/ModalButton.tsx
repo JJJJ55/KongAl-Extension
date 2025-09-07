@@ -13,7 +13,7 @@ const CloseOverlay = () => (
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     transition={{ duration: 0.2 }}
-    className="absolute inset-0 bg-opacity-10 rounded-2xl bg-black/20 backdrop-blur-xs"
+    className="bg-opacity-10 absolute inset-0 rounded-2xl bg-black/20 backdrop-blur-xs"
   >
     <div className="absolute inset-0 flex items-center justify-center text-white">
       <X size={24} />
@@ -275,6 +275,7 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
   }, [shouldRefresh, info.noti])
   return (
     <div
+      data-testid="modal-button"
       onClick={handleModalOpen}
       className="fixed z-500 h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat"
       style={{
