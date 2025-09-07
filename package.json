@@ -50,6 +50,7 @@
     "tailwindcss": "^4.1.11",
     "typescript": "~5.7.2",
     "vite": "^6.2.0",
+    "vite-plugin-svgr": "^4.5.0",
     "vite-plugin-zip-pack": "^1.2.4",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
