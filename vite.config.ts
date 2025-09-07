@@ -6,6 +6,7 @@ import { defineConfig } from 'vite'
 import zip from 'vite-plugin-zip-pack'
 import tailwindcss from '@tailwindcss/vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import svgr from 'vite-plugin-svgr'
 
 import manifest from './manifest.config.js'
 import { name, version } from './package.json'
@@ -19,6 +20,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    svgr(),
     crx({ manifest }),
     tailwindcss(),
     tsconfigPaths(),
