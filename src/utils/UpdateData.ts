@@ -1,6 +1,5 @@
 import type {
   Contents,
-  Course,
   CourseItem,
   Detail,
   DetailItem,
@@ -136,28 +135,6 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
   }
 
   updateFn('contents', prev => {
-    // const newCourseDetail = { ...prev.courseDetail }
-    // for (const courseId in newBoardList) {
-    //   const currentDetail = newCourseDetail[courseId] || Detail
-    //   newCourseDetail[courseId] = {
-    //     ...currentDetail,
-    //     BoardList: {
-    //       ...currentDetail.BoardList,
-    //       ...newBoardList[courseId],
-    //     },
-    //   }
-    // }
-
-    // for (const courseId in newReportList) {
-    //   const currentDetail = newCourseDetail[courseId] || Detail
-    //   newCourseDetail[courseId] = {
-    //     ...currentDetail,
-    //     ReportList: {
-    //       ...currentDetail.ReportList,
-    //       ...newReportList[courseId],
-    //     },
-    //   }
-    // }
     const currentCourseDetail = { ...prev.courseDetail }
     const newCourseDetail: Detail = {}
     ids!.forEach((id, _) => (newCourseDetail[id] = courseDetailItems))
@@ -290,23 +267,5 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
         },
       },
     }
-  })
-}
-
-export const newUpdateList = ({ ids, updateFn }: NewUpdateProps) => {
-  console.log('중복 제거')
-  updateFn('contents', prev => {
-    const currentList = prev.courseList
-    const currentDetail = prev.courseDetail
-
-    const newCourseList: Course = {}
-    const newCourseDetail: Detail = {}
-
-    ids.forEach((id, _) => {
-      newCourseList[id] = currentList[id]
-      newCourseDetail[id] = currentDetail[id]
-    })
-
-    return { ...prev, courseList: newCourseList, courseDetail: newCourseDetail }
   })
 }
