@@ -2,20 +2,24 @@ import { describe, expect, it } from 'vitest'
 import { ChangeCreateAt, ChangeDutAt, CompareDueAt, CompareUpdateAt } from '@/utils/FormatDate'
 
 describe('만든 날짜 양식에 맞게 변환', () => {
-  // 날짜 변환 테스트
   it('null값이 들어간 경우', () => {
     expect(ChangeCreateAt(null)).toBe('-')
   })
-  it.skip('변환 테스트1', () => {
-    expect(ChangeCreateAt('2025-08-20T14:59:00Z')).toBe('2025-08-20')
+  it('변환 테스트1', () => {
+    expect(ChangeCreateAt('2025-08-20T14:59:00Z')).toBe('2025-08-20 오후 11:59')
   })
-  it.skip('변환 테스트2', () => {
-    expect(ChangeCreateAt('2025-07-02T08:55:30Z')).toBe('2025-07-02')
+  it('변환 테스트2', () => {
+    expect(ChangeCreateAt('2025-07-02T11:55:30Z')).toBe('2025-07-02 오후 8:55')
+  })
+  it('변환 테스트3', () => {
+    expect(ChangeCreateAt('2025-09-01T02:51:15Z')).toBe('2025-09-01 오전 11:51')
+  })
+  it('변환 테스트4', () => {
+    expect(ChangeCreateAt('2025-09-01T20:51:15Z')).toBe('2025-09-02 오전 5:51')
   })
 })
 
 describe('마감일 변환 테스트', () => {
-  // 마감일 테스트
   it('null값인 경우', () => {
     expect(ChangeDutAt(null)).toBe('-')
   })
@@ -38,7 +42,6 @@ describe('마감일 변환 테스트', () => {
 })
 
 describe('마감일과 업데이트 날짜 비교', () => {
-  // 마감일과 업데이트날짜 비교
   it('마감일이 null인 경우', () => {
     expect(CompareDueAt(null, '2025-05-02T06:49:20Z')).toBe('-')
   })
@@ -62,7 +65,6 @@ describe('마감일과 업데이트 날짜 비교', () => {
 })
 
 describe('생성 날짜와 업데이트 날짜 비교', () => {
-  // 생성날짜와 업데이트날짜 비교
   it('생성 날짜가 null인 경우', () => {
     expect(CompareUpdateAt(null, '2025-05-02T06:49:20Z')).toBe(true)
   })
