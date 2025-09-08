@@ -6,10 +6,7 @@ import { DetailPlay } from './DetailPlay'
 import { DetailBoard } from './DetailBoard'
 import { DetailReport } from './DetailReport'
 import { useMemo, useState } from 'react'
-import type { CourseItem, PlayItem } from '@/types'
-import { useStoragestore } from '@/store/useStorageStore'
-import { toast } from 'react-toastify'
-import { UpdatePlay } from '@/utils/UpdateData'
+import type { CourseItem } from '@/types'
 
 const modalVariants: Variants = {
   hidden: {
@@ -31,24 +28,6 @@ const modalVariants: Variants = {
 export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem] | null; onClick: () => void }) => {
   const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('play')
 
-  const { settings, contents, updateData } = useStoragestore()
-  const handleGetPlay = (id: string) => {
-    chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id, token: settings.xToken }, response => {
-      if (response.success) {
-        UpdatePlay({
-          itemData: response.data,
-          contents,
-          id,
-          updateAt: contents.courseList[id].updateAt,
-          updateFn: updateData,
-        })
-        toast.success('학습 정보를 가져왔어요!', { icon: false })
-      } else {
-        toast.error('학습 정보 업데이트를 실패했어요.', { icon: false })
-      }
-    })
-  }
-
   const ActiveContent = useMemo(() => {
     return activeType === 'play' ? (
       <DetailPlay courseId={data![0]} />
@@ -69,12 +48,7 @@ export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem
       className="bg-bgColor dark:bg-dark fixed z-500 h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm transition-colors duration-500"
     >
       <main className="flex h-full flex-col">
-        <DetailTopNav
-          title={data![1].title}
-          teacher={data![1].teacher}
-          onClick={onClick}
-          onGet={() => handleGetPlay(data![0])}
-        />
+        <DetailTopNav title={data![1].title} teacher={data![1].teacher} onClick={onClick} />
         {ActiveContent}
         <DetailBottomNav dId={data![0]} activeType={activeType} setActiveType={setActiveType} />
       </main>

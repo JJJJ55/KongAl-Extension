@@ -21,11 +21,6 @@ type UpdateDataProps = {
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
 }
 
-type NewUpdateProps = {
-  ids: string[]
-  updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
-}
-
 const courseDetailItems: DetailItem = {
   PlayList: {},
   BoardList: {},
@@ -33,16 +28,13 @@ const courseDetailItems: DetailItem = {
 }
 
 export const UpdateSubject = ({ contents, itemData, updateFn }: UpdateDataProps) => {
-  console.log(itemData)
   const currentList = contents.courseList
   const newCourseList: Record<string, CourseItem> = {}
   for (const data of itemData) {
     const { id, name, teachers } = data
     if (currentList[id] !== undefined) {
-      console.log('1', currentList[id])
       newCourseList[id] = { ...currentList[id] }
     } else {
-      console.log('2', currentList[id])
       newCourseList[id] = {
         title: name,
         teacher: teachers.length > 1 ? `${teachers[0].display_name} 등 ${teachers.length}인` : teachers[0].display_name,
@@ -63,8 +55,6 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
   const newNoti: Record<string, Noti> = {}
   const notificationList: NotificationItem[] = []
   const seen: Set<string> = new Set()
-  console.log(itemData)
-  console.log(updateAt)
 
   const pushNotification = (title: string, msg: string) => {
     const key = `${title}-${msg}`
@@ -115,9 +105,7 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
         if (updateAt === null) {
           pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 과제가 있어요!')
         } else {
-          // const type = CompareDueAt(plannable_date, updateAt)
           const type = CompareDueAt(plannable_date, new Date().toISOString())
-          console.log('과제 결과', type, newReportList[course_id][plannable_id])
           if (type === '오늘') {
             pushNotification(contents?.courseList[course_id]?.title || '콩알', '오늘 마감인 과제가 있어요!')
           } else if (type === '이내') {
@@ -180,7 +168,6 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
 }
 
 export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn }: UpdateDataProps) => {
-  // 학습 업데이트 (단일)
   const newPlayList: Record<string, Record<string, PlayItem>> = {}
   const newNoti: Record<string, Noti> = {}
   const notificationList: NotificationItem[] = []
@@ -234,9 +221,6 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
     }
   }
 
-  console.log('넣을 것', newPlayList)
-  console.log('들어온 id', id)
-
   if (notificationList.length > 0) {
     updateFn('info', prev => ({ ...prev, noti: true }))
     chrome.runtime.sendMessage({ type: 'NOTI', beep: isBeep, notification: notificationList })
@@ -250,9 +234,6 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
       ...newNoti[id!],
       updateAt: new Date().toISOString(),
     }
-
-    console.log('원래 있는 것', newCourseList)
-    console.log('업뎃', newCourseList[id!])
 
     return {
       ...prev,
