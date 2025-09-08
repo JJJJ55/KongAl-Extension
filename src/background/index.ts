@@ -20,7 +20,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return true
   } else if (message.type === 'NOTI') {
-    console.log('받은 알림 목록', message.notification)
     message.notification.forEach(({ title, msg }: NotificationItem) => {
       chrome.notifications.create({
         type: 'basic',
