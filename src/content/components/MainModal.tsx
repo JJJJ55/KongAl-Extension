@@ -24,12 +24,12 @@ const modalVariants: Variants = {
   },
 }
 
-export const MainModal = () => {
+export const MainModal = ({ isLoading }: { isLoading: boolean }) => {
   const [activeType, setActiveType] = useState<'subjects' | 'settings'>('subjects')
   const { system } = useStoragestore()
   const ActiveContent = useMemo(() => {
-    return activeType === 'subjects' ? <SubjectPage /> : <SettingPage />
-  }, [activeType])
+    return activeType === 'subjects' ? <SubjectPage isLoading={isLoading} /> : <SettingPage />
+  }, [activeType, isLoading])
 
   const mainRef = useRef<HTMLDivElement>(null)
   useEffect(() => {

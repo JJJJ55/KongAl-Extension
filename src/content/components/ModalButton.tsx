@@ -4,8 +4,14 @@ import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
+
+type ModalButtonProps = {
+  isOpen: boolean
+  onClick: () => void
+  onLoading: (isFlag: boolean) => void
+}
 
 const CloseOverlay = () => (
   <motion.div
@@ -21,7 +27,7 @@ const CloseOverlay = () => (
   </motion.div>
 )
 
-export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) => {
+export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) => {
   const { system, contents, settings, info, updateData } = useStoragestore()
   const { shouldRefresh } = useRefreshCheck()
 
@@ -45,15 +51,20 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
     onClick()
   }
 
-  const UpdateSubjectData = async () => {
+  const UpdateSubjectData = useCallback(async () => {
+    let isIssue = false
+    let isPlay = false
+    onLoading(true)
+    toast.success('정보 업데이트 중이에요!', { icon: false })
+
     const subjectRes = await sendMessageAsync({ type: 'USER_SUBJECT', token: settings.siteToken })
     if (!subjectRes.success) {
       toast.error('과목 업데이트에 실패했어요.', { icon: false })
+      onLoading(false)
       return
     }
 
     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
-    console.log('목록 : ', ids)
 
     const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token: settings.siteToken, ids })
     if (issueRes.success) {
@@ -66,13 +77,9 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
         updateFn: updateData,
       })
       updateData('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
-      // 바뀐 날짜 업데이트
-      toast.success('정보가 업데이트 됐어요!', { icon: false })
-    } else {
-      toast.error('이슈 업데이트에 실패했어요.', { icon: false })
+      isIssue = true
     }
 
-    // 순차적으로 UpdatePlay 실행
     for (const id of ids) {
       if (
         contents.courseList[id] === undefined ||
@@ -80,7 +87,6 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
         CheckPlayUpdate(contents.courseList[id].updateAt)
       ) {
         const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
-        console.log('지연시간', delay)
         const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
         if (res.success) {
           UpdatePlay({
@@ -92,37 +98,28 @@ export const ModalButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () 
             updateFn: updateData,
           })
           await new Promise(resolve => setTimeout(resolve, delay))
+        } else {
+          isPlay = true
         }
       }
-      // const delay = Math.floor(Math.random() * (1500 - 500 + 1)) + 500
-      // console.log('지연시간', delay)
-      // const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
-      // if (res.success) {
-      //   UpdatePlay({
-      //     itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-      //     isBeep: system.notiBeep,
-      //     contents,
-      //     id,
-      //     updateAt: contents.courseList[id]?.updateAt,
-      //     updateFn: updateData,
-      //   })
-      //   await new Promise(resolve => setTimeout(resolve, delay))
-      // }
     }
-  }
+    onLoading(false)
+    if (isIssue) {
+      toast.success('이슈가 업데이트 됐어요!', { icon: false })
+    } else {
+      toast.error('이슈 업데이트에 실패했어요.', { icon: false })
+    }
+    if (isPlay) toast.error('학습 업데이트에 일부 문제가 있어요', { icon: false })
+  }, [])
 
   const didRun = useRef(false)
   useEffect(() => {
-    console.log('업데이트 체크')
-    console.log(shouldRefresh)
-
     if (shouldRefresh && !didRun.current) {
       didRun.current = true
-      console.log('정보가져온당')
-
       UpdateSubjectData()
     }
   }, [shouldRefresh, info.noti])
+
   return (
     <div
       data-testid="modal-button"
