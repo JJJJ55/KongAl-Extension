@@ -3,7 +3,7 @@ import { NavLink } from './NavLink'
 
 export const PopupNav = () => {
   return (
-    <nav className="border-knuBlue flex w-full justify-center gap-6">
+    <nav className="flex w-full justify-center gap-4">
       <NavLink link={import.meta.env.VITE_GITHUB} text="Github">
         <GithubIcon className="h-[20px] w-[20px]" />
       </NavLink>

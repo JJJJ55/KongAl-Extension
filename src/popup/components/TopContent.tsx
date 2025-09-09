@@ -49,7 +49,7 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
         (site.includes(import.meta.env.VITE_TOKEN_URL) ? (
           <>
             <a
-              className="text-14px text-knuBlue cursor-pointer font-bold"
+              className="text-14px text-knuBlue dark:text-positive cursor-pointer font-bold"
               href={`${import.meta.env.VITE_REDIRECT_URL}/profile/settings`}
               target="_blank"
             >
@@ -58,7 +58,7 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
             <div className="mt-2 flex gap-2">
               <input
                 type="text"
-                className="border-gray4 h-[40px] w-[250px] rounded-xl border px-2 text-[12px] font-bold"
+                className="border-gray4 dark:bg-dark12 dark:placeholder-gray3 h-[40px] w-[250px] rounded-xl border bg-white px-2 text-[12px] font-bold outline-0 dark:text-white"
                 placeholder="토큰을 입력해주세요."
                 value={value!}
                 onChange={e => setValue(e.target.value)}
@@ -73,14 +73,14 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
             <Text className="mt-4 text-[15px] font-bold">LMS 사이트에서 로그인 후 진행해주세요!</Text>
             <div className="flex w-full justify-around">
               <a
-                className="text-14px text-knuBlue cursor-pointer font-bold"
+                className="text-14px text-knuBlue dark:text-positive cursor-pointer font-bold"
                 href={`${import.meta.env.VITE_REDIRECT_URL}`}
                 target="_blank"
               >
                 LMS 바로가기
               </a>
               <a
-                className="text-14px text-knuBlue cursor-pointer font-bold"
+                className="text-14px text-knuBlue dark:text-positive cursor-pointer font-bold"
                 href={`${import.meta.env.VITE_GUIDE}`}
                 target="_blank"
               >

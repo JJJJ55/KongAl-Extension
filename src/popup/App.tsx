@@ -1,6 +1,6 @@
-import '@/styles/popup.css'
+import '@/styles/index.css'
 import { PopupNav, TokenLoading, TopContent } from './components'
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { useStoragestore } from '@/store/useStorageStore'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
@@ -8,6 +8,19 @@ import { toast } from 'react-toastify'
 export default function App() {
   const { system, contents, settings, info, updateData } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
+  const mainRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!mainRef.current) return
+
+    const root = mainRef.current
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    if (system.theme === 'dark' || (system.theme === 'sys' && systemDark)) {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+  }, [system.theme])
 
   const handleAddToken = async (token: string | null) => {
     setIsLoading(true)
@@ -114,7 +127,7 @@ export default function App() {
 
   const ToastComponent = lazy(() => import('@/components/ToastComponent'))
   return (
-    <div className="flex h-[350px] w-[350px] flex-col items-center justify-around">
+    <div ref={mainRef} className="dark:bg-dark flex h-[350px] w-[350px] flex-col items-center justify-around">
       {isLoading ? (
         <TokenLoading />
       ) : (
