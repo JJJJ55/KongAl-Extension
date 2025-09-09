@@ -5,39 +5,21 @@ import { useStoragestore } from '@/store/useStorageStore'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
 
+type SendMessageProps = {
+  success: boolean
+  data: any
+}
+
+type LMSWebInfoProps = {
+  success: boolean
+  lmsUser: string
+  xToken: string
+}
+
 export default function App() {
   const { system, contents, settings, info, updateData } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
   const mainRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!mainRef.current) return
-
-    const root = mainRef.current
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    if (system.theme === 'dark' || (system.theme === 'sys' && systemDark)) {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
-    }
-  }, [system.theme])
-
-  const handleAddToken = async (token: string | null) => {
-    setIsLoading(true)
-    await getInfo(token)
-    setIsLoading(false)
-  }
-
-  type SendMessageProps = {
-    success: boolean
-    data: any
-  }
-
-  type LMSWebInfoProps = {
-    success: boolean
-    lmsUser: string
-    xToken: string
-  }
 
   const sendMessageAsync = (message: any): Promise<SendMessageProps> => {
     return new Promise<SendMessageProps>(resolve => {
@@ -53,6 +35,12 @@ export default function App() {
         }
       })
     })
+  }
+
+  const handleAddToken = async (token: string | null) => {
+    setIsLoading(true)
+    await getInfo(token)
+    setIsLoading(false)
   }
 
   const getInfo = async (token: string | null) => {
@@ -124,6 +112,18 @@ export default function App() {
       userId: info[2],
     }))
   }
+
+  useEffect(() => {
+    if (!mainRef.current) return
+
+    const root = mainRef.current
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    if (system.theme === 'dark' || (system.theme === 'sys' && systemDark)) {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+  }, [system.theme])
 
   const ToastComponent = lazy(() => import('@/components/ToastComponent'))
   return (
