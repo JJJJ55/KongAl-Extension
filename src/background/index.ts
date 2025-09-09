@@ -20,6 +20,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return true
   } else if (message.type === 'NOTI') {
+    const ua = navigator.userAgent.toLowerCase().includes('whale') ? true : false
     message.notification.forEach(({ title, msg }: NotificationItem) => {
       chrome.notifications.create({
         type: 'basic',
@@ -27,7 +28,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         title,
         message: msg,
         priority: 2,
-        silent: message.beep,
+        silent: ua ? true : message.beep,
       })
     })
     chrome.action.setBadgeText({ text: '!' })
