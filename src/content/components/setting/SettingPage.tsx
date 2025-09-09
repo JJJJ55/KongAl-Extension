@@ -6,6 +6,7 @@ import { SettingTopNav } from './SettingTopNav'
 
 export const SettingPage = () => {
   const { system, settings, info, updateData, resetStore } = useStoragestore()
+  const ua = navigator.userAgent.toLowerCase().includes('whale') ? true : false
 
   const handleSettingItem = (type: string, value: string) => {
     if (type === 'theme') updateData('system', prev => ({ ...prev, theme: value }))
@@ -24,14 +25,23 @@ export const SettingPage = () => {
           itemsName={['시스템 설정', '라이트', '다크']}
           onFunc={handleSettingItem}
         />
-        <SettingItem
-          type="beep"
-          title="알림음 여부"
-          value={system.notiBeep ? 'N' : 'Y'}
-          items={['Y', 'N']}
-          itemsName={['설 정', '해 제']}
-          onFunc={handleSettingItem}
-        />
+        {!ua ? (
+          <SettingItem
+            type="beep"
+            title="알림음 여부"
+            value={system.notiBeep ? 'N' : 'Y'}
+            items={['Y', 'N']}
+            itemsName={['설 정', '해 제']}
+            onFunc={handleSettingItem}
+          />
+        ) : (
+          <div>
+            <Text className="dark:text-white">알림음 여부</Text>
+            <div className="text-gray4 mt-1 flex w-[300px] justify-center px-4 text-center text-[13px] font-medium">
+              <Text className="dark:text-white">웨일 브라우저는 알림음을 지원하지 않아요.</Text>
+            </div>
+          </div>
+        )}
       </div>
       <div className="text-[15px] font-bold">
         <Text className="dark:text-white">토큰 정보</Text>
