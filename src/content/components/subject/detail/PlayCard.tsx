@@ -30,10 +30,7 @@ export const PlayCard = ({ index, data, onLink }: PlayProps) => {
       <div className="dark:bg-dark12 flex h-[60px] w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5 transition-colors duration-500">
         <div className="flex items-center justify-between">
           <Text
-            className={clsx(
-              'truncate text-[13px] font-medium dark:text-white',
-              data.isAttendance !== null ? 'w-[220px]' : 'w-full',
-            )}
+            className={clsx('truncate text-[13px] font-medium', data.isAttendance !== null ? 'w-[220px]' : 'w-full')}
           >
             {data.title}
           </Text>

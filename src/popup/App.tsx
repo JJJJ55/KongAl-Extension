@@ -1,30 +1,25 @@
-import '@/styles/popup.css'
+import '@/styles/index.css'
 import { PopupNav, TokenLoading, TopContent } from './components'
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { useStoragestore } from '@/store/useStorageStore'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
 
+type SendMessageProps = {
+  success: boolean
+  data: any
+}
+
+type LMSWebInfoProps = {
+  success: boolean
+  lmsUser: string
+  xToken: string
+}
+
 export default function App() {
   const { system, contents, settings, info, updateData } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
-
-  const handleAddToken = async (token: string | null) => {
-    setIsLoading(true)
-    await getInfo(token)
-    setIsLoading(false)
-  }
-
-  type SendMessageProps = {
-    success: boolean
-    data: any
-  }
-
-  type LMSWebInfoProps = {
-    success: boolean
-    lmsUser: string
-    xToken: string
-  }
+  const mainRef = useRef<HTMLDivElement>(null)
 
   const sendMessageAsync = (message: any): Promise<SendMessageProps> => {
     return new Promise<SendMessageProps>(resolve => {
@@ -40,6 +35,12 @@ export default function App() {
         }
       })
     })
+  }
+
+  const handleAddToken = async (token: string | null) => {
+    setIsLoading(true)
+    await getInfo(token)
+    setIsLoading(false)
   }
 
   const getInfo = async (token: string | null) => {
@@ -112,9 +113,21 @@ export default function App() {
     }))
   }
 
+  useEffect(() => {
+    if (!mainRef.current) return
+
+    const root = mainRef.current
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    if (system.theme === 'dark' || (system.theme === 'sys' && systemDark)) {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+  }, [system.theme])
+
   const ToastComponent = lazy(() => import('@/components/ToastComponent'))
   return (
-    <div className="flex h-[350px] w-[350px] flex-col items-center justify-around">
+    <div ref={mainRef} className="dark:bg-dark flex h-[350px] w-[350px] flex-col items-center justify-around">
       {isLoading ? (
         <TokenLoading />
       ) : (

@@ -36,15 +36,15 @@ export const SettingPage = () => {
           />
         ) : (
           <div>
-            <Text className="dark:text-white">알림음 여부</Text>
+            <Text>알림음 여부</Text>
             <div className="text-gray4 mt-1 flex w-[300px] justify-center px-4 text-center text-[13px] font-medium">
-              <Text className="dark:text-white">웨일 브라우저는 알림음을 지원하지 않아요.</Text>
+              <span className="font-pretendard font-medium">웨일 브라우저는 알림음을 지원하지 않아요.</span>
             </div>
           </div>
         )}
       </div>
       <div className="text-[15px] font-bold">
-        <Text className="dark:text-white">토큰 정보</Text>
+        <Text>토큰 정보</Text>
         <div className="dark:bg-dark5 bg-gray2 text-gray4 mt-1 h-[40px] w-[300px] truncate rounded-xl px-4 leading-[40px] transition-colors duration-500">
           {settings.siteToken ? settings.siteToken : '토큰이 존재하지 않습니다.'}
         </div>

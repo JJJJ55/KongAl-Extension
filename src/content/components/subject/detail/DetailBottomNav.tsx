@@ -1,8 +1,8 @@
-import { BoardIcon, PlayIcon, ReportIcon, Text } from '@/components'
+import { BoardIcon, BottomNavContent, PlayIcon, ReportIcon } from '@/components'
 import { useStoragestore } from '@/store/useStorageStore'
-import clsx from 'clsx'
+import { DetailBottomItem } from './DetailBottomItem'
 
-type BottomNavProps = {
+type DetailBottomNavProps = {
   dId: string
   activeType: 'play' | 'board' | 'report'
   setActiveType: (type: 'play' | 'board' | 'report') => void
@@ -12,48 +12,22 @@ const IssueOn = () => (
   <div className="bg-negative absolute h-[6px] w-[6px] rounded-full" style={{ top: '8px', right: '40px' }}></div>
 )
 
-export const DetailBottomNav = ({ dId, activeType, setActiveType }: BottomNavProps) => {
+export const DetailBottomNav = ({ dId, activeType, setActiveType }: DetailBottomNavProps) => {
   const { contents } = useStoragestore()
   return (
-    <div
-      className="dark:bg-dark12 flex justify-around rounded-2xl bg-white transition-colors duration-500"
-      style={{ boxShadow: '0 -5px 5px -5px rgba(0,0,0,0.3)', height: '70px' }}
-    >
-      <button
-        className={clsx(
-          'relative flex flex-1 cursor-pointer flex-col items-center justify-center px-[16px] py-[12px] text-[12px]',
-          activeType === 'play' ? 'text-knuBlue dark:text-positive' : 'text-gray4',
-        )}
-        onClick={() => setActiveType('play')}
-      >
+    <BottomNavContent>
+      <DetailBottomItem activeType={activeType} setActiveType={setActiveType} item="play" itemName="학 습">
         {contents.courseList[dId].isPlay > 0 && <IssueOn />}
         <PlayIcon />
-        <Text>학 습</Text>
-      </button>
-
-      <button
-        className={clsx(
-          'relative flex flex-1 cursor-pointer flex-col items-center justify-center px-[16px] py-[12px] text-[12px]',
-          activeType === 'board' ? 'text-knuBlue dark:text-positive' : 'text-gray4',
-        )}
-        onClick={() => setActiveType('board')}
-      >
+      </DetailBottomItem>
+      <DetailBottomItem activeType={activeType} setActiveType={setActiveType} item="board" itemName="공 지">
         {contents.courseList[dId].isBoard > 0 && <IssueOn />}
         <BoardIcon />
-        <Text>공 지</Text>
-      </button>
-
-      <button
-        className={clsx(
-          'relative flex flex-1 cursor-pointer flex-col items-center justify-center px-[16px] py-[12px] text-[12px]',
-          activeType === 'report' ? 'text-knuBlue dark:text-positive' : 'text-gray4',
-        )}
-        onClick={() => setActiveType('report')}
-      >
+      </DetailBottomItem>
+      <DetailBottomItem activeType={activeType} setActiveType={setActiveType} item="report" itemName="과 제">
         {contents.courseList[dId].isReport > 0 && <IssueOn />}
         <ReportIcon />
-        <Text>과 제</Text>
-      </button>
-    </div>
+      </DetailBottomItem>
+    </BottomNavContent>
   )
 }

@@ -23,11 +23,11 @@ export const BoardCard = ({ index, data, onLink }: BoardProps) => {
     >
       <div className="dark:bg-dark12 flex h-full w-[295px] flex-col justify-center gap-2 rounded-xl bg-white px-3 py-5 transition-colors duration-500">
         <div className="flex items-start justify-between">
-          <Text className="w-[258px] truncate text-[13px] font-medium dark:text-white">{data.title}</Text>
+          <Text className="w-[258px] truncate text-[13px] font-medium">{data.title}</Text>
           {!data.isOk && <NotReadIssue />}
         </div>
         <div>
-          <Text className="text-[11px] font-medium dark:text-white">{ChangeCreateAt(data.createAt)}</Text>
+          <Text className="text-[11px] font-medium">{ChangeCreateAt(data.createAt)}</Text>
         </div>
       </div>
     </motion.div>
