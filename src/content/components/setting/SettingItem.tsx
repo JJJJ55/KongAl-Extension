@@ -13,7 +13,7 @@ type SettingItemProps = {
 export const SettingItem = ({ type, title, value, items, itemsName, onFunc }: SettingItemProps) => {
   return (
     <div>
-      <Text className="dark:text-white">{title}</Text>
+      <Text>{title}</Text>
       <div className="text-gray4 mt-1 flex w-[300px] justify-center px-4 text-center text-[13px] font-medium">
         {items.map((x, i) => (
           <span

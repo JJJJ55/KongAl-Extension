@@ -84,15 +84,15 @@ export const SettingTopNav = ({ image, userName, userId, updateData }: SettingTo
         </div>
         <div className="mt-7 flex flex-col items-center justify-around gap-3">
           <div className="w-[165px] text-center text-[15px] font-bold">
-            <Text className="dark:text-white">{`${userName.length >= 10 ? [...userName].slice(0, 9).join('') + '...' : userName} 님`}</Text>
-            <Text className="dark:text-white">{`(${userId})`}</Text>
+            <Text>{`${userName.length >= 10 ? [...userName].slice(0, 9).join('') + '...' : userName} 님`}</Text>
+            <Text>{`(${userId})`}</Text>
           </div>
           <div
             className="bg-gray1 bg dark:bg-gray4 flex h-[30px] w-[110px] cursor-pointer items-center justify-center rounded-xl"
             onClick={() => window.open(`${import.meta.env.VITE_DONATION}`, '_blank')}
           >
             <BuymecoffeeIcon className="h-[15px] w-[15px]" />
-            <Text className="text-[12px] font-medium text-black dark:text-white">개발자 후원하기</Text>
+            <Text className="text-[12px]">개발자 후원하기</Text>
           </div>
         </div>
       </div>

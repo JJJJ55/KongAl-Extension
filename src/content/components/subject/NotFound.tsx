@@ -9,7 +9,7 @@ export const NotFound = () => {
           backgroundImage: `url(${chrome.runtime.getURL('/assets/notFound.png')})`,
         }}
       ></div>
-      <Text className="text-[16px] font-bold dark:text-white">내역이 존재하지 않아요</Text>
+      <Text className="text-[16px] font-bold">내역이 존재하지 않아요</Text>
     </div>
   )
 }

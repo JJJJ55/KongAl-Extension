@@ -51,7 +51,7 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
                   <PlayCard key={pid} index={idx} data={p} onLink={handleLink} />
                 ))
               ) : (
-                <Text className="text-[12px] dark:text-white">학습이 존재하지 않습니다.</Text>
+                <Text className="text-[12px]">학습이 존재하지 않습니다.</Text>
               )}
             </Fragment>
           )

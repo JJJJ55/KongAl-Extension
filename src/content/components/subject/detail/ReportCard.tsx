@@ -40,13 +40,13 @@ export const ReportCard = ({ index, data, onStatus }: ReportProps) => {
     >
       <div className="dark:bg-dark12 flex h-full w-[295px] flex-col justify-center gap-2 overflow-hidden rounded-xl bg-white px-3 py-5 transition-colors duration-500">
         <div className="flex items-center justify-between">
-          <Text className="w-[213px] truncate text-[13px] font-medium dark:text-white">{data.title}</Text>
+          <Text className="w-[213px] truncate text-[13px] font-medium">{data.title}</Text>
           {data.isChange ? <UserSubmitIssue /> : data.isOk ? <SubmitIssue /> : <UnSubmitIssue />}
         </div>
         <div className="flex items-end justify-between">
           <div className="flex items-center">
             <TimeIcon className="h-[16px] w-[16px] dark:text-white" />
-            <Text className="ml-1 text-[12px] font-medium dark:text-white">{ChangeDutAt(data.dueAt)}</Text>
+            <Text className="ml-1 text-[12px] font-medium">{ChangeDutAt(data.dueAt)}</Text>
           </div>
         </div>
       </div>

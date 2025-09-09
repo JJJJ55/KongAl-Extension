@@ -1,8 +1,41 @@
 @config '../../tailwind.config.js';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  * {
+    margin: 0;
+  }
+  html,
+  body {
+    margin: 0;
+  }
+}
+
+@theme {
+  --color-knuBlue: #033884;
+  --color-knuBlue-pointer: #002c6c;
+  --color-knuGreen: #23955c;
+  --color-bgColor: #f5f7fa;
+  --color-positive: #3f8cff;
+  --color-negative: #ff6e65;
+  --color-kongju: #db5039;
+  --color-chenan: #308c9b;
+  --color-yesan: #e1971c;
+  --color-gray1: #f0f0f0;
+  --color-gray2: #d3d3d3;
+  --color-gray3: #a6a6a6;
+  --color-gray4: #757575;
+  --color-gray5: #757575;
+  --color-dark: #121212;
+  --color-dark5: #1e1e1e;
+  --color-dark8: #252525;
+  --color-dark12: #2e2e2e;
+  --color-SkeletonDark: #4d4d4d;
+  --font-pretendard: 'Pretendard-Regular', system-ui, sans-serif;
+}
 
 @font-face {
   font-family: 'Pretendard-Regular';
@@ -11,9 +44,9 @@
   font-style: normal;
 }
 
-@theme {
-  --color-knuBlue: #033884;
-  --color-knuBlue-pointer: #002c6c;
-  --color-gray4: #757575;
-  --font-pretendard: 'Pretendard-Regular', system-ui, sans-serif;
+:host {
+  all: initial;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  letter-spacing: normal;
 }
