@@ -2,6 +2,7 @@ import type { Contents } from './content'
 
 export type StorageData = {
   system: {
+    pos: 'tl' | 'tr' | 'bl' | 'br'
     theme: string
     notiBeep: boolean
   }
