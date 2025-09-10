@@ -55,7 +55,6 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
     let isIssue = false
     let isPlay = false
     onLoading(true)
-    toast.success('정보 업데이트 중이에요!', { icon: false })
 
     const subjectRes = await sendMessageAsync({ type: 'USER_SUBJECT', token: settings.siteToken })
     if (!subjectRes.success) {
