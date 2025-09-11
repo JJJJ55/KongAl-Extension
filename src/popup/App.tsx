@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { PopupNav, TokenLoading, TopContent } from './components'
 import { useThemeCheck } from '@/hooks/useThemeHook'
 import { useStoragestore } from '@/store/useStorageStore'
-import { getLmsWebInfo, sendMessageAsync } from '@/utils/requestApi'
+import { getLmsWebInfo, sendMessageAsync } from '@/utils/RequestApi'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 
 export default function App() {

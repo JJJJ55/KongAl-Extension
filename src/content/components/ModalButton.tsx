@@ -7,7 +7,8 @@ import { useDragBtn } from '@/hooks/useDragBtnHook'
 import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
 import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
-import { sendMessageAsync } from '@/utils/requestApi'
+
+import { sendMessageAsync } from '@/utils/RequestApi'
 import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 
 type ModalButtonProps = {
