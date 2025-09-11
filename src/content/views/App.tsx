@@ -12,7 +12,7 @@ function App() {
     return userAllowedSites.some(site => site === url)
   }
 
-  chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg.type === 'GET_LMS') {
       const images: NodeListOf<HTMLImageElement> = document.querySelectorAll('div.fs-exclude img')
       const altTexts = Array.from(images).map(img => img.alt)

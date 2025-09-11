@@ -1,6 +1,6 @@
 import type { NotificationItem } from '@/types'
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type === 'USER_INFO') {
     getUserInfo(message.token).then(result => sendResponse(result))
 
