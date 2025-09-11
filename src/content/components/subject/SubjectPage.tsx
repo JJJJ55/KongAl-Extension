@@ -1,11 +1,11 @@
+import { AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
+import { SubjectDetailPage } from './detail/SubjectDetailPage'
 import { LoadingSkeleton } from './LoadingSkeleton'
 import { NotFound } from './NotFound'
 import { SubjectCard } from './SubjectCard'
 import { TopNavBar } from './TopNavbar'
 import { useStoragestore } from '@/store/useStorageStore'
-import { AnimatePresence } from 'framer-motion'
-import { SubjectDetailPage } from './detail/SubjectDetailPage'
 import type { CourseItem } from '@/types'
 
 export const SubjectPage = ({ isLoading }: { isLoading: boolean }) => {

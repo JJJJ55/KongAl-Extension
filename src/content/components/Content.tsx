@@ -1,7 +1,7 @@
 import { AnimatePresence } from 'framer-motion'
-import { ModalButton } from './ModalButton'
-import { MainModal } from './MainModal'
 import { useState } from 'react'
+import { MainModal } from './MainModal'
+import { ModalButton } from './ModalButton'
 
 export const Content = () => {
   const [isOpen, setIsOpen] = useState(false)
