@@ -1,12 +1,14 @@
 import { motion } from 'framer-motion'
-import type { Variants } from 'framer-motion'
-import { SubjectPage } from './subject/SubjectPage'
-import { BottomNavBar } from './subject/BottomNavbar'
+import { useState, useMemo } from 'react'
+
 import { SettingPage } from './setting/SettingPage'
-import { useMemo, useState } from 'react'
-import { useStoragestore } from '@/store/useStorageStore'
+import { BottomNavBar } from './subject/BottomNavbar'
+import { SubjectPage } from './subject/SubjectPage'
 import ToastComponent from '@/components/ToastComponent'
 import { useThemeCheck } from '@/hooks/useThemeHook'
+import { useStoragestore } from '@/store/useStorageStore'
+
+import type { Variants } from 'framer-motion'
 
 const modalVariants: Variants = {
   hidden: {

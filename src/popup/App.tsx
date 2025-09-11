@@ -1,11 +1,11 @@
 import '@/styles/index.css'
-import { PopupNav, TokenLoading, TopContent } from './components'
 import { lazy, Suspense, useState } from 'react'
-import { useStoragestore } from '@/store/useStorageStore'
-import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 import { toast } from 'react-toastify'
-import { getLmsWebInfo, sendMessageAsync } from '@/utils/requestApi'
+import { PopupNav, TokenLoading, TopContent } from './components'
 import { useThemeCheck } from '@/hooks/useThemeHook'
+import { useStoragestore } from '@/store/useStorageStore'
+import { getLmsWebInfo, sendMessageAsync } from '@/utils/requestApi'
+import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 
 export default function App() {
   const { system, contents, settings, info, updateData } = useStoragestore()
@@ -25,7 +25,8 @@ export default function App() {
       return
     }
 
-    const info = response.data.name.match(/^([^\(]+)\(([^)]+)\)$/)
+    const regex = new RegExp(/^([^(]+)\(([^)]+)\)$/)
+    const info = response.data.name.match(regex)
 
     const lmsRes = await getLmsWebInfo(response.data.name)
     if (!lmsRes.success || lmsRes.xToken === null) {

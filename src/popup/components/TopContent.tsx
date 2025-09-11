@@ -1,6 +1,6 @@
+import { useState } from 'react'
 import { BasicButton, Text } from '@/components'
 import { Guide } from '@/constants'
-import { useState } from 'react'
 
 type TopContentProps = {
   noti: boolean

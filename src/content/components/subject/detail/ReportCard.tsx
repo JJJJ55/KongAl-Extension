@@ -1,9 +1,9 @@
-import { Text, TimeIcon } from '@/components'
-import type { IssueItem } from '@/types'
-import { ChangeDutAt } from '@/utils/FormatDate'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { Text, TimeIcon } from '@/components'
+import type { IssueItem } from '@/types'
+import { ChangeDutAt } from '@/utils/FormatDate'
 
 type ReportProps = {
   index: number

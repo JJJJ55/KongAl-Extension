@@ -1,7 +1,7 @@
-import { CommonContainer } from '@/components'
-import { Content } from '../components/Content'
-import { useStoragestore } from '@/store/useStorageStore'
 import { useEffect } from 'react'
+import { Content } from '../components/Content'
+import { CommonContainer } from '@/components'
+import { useStoragestore } from '@/store/useStorageStore'
 
 function App() {
   const { info, settings, isInit, updateData } = useStoragestore()

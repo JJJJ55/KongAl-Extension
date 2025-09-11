@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import App from '@/popup/App.tsx'
 import { Content } from '@/content/components/Content'
+import App from '@/popup/App.tsx'
 
 const { chrome } = global as any
 
