@@ -1,9 +1,9 @@
-import { Text } from '@/components'
-import { getCroppedImg } from '@/utils/ImgCrop'
 import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import Cropper from 'react-easy-crop'
+import { Text } from '@/components'
+import { getCroppedImg } from '@/utils/ImgCrop'
 
 import type { Point, Area } from 'react-easy-crop'
 

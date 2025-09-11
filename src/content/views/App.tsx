@@ -1,7 +1,7 @@
-import { CommonContainer } from '@/components'
-import { Content } from '../components/Content'
-import { useStoragestore } from '@/store/useStorageStore'
 import { useEffect } from 'react'
+import { Content } from '../components/Content'
+import { CommonContainer } from '@/components'
+import { useStoragestore } from '@/store/useStorageStore'
 
 function App() {
   const { info, settings, isInit, updateData } = useStoragestore()
@@ -12,7 +12,7 @@ function App() {
     return userAllowedSites.some(site => site === url)
   }
 
-  chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg.type === 'GET_LMS') {
       const images: NodeListOf<HTMLImageElement> = document.querySelectorAll('div.fs-exclude img')
       const altTexts = Array.from(images).map(img => img.alt)

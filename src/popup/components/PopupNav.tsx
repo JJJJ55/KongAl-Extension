@@ -1,5 +1,5 @@
-import { CallIcon, GithubIcon, BuymecoffeeIcon } from '@/components/Icons'
 import { NavLink } from './NavLink'
+import { CallIcon, GithubIcon, BuymecoffeeIcon } from '@/components/Icons'
 
 export const PopupNav = () => {
   return (

@@ -1,8 +1,8 @@
-import { BasicButton, Text } from '@/components'
-import { useStoragestore } from '@/store/useStorageStore'
 import { SettingBottomNav } from './SettingBottomNav'
 import { SettingItem } from './SettingItem'
 import { SettingTopNav } from './SettingTopNav'
+import { BasicButton, Text } from '@/components'
+import { useStoragestore } from '@/store/useStorageStore'
 
 export const SettingPage = () => {
   const { system, settings, info, updateData, resetStore } = useStoragestore()

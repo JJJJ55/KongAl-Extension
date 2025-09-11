@@ -1,8 +1,8 @@
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
-import styles from '@/styles/index.css?inline'
-import { CommonContainer } from '@/components/CommonContainer.tsx'
 import toastStyles from 'react-toastify/dist/ReactToastify.css?inline'
+import App from './App.tsx'
+import { CommonContainer } from '@/components/CommonContainer.tsx'
+import styles from '@/styles/index.css?inline'
 
 function createShadowRoot(styles: string[]): ShadowRoot {
   const host = document.createElement('div')

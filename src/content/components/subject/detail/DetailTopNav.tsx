@@ -1,5 +1,5 @@
-import { InfoIcon, Text, TopNavContent } from '@/components'
 import { X } from 'lucide-react'
+import { InfoIcon, Text, TopNavContent } from '@/components'
 
 type DetailTopNavProps = {
   title: string | undefined

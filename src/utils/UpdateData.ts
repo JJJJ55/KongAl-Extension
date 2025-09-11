@@ -1,3 +1,4 @@
+import { ChangeDutAt, CompareDueAt, CompareUpdateAt } from './FormatDate'
 import type {
   Contents,
   CourseItem,
@@ -9,7 +10,6 @@ import type {
   PlayItem,
   StorageData,
 } from '@/types'
-import { ChangeDutAt, CompareDueAt, CompareUpdateAt } from './FormatDate'
 
 type UpdateDataProps = {
   itemData: any
@@ -65,53 +65,61 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
   }
 
   for (const data of itemData) {
-    const { course_id, plannable, plannable_id, html_url, plannable_type, plannable_date, submissions } = data
+    const {
+      course_id: courseId,
+      plannable,
+      plannable_id: plannableId,
+      html_url: htmlUrl,
+      plannable_type: plannableType,
+      plannable_date: plannableDate,
+      submissions,
+    } = data
 
-    if (!newNoti[course_id]) newNoti[course_id] = { isBoard: 0, isReport: 0 }
-    if (plannable_type === 'announcement') {
-      if (!newBoardList[course_id]) newBoardList[course_id] = {}
-      newBoardList[course_id][plannable_id] = {
+    if (!newNoti[courseId]) newNoti[courseId] = { isBoard: 0, isReport: 0 }
+    if (plannableType === 'announcement') {
+      if (!newBoardList[courseId]) newBoardList[courseId] = {}
+      newBoardList[courseId][plannableId] = {
         title: plannable.title,
         createAt: plannable.created_at,
-        html_url,
+        html_url: htmlUrl,
         isOk: plannable.read_state === 'read' ? true : false,
       }
       if (plannable.read_state !== 'read') {
-        newNoti[course_id].isBoard = newNoti[course_id].isBoard! + 1
+        newNoti[courseId].isBoard = newNoti[courseId].isBoard! + 1
         if (CompareUpdateAt(plannable.created_at, updateAt)) {
-          pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 공지가 있어요!')
+          pushNotification(contents?.courseList[courseId]?.title || '콩알', '새로운 공지가 있어요!')
         }
       }
     } else {
-      if (!newReportList[course_id]) newReportList[course_id] = contents?.courseDetail?.[course_id]?.ReportList || {}
-      newReportList[course_id][plannable_id] = {
+      if (!newReportList[courseId]) newReportList[courseId] = contents?.courseDetail?.[courseId]?.ReportList || {}
+      newReportList[courseId][plannableId] = {
         title: plannable.title,
         createAt: plannable.created_at,
-        dueAt: plannable_date,
-        html_url,
-        isOk: newReportList[course_id][plannable_id]
-          ? newReportList[course_id][plannable_id].isChange
+        dueAt: plannableDate,
+        html_url: htmlUrl,
+        isOk: newReportList[courseId][plannableId]
+          ? newReportList[courseId][plannableId].isChange
             ? true
             : (submissions.submitted ?? false)
           : (submissions.submitted ?? false),
-        isChange: newReportList[course_id][plannable_id] ? newReportList[course_id][plannable_id].isChange : false,
+        isChange: newReportList[courseId][plannableId] ? newReportList[courseId][plannableId].isChange : false,
       }
       if (
-        !newReportList[course_id][plannable_id].isOk &&
-        !newReportList[course_id][plannable_id].isChange &&
-        ChangeDutAt(plannable_date) !== '마 감'
+        !newReportList[courseId][plannableId].isOk &&
+        !newReportList[courseId][plannableId].isChange &&
+        ChangeDutAt(plannableDate) !== '마 감'
       ) {
-        newNoti[course_id].isReport = newNoti[course_id].isReport! + 1
+        newNoti[courseId].isReport = newNoti[courseId].isReport! + 1
         if (updateAt === null) {
-          pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 과제가 있어요!')
+          pushNotification(contents?.courseList[courseId]?.title || '콩알', '새로운 과제가 있어요!')
         } else {
-          const type = CompareDueAt(plannable_date, new Date().toISOString())
+          const type = CompareDueAt(plannableDate, new Date().toISOString())
           if (type === '오늘') {
-            pushNotification(contents?.courseList[course_id]?.title || '콩알', '오늘 마감인 과제가 있어요!')
+            pushNotification(contents?.courseList[courseId]?.title || '콩알', '오늘 마감인 과제가 있어요!')
           } else if (type === '이내') {
-            pushNotification(contents?.courseList[course_id]?.title || '콩알', '곧 마감되는 과제가 있어요!')
+            pushNotification(contents?.courseList[courseId]?.title || '콩알', '곧 마감되는 과제가 있어요!')
           } else if (CompareUpdateAt(plannable.created_at, updateAt)) {
-            pushNotification(contents?.courseList[course_id]?.title || '콩알', '새로운 과제가 있어요!')
+            pushNotification(contents?.courseList[courseId]?.title || '콩알', '새로운 과제가 있어요!')
           }
         }
       }
@@ -185,18 +193,18 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
   for (const data of itemData) {
     const { position } = data
     for (const d of data.module_items) {
-      const { module_item_id, title, content_type, completed } = d
+      const { module_item_id: moduleId, title, content_type: contentType, completed } = d
       if (!newPlayList[position]) newPlayList[position] = {}
-      newPlayList[position][module_item_id] = {
+      newPlayList[position][moduleId] = {
         title,
         isComplete: completed,
         isAttendance: null,
         dueAt: d.content_data.due_at,
       }
-      if (content_type === 'attendance_item') {
-        const { use_attendance, omit_progress } = d.content_data
-        if (use_attendance === true && omit_progress === false) {
-          newPlayList[position][module_item_id].isAttendance = d.attendance_status
+      if (contentType === 'attendance_item') {
+        const { use_attendance: useAttendance, omit_progress: omitProgress } = d.content_data
+        if (useAttendance === true && omitProgress === false) {
+          newPlayList[position][moduleId].isAttendance = d.attendance_status
           if (d.attendance_status !== 'attendance' || d.attendance_status !== 'absent') {
             //출석 또는 결석은 알림을 안울림
             if (ChangeDutAt(d.content_data.due_at) !== '마 감') {

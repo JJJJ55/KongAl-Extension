@@ -1,7 +1,7 @@
-import { Text } from '@/components'
-import type { CourseItem } from '@/types'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
+import { Text } from '@/components'
+import type { CourseItem } from '@/types'
 
 const ReportIssue = () => <span className="bg-kongju rounded-2xl px-1 text-[10px] text-white">과제 미제출</span>
 const ClassIssue = () => <span className="bg-chenan rounded-2xl px-1 text-[10px] text-white">강의 확인</span>

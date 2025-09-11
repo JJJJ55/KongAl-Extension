@@ -1,6 +1,6 @@
+import { DetailBottomItem } from './DetailBottomItem'
 import { BoardIcon, BottomNavContent, PlayIcon, ReportIcon } from '@/components'
 import { useStoragestore } from '@/store/useStorageStore'
-import { DetailBottomItem } from './DetailBottomItem'
 
 type DetailBottomNavProps = {
   dId: string

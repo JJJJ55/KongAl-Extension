@@ -1,7 +1,7 @@
+import { motion } from 'framer-motion'
 import { Text } from '@/components'
 import type { IssueItem } from '@/types'
 import { ChangeCreateAt } from '@/utils/FormatDate'
-import { motion } from 'framer-motion'
 
 type BoardProps = {
   index: number

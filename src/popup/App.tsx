@@ -1,41 +1,16 @@
 import '@/styles/index.css'
-import { PopupNav, TokenLoading, TopContent } from './components'
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
-import { useStoragestore } from '@/store/useStorageStore'
-import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
+import { lazy, Suspense, useState } from 'react'
 import { toast } from 'react-toastify'
-
-type SendMessageProps = {
-  success: boolean
-  data: any
-}
-
-type LMSWebInfoProps = {
-  success: boolean
-  lmsUser: string
-  xToken: string
-}
+import { PopupNav, TokenLoading, TopContent } from './components'
+import { useThemeCheck } from '@/hooks/useThemeHook'
+import { useStoragestore } from '@/store/useStorageStore'
+import { getLmsWebInfo, sendMessageAsync } from '@/utils/RequestApi'
+import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
 
 export default function App() {
   const { system, contents, settings, info, updateData } = useStoragestore()
   const [isLoading, setIsLoading] = useState(false)
-  const mainRef = useRef<HTMLDivElement>(null)
-
-  const sendMessageAsync = (message: any): Promise<SendMessageProps> => {
-    return new Promise<SendMessageProps>(resolve => {
-      chrome.runtime.sendMessage(message, resolve)
-    })
-  }
-
-  const getLmsWebInfo = (userName: string): Promise<LMSWebInfoProps> => {
-    return new Promise<LMSWebInfoProps>(resolve => {
-      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-        if (tabs[0].id) {
-          chrome.tabs.sendMessage(tabs[0].id, { type: 'GET_LMS', userName }, resolve)
-        }
-      })
-    })
-  }
+  const { mainRef } = useThemeCheck()
 
   const handleAddToken = async (token: string | null) => {
     setIsLoading(true)
@@ -50,7 +25,7 @@ export default function App() {
       return
     }
 
-    const regex = /^([^\(]+)\(([^)]+)\)$/
+    const regex = new RegExp(/^([^(]+)\(([^)]+)\)$/)
     const info = response.data.name.match(regex)
 
     const lmsRes = await getLmsWebInfo(response.data.name)
@@ -112,18 +87,6 @@ export default function App() {
       userId: info[2],
     }))
   }
-
-  useEffect(() => {
-    if (!mainRef.current) return
-
-    const root = mainRef.current
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    if (system.theme === 'dark' || (system.theme === 'sys' && systemDark)) {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
-    }
-  }, [system.theme])
 
   const ToastComponent = lazy(() => import('@/components/ToastComponent'))
   return (

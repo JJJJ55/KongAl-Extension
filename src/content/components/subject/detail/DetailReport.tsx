@@ -1,6 +1,6 @@
-import { useStoragestore } from '@/store/useStorageStore'
 import { ReportCard } from './ReportCard'
 import { NotFound } from '../NotFound'
+import { useStoragestore } from '@/store/useStorageStore'
 import { ChangeReportStatus } from '@/utils/ChangeStatus'
 
 export const DetailReport = ({ courseId }: { courseId: string | '' }) => {

@@ -1,10 +1,10 @@
 import { createRoot } from 'react-dom/client'
-import App from './views/App.tsx'
-import styles from '@/styles/index.css?inline'
 import cropperStyles from 'react-easy-crop/react-easy-crop.css?inline'
 import toastStyles from 'react-toastify/dist/ReactToastify.css?inline'
+import App from './views/App.tsx'
 
 import { SHADOW_HOST_ID } from '@/constants'
+import styles from '@/styles/index.css?inline'
 
 function createShadowRoot(styles: string[]): ShadowRoot {
   const host = document.createElement('div')

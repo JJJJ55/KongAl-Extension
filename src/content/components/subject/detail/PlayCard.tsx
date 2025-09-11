@@ -1,8 +1,8 @@
+import clsx from 'clsx'
+import { motion } from 'framer-motion'
 import { Text, TimeIcon } from '@/components'
 import type { PlayItem } from '@/types'
 import { ChangeDutAt } from '@/utils/FormatDate'
-import { motion } from 'framer-motion'
-import clsx from 'clsx'
 
 type PlayProps = {
   index: number

@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion'
-import type { Variants } from 'framer-motion'
-import { DetailTopNav } from './DetailTopNav'
+import { useMemo, useState } from 'react'
+import { DetailBoard } from './DetailBoard'
 import { DetailBottomNav } from './DetailBottomNav'
 import { DetailPlay } from './DetailPlay'
-import { DetailBoard } from './DetailBoard'
 import { DetailReport } from './DetailReport'
-import { useMemo, useState } from 'react'
+import { DetailTopNav } from './DetailTopNav'
 import type { CourseItem } from '@/types'
+import type { Variants } from 'framer-motion'
 
 const modalVariants: Variants = {
   hidden: {

@@ -1,6 +1,6 @@
-import { useStoragestore } from '@/store/useStorageStore'
 import { BoardCard } from './BoardCard'
 import { NotFound } from '../NotFound'
+import { useStoragestore } from '@/store/useStorageStore'
 import { ChangeBoardStatus } from '@/utils/ChangeStatus'
 
 export const DetailBoard = ({ courseId }: { courseId: string | '' }) => {

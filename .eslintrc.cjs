@@ -17,6 +17,7 @@ module.exports = {
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'no-unused-vars': 'off',
     'no-empty-pattern': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-unused-vars': [
       'warn',
@@ -42,7 +43,6 @@ module.exports = {
     'import/order': [
       'warn',
       {
-        'newlines-between': 'always',
         groups: [['builtin', 'external'], ['internal', 'parent', 'sibling', 'index'], ['object'], ['type']],
         pathGroups: [
           {

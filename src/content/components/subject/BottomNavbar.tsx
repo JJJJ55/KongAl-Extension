@@ -1,5 +1,5 @@
-import { BottomNavContent, SettingIcon, SubjectIcon } from '@/components'
 import { BottomNavItem } from './BottomNavItem'
+import { BottomNavContent, SettingIcon, SubjectIcon } from '@/components'
 
 type BottomNavProps = {
   activeType: 'subjects' | 'settings'

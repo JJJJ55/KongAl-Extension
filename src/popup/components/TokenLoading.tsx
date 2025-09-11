@@ -1,5 +1,5 @@
-import { Text } from '@/components'
 import React, { lazy, Suspense, useEffect, useState } from 'react'
+import { Text } from '@/components'
 
 export const TokenLoading = React.memo(() => {
   const Lottie = lazy(() => import('lottie-react'))

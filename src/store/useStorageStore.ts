@@ -1,7 +1,7 @@
-import type { StorageData } from '@/types'
 import { create } from 'zustand'
-import pkg from '../../package.json'
 import { chromeStorage } from './chromeStorage'
+import pkg from '../../package.json'
+import type { StorageData } from '@/types'
 
 interface StorageStore extends StorageData {
   isInit: boolean
@@ -12,6 +12,7 @@ interface StorageStore extends StorageData {
 
 const initialStorageData: StorageData = {
   system: {
+    pos: 'br',
     theme: 'sys',
     notiBeep: false,
   },

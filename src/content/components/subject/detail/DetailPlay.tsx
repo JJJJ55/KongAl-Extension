@@ -1,12 +1,12 @@
-import { LineText, Text } from '@/components'
-import { PlayCard } from './PlayCard'
-import { useStoragestore } from '@/store/useStorageStore'
-import { NotFound } from '../NotFound'
 import { useEffect } from 'react'
+import { Fragment } from 'react'
+import { toast } from 'react-toastify'
+import { PlayCard } from './PlayCard'
+import { NotFound } from '../NotFound'
+import { LineText, Text } from '@/components'
+import { useStoragestore } from '@/store/useStorageStore'
 import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
 import { UpdatePlay } from '@/utils/UpdateData'
-import { toast } from 'react-toastify'
-import { Fragment } from 'react'
 
 export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
   const { settings, contents, updateData } = useStoragestore()

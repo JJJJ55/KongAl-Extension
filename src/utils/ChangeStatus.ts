@@ -1,5 +1,5 @@
-import type { StorageData } from '@/types'
 import { ChangeDutAt } from './FormatDate'
+import type { StorageData } from '@/types'
 
 type ChangeStatusProps = {
   courseId: string

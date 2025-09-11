@@ -1,10 +1,10 @@
-import { BuymecoffeeIcon, Text } from '@/components'
 import { AnimatePresence } from 'framer-motion'
-import { useCallback, useRef, useState } from 'react'
-import { ImageCropModal } from './ImageCropModal'
-import { toast } from 'react-toastify'
-import type { StorageData } from '@/types'
 import { Camera, Undo2 } from 'lucide-react'
+import { useCallback, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
+import { ImageCropModal } from './ImageCropModal'
+import { BuymecoffeeIcon, Text } from '@/components'
+import type { StorageData } from '@/types'
 
 type SettingTopNavProps = {
   image: string
