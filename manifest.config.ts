@@ -24,6 +24,7 @@ export default defineManifest({
       matches: [
         'https://*.google.com/*',
         'https://*.naver.com/*',
+        'https://*.www.youtube.com/*',
         'https://knulms.kongju.ac.kr/*',
         'https://*.kongju.ac.kr/*',
         'https://*.kncu.kongju.ac.kr/*',
@@ -33,6 +34,7 @@ export default defineManifest({
   host_permissions: [
     'https://*.google.com/*',
     'https://*.naver.com/*',
+    'https://*.www.youtube.com/*',
     'https://knulms.kongju.ac.kr/*',
     'https://*.kongju.ac.kr/*',
     'https://*.kncu.kongju.ac.kr/*',
