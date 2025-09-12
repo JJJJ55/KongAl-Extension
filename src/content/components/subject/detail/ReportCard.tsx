@@ -45,7 +45,7 @@ export const ReportCard = ({ index, data, onStatus }: ReportProps) => {
         </div>
         <div className="flex items-end justify-between">
           <div className="flex items-center">
-            <TimeIcon className="h-[16px] w-[16px] dark:text-white" />
+            <TimeIcon className="h-[16px] w-[16px] text-black dark:text-white" />
             <Text className="ml-1 text-[12px] font-medium">{ChangeDutAt(data.dueAt)}</Text>
           </div>
         </div>

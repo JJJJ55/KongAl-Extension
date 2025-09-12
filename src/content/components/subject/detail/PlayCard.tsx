@@ -49,7 +49,7 @@ export const PlayCard = ({ index, data, onLink }: PlayProps) => {
           )}
         </div>
         <div className="flex items-center dark:text-white">
-          <TimeIcon className="dark:text-gray2 h-[16px] w-[16px]" />
+          <TimeIcon className="dark:text-gray2 h-[16px] w-[16px] text-black" />
           <Text className="ml-1 text-[12px] font-medium">{ChangeDutAt(data.dueAt)}</Text>
         </div>
       </div>

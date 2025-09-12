@@ -60,7 +60,7 @@ export const SettingTopNav = ({ image, userName, userId, updateData }: SettingTo
               onClick={() => inputRef.current?.click()}
               className="bg-gray1 group relative flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full opacity-70 hover:opacity-100"
             >
-              <Camera size={20} />
+              <Camera size={20} className="text-black" />
               <div
                 style={{ top: '-25px' }}
                 className="absolute mt-[4px] bg-gray-800 px-[6px] py-[2px] text-[10px] whitespace-nowrap text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100"
@@ -72,7 +72,7 @@ export const SettingTopNav = ({ image, userName, userId, updateData }: SettingTo
               onClick={handleImgReset}
               className="bg-gray1 group relative flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full opacity-70 hover:opacity-100"
             >
-              <Undo2 size={20} />
+              <Undo2 size={20} className="text-black" />
               <div
                 style={{ top: '-25px' }}
                 className="absolute z-10 mt-[4px] bg-gray-800 px-[6px] py-[2px] text-[10px] whitespace-nowrap text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100"

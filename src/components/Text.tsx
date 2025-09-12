@@ -6,5 +6,5 @@ type ButtonProps = {
 }
 
 export const Text = ({ className, children }: ButtonProps) => {
-  return <div className={clsx('font-pretendard dark:text-white', className)}>{children}</div>
+  return <div className={clsx('font-pretendard text-black dark:text-white', className)}>{children}</div>
 }
