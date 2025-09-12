@@ -1,12 +1,14 @@
 # 🥜 콩알 [Kong_Al]
-> 국립공주대학교 LMS 정보 알리미 확장 프로그램
+
+> #### 🏛 국립공주대학교 LMS 정보 알리미 확장 프로그램
+
 <div align='center'>
   <div>
     <img src="https://github.com/user-attachments/assets/7c580f9b-8d19-4f81-b089-0930ac9319dd" alt="화면"/>
   </div>
   <div>
-    <h3>개발 기간</h3>
-    <b>📅 2025. 05. 28 ~ Ing</b>
+    <h3>📅 개발 기간</h3>
+    <b>2025. 05. 28 ~ Ing</b>
   </div>
   <br/>
 <!--   <img src="https://img.shields.io/chrome-web-store/v/hannhecbnjnnbbafffmogdlnajpcomek?style=for-the-badge&label=version&color=blue" alt="서비스 버전" /> -->
@@ -35,24 +37,29 @@
 </div>
 
 ## 개발 배경
-> 💦 아 맞다! LMS 있었지? ㅜㅜ  
-> 💦 우리 OOO 수업 과제 언제까지였지?? 나 했었나??  
-> 💦 뭐라고?? 그런 공지가 있었다고..?  
 
- ### &ensp; 😎 학점 챙기기도 힘들고 정신없으시죠? <ins>이제 LMS 정보들은 콩알에게 맡겨주세요!</ins>
+> 💦 아 맞다! LMS 있었지? ㅜㅜ
+>
+> 💦 우리 OOO 수업 과제 언제까지였지?? 나 했었나??
+>
+> 💦 뭐라고?? 그런 공지가 있었다고..?
+
+### &ensp; 😎 학점 챙기기도 힘들고 정신없으시죠? <ins>이제 LMS 정보들은 콩알에게 맡겨주세요!</ins>
 
  <br/>
 
 ## 프로젝트 소개
+
 > ✔ 콩알은 **여러분의 LMS있는 정보들을 종합해서 간편하게 제공해주는 확장 프로그램**입니다.
-> 
+>
 > ✔ 주요 과목들의 **주차 학습, 공지사항, 과제**들을 한눈에 확인해보세요!
-> 
+>
 > ✔ 또한 **놓친 LMS 학습, 새 공지, 미 제출 과제가 있다면 알림**으로 알려주니 학점 챙기기에도 편해요!
 
 <br/>
 
 ### &ensp; 🛠️ 기술 스택
+
 &ensp;[![Skills](https://go-skill-icons.vercel.app/api/icons?i=react,typescript,vite,zustand,tailwindcss,vitest,chrome)](https://github.com/JJJJ55/KongAl-Extension)
 
 <br/>
@@ -61,17 +68,19 @@
 
 > #### 메인 화면
 
-|과목 탭|설정 탭|
-|--|--|
-|<img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/bcb07341-1dd1-4868-b4db-4886c95bee94" alt="과목 탭"/>|<img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/2308a6c6-74b0-46ef-9e79-393474f7e5bc" alt="설정 탭"/>|
+| 과목 탭                                                                                                                                         | 설정 탭                                                                                                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/bcb07341-1dd1-4868-b4db-4886c95bee94" alt="과목 탭"/> | <img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/2308a6c6-74b0-46ef-9e79-393474f7e5bc" alt="설정 탭"/> |
+
 - 과목 탭에서는 주요 과목과 이슈 태그를 한눈에 볼 수 있습니다
 - 설정 탭에서 사용자 정보 및 테마, 알림음 여부를 설정할 수 있습니다
 
 > #### 과목 상세 화면
 
-|과목 내 학습|과목 내 공지|과목 내 과제|
-|--|--|--|
-|<img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/3a761a9d-d2e8-4df2-82f3-9b107a484816" alt="과목 내 학습"/>|<img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/00bd2952-d267-4b87-a34f-59450af1d54a" alt="과목 내 공지"/>|<img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/d906437b-3bf4-409d-9f51-2f5107231bee" alt="과목 내 과제"/>
+| 과목 내 학습                                                                                                                                         | 과목 내 공지                                                                                                                                         | 과목 내 과제                                                                                                                                         |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/3a761a9d-d2e8-4df2-82f3-9b107a484816" alt="과목 내 학습"/> | <img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/00bd2952-d267-4b87-a34f-59450af1d54a" alt="과목 내 공지"/> | <img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/d906437b-3bf4-409d-9f51-2f5107231bee" alt="과목 내 과제"/> |
+
 - 과목의 주차학습 (LMS 학습) 정보를 볼 수 있습니다.
 - 공지 리스트를 한눈에 볼 수 있습니다.
 - 과제 내역이 제공되며, 미제출 과제는 임의로 상태 변경이 가능합니다.
