@@ -33,7 +33,7 @@ const CloseOverlay = () => (
 
 export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) => {
   const { system, contents, settings, info, updateData } = useStoragestore()
-  const { handleDragEnd, handleOnDrag, isDragging, setIsDragging, activeCorner } = useDragBtn()
+  const { handleOnDrag, isDragging, setIsDragging, activeCorner } = useDragBtn()
   const { shouldRefresh } = useRefreshCheck()
 
   const handleModalOpen = () => {
@@ -115,7 +115,7 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
   return (
     <>
       {isDragging && (
-        <div className="fixed top-0 left-0 z-[400] flex h-[100vh] w-[100vw] items-center justify-center bg-black/50">
+        <div className="fixed top-0 left-0 z-[2147483647] flex h-[100vh] w-[100vw] items-center justify-center bg-black/50">
           <div className="font-pretendard text-[20px] font-bold text-white">원하는 모서리에 가져다 놓아주세요!</div>
           <ModalBtnDrag activeCorner={activeCorner} positionName="tl" img={settings.image} />
           <ModalBtnDrag activeCorner={activeCorner} positionName="tr" img={settings.image} />
@@ -129,15 +129,15 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
           if (!isDragging) handleModalOpen()
         }}
         onDragStart={() => setIsDragging(true)}
-        className="fixed z-500 h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat"
+        className="fixed z-[2147483647] h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat"
         drag
         dragSnapToOrigin
         dragMomentum={false}
         dragElastic={0}
-        onDrag={(_, info) => handleOnDrag(info)}
-        onDragEnd={(_, info) => {
+        onDrag={(_, info) => handleOnDrag(info.offset.x, info.offset.y)}
+        onDragEnd={() => {
           setIsDragging(false)
-          handleDragEnd(info)
+          updateData('system', prev => ({ ...prev, pos: activeCorner }))
         }}
         style={{
           ...(system.pos === 'tl' && { top: '25px', left: '25px' }),
