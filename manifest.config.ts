@@ -21,9 +21,21 @@ export default defineManifest({
   content_scripts: [
     {
       js: ['src/content/main.tsx'],
-      matches: ['https://kncu.kongju.ac.kr/*', 'https://knulms.kongju.ac.kr/*', 'https://www.naver.com/'],
+      matches: [
+        'https://*.google.com/*',
+        'https://*.naver.com/*',
+        'https://knulms.kongju.ac.kr/*',
+        'https://*.kongju.ac.kr/*',
+        'https://*.kncu.kongju.ac.kr/*',
+      ],
     },
   ],
-  host_permissions: ['https://kncu.kongju.ac.kr/*', 'https://knulms.kongju.ac.kr/*', 'https://www.naver.com/'],
+  host_permissions: [
+    'https://*.google.com/*',
+    'https://*.naver.com/*',
+    'https://knulms.kongju.ac.kr/*',
+    'https://*.kongju.ac.kr/*',
+    'https://*.kncu.kongju.ac.kr/*',
+  ],
   permissions: ['storage', 'unlimitedStorage', 'activeTab', 'scripting', 'notifications', 'cookies'],
 })
