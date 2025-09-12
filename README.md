@@ -34,6 +34,15 @@
   </div> 
 </div>
 
+## 개발 배경
+> 💦 아 맞다! LMS 있었지? ㅜㅜ  
+> 💦 우리 OOO 수업 과제 언제까지였지?? 나 했었나??  
+> 💦 뭐라고?? 그런 공지가 있었다고..?  
+
+ ### &ensp; 😎 학점 챙기기도 힘들고 정신없으시죠? <ins>이제 LMS 정보들은 콩알에게 맡겨주세요!</ins>
+
+ <br/>
+
 ## 프로젝트 소개
 > ✔ 콩알은 **여러분의 LMS있는 정보들을 종합해서 간편하게 제공해주는 확장 프로그램**입니다.
 > 
@@ -41,9 +50,12 @@
 > 
 > ✔ 또한 **놓친 LMS 학습, 새 공지, 미 제출 과제가 있다면 알림**으로 알려주니 학점 챙기기에도 편해요!
 
+<br/>
 
-#### &ensp; 🛠️ 기술 스택
-&ensp; [![Skills](https://go-skill-icons.vercel.app/api/icons?i=react,typescript,vite,zustand,tailwindcss,vitest,chrome)](https://github.com/JJJJ55/KongAl-Extension)
+### &ensp; 🛠️ 기술 스택
+&ensp;[![Skills](https://go-skill-icons.vercel.app/api/icons?i=react,typescript,vite,zustand,tailwindcss,vitest,chrome)](https://github.com/JJJJ55/KongAl-Extension)
+
+<br/>
 
 > ## 서비스 소개
 
@@ -56,6 +68,7 @@
 - 설정 탭에서 사용자 정보 및 테마, 알림음 여부를 설정할 수 있습니다
 
 > #### 과목 상세 화면
+
 |과목 내 학습|과목 내 공지|과목 내 과제|
 |--|--|--|
 |<img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/3a761a9d-d2e8-4df2-82f3-9b107a484816" alt="과목 내 학습"/>|<img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/00bd2952-d267-4b87-a34f-59450af1d54a" alt="과목 내 공지"/>|<img width="358" height="608" alt="Image" src="https://github.com/user-attachments/assets/d906437b-3bf4-409d-9f51-2f5107231bee" alt="과목 내 과제"/>
