@@ -1,43 +1,47 @@
-import Logo from '@/assets/crx.svg'
-import { useState } from 'react'
-// import './App.css'
+import { useEffect } from 'react'
+import { Content } from '../components/Content'
+import { CommonContainer } from '@/components'
+import { useStoragestore } from '@/store/useStorageStore'
 
 function App() {
-  const [show, setShow] = useState(false)
-  const toggle = () => setShow(!show)
+  const { info, settings, isInit, updateData } = useStoragestore()
 
-  return (
-    // <div>
-    //   {show && (
-    //     <div className={`popup-content ${show ? 'opacity-100' : 'opacity-0'}`}>
-    //       <h1>HELLO CRXJS</h1>
-    //       <div className="w-50px h-50px bg-knuBlue text-2xl font-bold underline">테스트</div>
-    //       <div className="bottom-25px right-25px h-56px w-56px fixed z-500">ggg</div>
-    //     </div>
-    //   )}
-    //   <div
-    //     className="fixed right-0 bottom-0 z-100 m-5 h-[24px] w-[24px] bg-cover bg-center bg-no-repeat"
-    //     style={{ backgroundImage: `url(${chrome.runtime.getURL('/logo.png')})` }}
-    //     onClick={toggle}
-    //   >
-    //     er
-    //     {/* <img src={Logo} alt="CRXJS logo" className="button-icon bg-cover bg-center bg-no-repeat" /> */}
-    //   </div>
-    // </div>
-    <div
-      className="fixed right-0 bottom-0 z-100 m-5 h-[48px] w-[48px] bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${chrome.runtime.getURL('/logo.png')})` }}
-      onClick={toggle}
-    >
-      {show && (
-        <div className={`popup-content ${show ? 'opacity-100' : 'opacity-0'}`}>
-          <h1>HELLO CRXJS</h1>
-          <div className="w-50px h-50px bg-knuBlue text-2xl font-bold underline">테스트</div>
-          <div className="bottom-25px right-25px h-56px w-56px fixed z-500">ggg</div>
-        </div>
-      )}
-    </div>
-  )
+  const userAllowedSites = [import.meta.env.VITE_TOKEN_URL]
+
+  const checkAllowedSites = (url: string) => {
+    return userAllowedSites.some(site => site === url)
+  }
+
+  chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+    if (msg.type === 'GET_LMS') {
+      const images: NodeListOf<HTMLImageElement> = document.querySelectorAll('div.fs-exclude img')
+      const altTexts = Array.from(images).map(img => img.alt)
+
+      const domain = window.location.hostname
+      if (checkAllowedSites(domain) && altTexts[0] === msg.userName) {
+        const token = document.cookie.split(';').find(now => now.startsWith(' xn_api_token='))
+        const xToken = token ? decodeURIComponent(token.split('=')[1]) : null
+        sendResponse({ success: true, lmsUser: altTexts[0], xToken })
+      } else {
+        sendResponse({ success: false, lmsUser: altTexts[0], xToken: null })
+      }
+    }
+  })
+
+  useEffect(() => {
+    if (!isInit) return
+    const images: NodeListOf<HTMLImageElement> = document.querySelectorAll('div.fs-exclude img')
+    const altTexts = Array.from(images).map(img => img.alt)
+
+    const domain = window.location.hostname
+    if (checkAllowedSites(domain) && altTexts[0] === info.fullName) {
+      const token = document.cookie.split(';').find(now => now.startsWith(' xn_api_token='))
+      const xToken = token ? decodeURIComponent(token.split('=')[1]) : ''
+      updateData('settings', prev => ({ ...prev, xToken: xToken }))
+    }
+  }, [isInit, info.fullName])
+
+  return <CommonContainer>{settings.siteToken && settings.siteToken!.length === 64 && <Content />}</CommonContainer>
 }
 
 export default App

@@ -1,9 +1,12 @@
-import path from 'node:path'
+/// <reference types="vitest" />
+
 import { crx } from '@crxjs/vite-plugin'
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
-import zip from 'vite-plugin-zip-pack'
 import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
+import path from 'node:path'
+import { defineConfig } from 'vite'
+import svgr from 'vite-plugin-svgr'
+import zip from 'vite-plugin-zip-pack'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 import manifest from './manifest.config.js'
@@ -17,11 +20,17 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    svgr(),
     crx({ manifest }),
     tailwindcss(),
     tsconfigPaths(),
     zip({ outDir: 'release', outFileName: `crx-${name}-${version}.zip` }),
   ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['/src/test/vitest.setup.ts'],
+  },
   server: {
     cors: {
       origin: [/chrome-extension:\/\//],

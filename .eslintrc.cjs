@@ -9,6 +9,7 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'prettier', 'import'],
@@ -16,6 +17,7 @@ module.exports = {
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'no-unused-vars': 'off',
     'no-empty-pattern': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-unused-vars': [
       'warn',
@@ -41,7 +43,6 @@ module.exports = {
     'import/order': [
       'warn',
       {
-        'newlines-between': 'always',
         groups: [['builtin', 'external'], ['internal', 'parent', 'sibling', 'index'], ['object'], ['type']],
         pathGroups: [
           {

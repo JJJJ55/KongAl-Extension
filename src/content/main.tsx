@@ -1,15 +1,10 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import cropperStyles from 'react-easy-crop/react-easy-crop.css?inline'
+import toastStyles from 'react-toastify/dist/ReactToastify.css?inline'
 import App from './views/App.tsx'
-import styles from '@/styles/index.css?inline'
+
 import { SHADOW_HOST_ID } from '@/constants'
-
-// const container = document.createElement('div')
-// container.id = 'crxjs-app'
-// document.body.appendChild(container)
-// createRoot(container).render(<App />)
-
-/////
+import styles from '@/styles/index.css?inline'
 
 function createShadowRoot(styles: string[]): ShadowRoot {
   const host = document.createElement('div')
@@ -27,7 +22,7 @@ function createShadowRoot(styles: string[]): ShadowRoot {
 }
 
 function initApp() {
-  const shadowRoot = createShadowRoot([styles])
+  const shadowRoot = createShadowRoot([styles, cropperStyles, toastStyles])
   createRoot(shadowRoot).render(<App />)
 }
 
@@ -36,5 +31,3 @@ if (document.readyState === 'loading') {
 } else {
   initApp()
 }
-
-////
