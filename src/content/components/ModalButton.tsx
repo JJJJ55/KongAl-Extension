@@ -112,8 +112,6 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
     }
   }, [shouldRefresh, info.noti])
 
-  console.log('리렌더링')
-
   return (
     <>
       {isDragging && (
