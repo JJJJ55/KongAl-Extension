@@ -45,7 +45,7 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
           const weekData = playList[week]
           return (
             <Fragment key={week}>
-              <LineText className="w-[60px] text-[13px] font-bold dark:text-white">{`${week}주차`}</LineText>
+              <LineText className="w-[60px] text-[13px] font-bold text-black dark:text-white">{`${week}주차`}</LineText>
               {weekData ? (
                 Object.entries(weekData).map(([pid, p], idx) => (
                   <PlayCard key={pid} index={idx} data={p} onLink={handleLink} />
