@@ -12,7 +12,19 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   const { mainRef } = useThemeCheck()
 
+  function escapeHtml(str: string | null) {
+    return str !== null
+      ? str
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;')
+      : null
+  }
+
   const handleAddToken = async (token: string | null) => {
+    token = escapeHtml(token)
     setIsLoading(true)
     await getInfo(token)
     setIsLoading(false)
