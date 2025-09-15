@@ -31,7 +31,8 @@ export const UpdateSubject = ({ contents, itemData, updateFn }: UpdateDataProps)
   const currentList = contents.courseList
   const newCourseList: Record<string, CourseItem> = {}
   for (const data of itemData) {
-    const { id, name, teachers } = data
+    const { id, name, teachers }: { id: string; name: string; teachers: any[] } = data
+    if (name.startsWith('[')) continue
     if (currentList[id] !== undefined) {
       newCourseList[id] = { ...currentList[id] }
     } else {
