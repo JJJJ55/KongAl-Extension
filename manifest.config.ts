@@ -1,9 +1,14 @@
 import { defineManifest } from '@crxjs/vite-plugin'
 import pkg from './package.json'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 export default defineManifest({
   manifest_version: 3,
-  name: pkg.name,
+  name: isDev
+    ? '[DEV] 콩알[Kong_Al] - 국립공주대학교 LMS 정보 알리미'
+    : '콩알[Kong_Al] - 국립공주대학교 LMS 정보 알리미',
+  description: pkg.description,
   version: pkg.version,
   icons: {
     48: 'public/kongal_Logo.png',
