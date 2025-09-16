@@ -1,5 +1,6 @@
 {
   "name": "kong-al",
+  "description": "국립공주대학교 LMS 정보 알리미",
   "type": "module",
   "version": "2.1.1",
   "private": true,
