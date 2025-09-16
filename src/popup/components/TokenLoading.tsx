@@ -6,7 +6,7 @@ export const TokenLoading = React.memo(() => {
   const [loadingJson, setLoadingJson] = useState<any>(null)
 
   useEffect(() => {
-    import('@/assets/Loading.json').then(module => setLoadingJson(module.default))
+    import('../Loading.json').then(module => setLoadingJson(module.default))
   }, [])
 
   return (

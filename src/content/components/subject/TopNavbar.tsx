@@ -1,5 +1,5 @@
-import KongalLogo from '@/assets/KongalLogo.svg?react'
 import { Text, TopNavContent } from '@/components'
+import KongalLogo from '@/../public/KongalLogo.svg?react'
 
 export const TopNavBar = () => {
   return (
