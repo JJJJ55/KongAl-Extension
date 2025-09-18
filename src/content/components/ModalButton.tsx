@@ -58,6 +58,11 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
     }
 
     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
+    if (ids.length === 0) {
+      toast.success('업데이트 완료', { icon: false })
+      onLoading(false)
+      return
+    }
     const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token: settings.siteToken, ids })
     if (issueRes.success) {
       UpdateIssue({
