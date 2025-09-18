@@ -29,7 +29,7 @@ const initialStorageData: StorageData = {
     version: pkg.version,
     updateAt: null,
     fetchCycle: 1000 * 60 * 60 * 12,
-    image: chrome.runtime.getURL('/kongal_Logo.png'),
+    image: chrome.runtime.getURL('kongal_Logo.png'),
   },
   contents: {
     courseList: {},
