@@ -18,7 +18,7 @@ export const SettingTopNav = ({ image, userName, userId, updateData }: SettingTo
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleImgReset = useCallback(async () => {
-    updateData('settings', prev => ({ ...prev, image: chrome.runtime.getURL('/kongal_Logo.png') }))
+    updateData('settings', prev => ({ ...prev, image: chrome.runtime.getURL('kongal_Logo.png') }))
     toast.success('프로필 사진이 기본으로 설정됐어요!', { icon: false })
   }, [])
 
