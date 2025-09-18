@@ -1,5 +1,26 @@
 import type { NotificationItem } from '@/types'
 
+chrome.runtime.onInstalled.addListener(async () => {
+  for (const c of chrome.runtime.getManifest().content_scripts ?? []) {
+    for (const t of await chrome.tabs.query({ url: c.matches ?? [] })) {
+      chrome.scripting.executeScript({
+        target: { tabId: t.id ?? 0 },
+        files: c.js ?? [],
+      })
+      c.css?.forEach(css => {
+        chrome.scripting.insertCSS({
+          target: { tabId: t.id ?? 0 },
+          files: [css],
+        })
+      })
+    }
+  }
+})
+
+chrome.runtime.onUpdateAvailable.addListener(() => {
+  chrome.runtime.reload()
+})
+
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type === 'USER_INFO') {
     getUserInfo(message.token).then(result => sendResponse(result))
