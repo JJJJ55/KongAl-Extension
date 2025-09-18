@@ -1,4 +1,5 @@
 name: Create Release Tag
+run-name: Kong_Al ${{ github.ref_name }} Release ❤️
 
 on:
   push:
