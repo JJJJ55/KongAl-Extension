@@ -24,6 +24,19 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+      - name: Setting env
+        run: |
+          echo "VITE_TOKEN_URL=${{ secrets.VITE_TOKEN_URL }}" >> .env
+          echo "VITE_USER_INFO=${{ secrets.VITE_USER_INFO }}" >> .env
+          echo "VITE_USER_SUBJECT=${{ secrets.VITE_USER_SUBJECT }}" >> .env
+          echo "VITE_USER_ISSUE=${{ secrets.VITE_USER_ISSUE }}" >> .env
+          echo "VITE_XTOKEN_URL=${{ secrets.VITE_XTOKEN_URL }}" >> .env
+          echo "VITE_PLAYSTRING=${{ secrets.VITE_PLAYSTRING }}" >> .env
+          echo "VITE_REDIRECT_URL=${{ secrets.VITE_REDIRECT_URL }}" >> .env
+          echo "VITE_GITHUB=${{ secrets.VITE_GITHUB }}" >> .env
+          echo "VITE_OPENCHAT=${{ secrets.VITE_OPENCHAT }}" >> .env
+          echo "VITE_GUIDE=${{ secrets.VITE_GUIDE }}" >> .env
+          echo "VITE_DONATION=${{ secrets.VITE_DONATION }}" >> .env
 
       - name: Install dependencies
         run: pnpm install
