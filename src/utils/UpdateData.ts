@@ -134,25 +134,35 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
   updateFn('contents', prev => {
     const currentCourseDetail = { ...prev.courseDetail }
     const newCourseDetail: Detail = {}
-    ids!.forEach((id, _) => (newCourseDetail[id] = courseDetailItems))
+    ids!.forEach((id, _) => {
+      newCourseDetail[id] = {
+        PlayList: { ...(currentCourseDetail[id]?.PlayList || {}) },
+        BoardList: {},
+        ReportList: {},
+      }
+    })
 
     for (const courseId in newBoardList) {
-      const currentDetail = currentCourseDetail[courseId] || courseDetailItems
+      console.log('공지', courseId)
+      // const currentDetail = currentCourseDetail[courseId] || courseDetailItems
       newCourseDetail[courseId] = {
-        ...currentDetail,
+        // ...currentDetail,
+        ...newCourseDetail[courseId],
         BoardList: {
-          ...currentDetail.BoardList,
+          // ...currentDetail.BoardList,
           ...newBoardList[courseId],
         },
       }
     }
 
     for (const courseId in newReportList) {
-      const currentDetail = currentCourseDetail[courseId] || courseDetailItems
+      console.log('과제', courseId)
+      // const currentDetail = currentCourseDetail[courseId] || courseDetailItems
       newCourseDetail[courseId] = {
-        ...currentDetail,
+        // ...currentDetail,
+        ...newCourseDetail[courseId],
         ReportList: {
-          ...currentDetail.ReportList,
+          // ...currentDetail.ReportList,
           ...newReportList[courseId],
         },
       }
@@ -170,7 +180,7 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
 
     return {
       ...prev,
-      courseDetail: newCourseDetail || courseDetailItems,
+      courseDetail: newCourseDetail,
       courseList: mergedCourseList,
     }
   })
