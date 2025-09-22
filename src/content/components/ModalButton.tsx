@@ -59,7 +59,8 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
 
     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
     if (ids.length === 0) {
-      toast.success('업데이트 완료', { icon: false })
+      toast.success('업데이트 완료!', { icon: false })
+      updateData('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
       onLoading(false)
       return
     }

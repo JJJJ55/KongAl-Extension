@@ -53,35 +53,39 @@ export default function App() {
     }
 
     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
-    const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token, ids })
-    if (issueRes.success) {
-      UpdateIssue({
-        isBeep: system.notiBeep,
-        contents,
-        ids,
-        itemData: issueRes.data,
-        updateAt: settings.updateAt,
-        updateFn: updateData,
-      })
-      toast.success('정보가 업데이트 됐어요!', { icon: false })
-    } else {
-      toast.error('이슈 업데이트에 실패했어요.', { icon: false })
-    }
-
-    for (const id of ids) {
-      const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: lmsRes.xToken })
-      const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
-      if (res.success) {
-        UpdatePlay({
-          itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+    if (ids.length !== 0) {
+      const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token, ids })
+      if (issueRes.success) {
+        UpdateIssue({
           isBeep: system.notiBeep,
           contents,
-          id,
-          updateAt: contents.courseList[id]?.updateAt,
+          ids,
+          itemData: issueRes.data,
+          updateAt: settings.updateAt,
           updateFn: updateData,
         })
-        await new Promise(resolve => setTimeout(resolve, delay))
+        toast.success('정보가 업데이트 됐어요!', { icon: false })
+      } else {
+        toast.error('이슈 업데이트에 실패했어요.', { icon: false })
       }
+
+      for (const id of ids) {
+        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: lmsRes.xToken })
+        const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
+        if (res.success) {
+          UpdatePlay({
+            itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+            isBeep: system.notiBeep,
+            contents,
+            id,
+            updateAt: contents.courseList[id]?.updateAt,
+            updateFn: updateData,
+          })
+          await new Promise(resolve => setTimeout(resolve, delay))
+        }
+      }
+    } else {
+      toast.success('정보가 업데이트 됐어요!', { icon: false })
     }
 
     // // info, settings 업데이트
