@@ -9,22 +9,24 @@
   <div>
     <h3>📅 개발 기간</h3>
     <b>2025. 05. 28 ~ Ing</b>
+    <h3>📅 정식 출시</h3>
+    <b>2025. 09. 26</b>
   </div>
   <br/>
-<!--   <img src="https://img.shields.io/chrome-web-store/v/hannhecbnjnnbbafffmogdlnajpcomek?style=for-the-badge&label=version&color=blue" alt="서비스 버전" /> -->
+  <img src="https://img.shields.io/chrome-web-store/v/ebkihfmcclpogahelbhfdehakhipbfbh?style=for-the-badge&label=version&color=blue" alt="서비스 버전" />
   <br />
   <br />
   <div style="display: flex; justify-content: center">
-    <a href="">
+    <a href="https://chromewebstore.google.com/detail/ebkihfmcclpogahelbhfdehakhipbfbh?utm_source=item-share-cb">
       <img src="https://github.com/user-attachments/assets/c371a3c8-8cdb-4acf-aba0-9394b586146d" alt="Chrome 웹 스토어에서 다운로드" />
     </a>
-    <a href="">
+    <a href="https://store.whale.naver.com/detail/bgmommgeffjfpibgkghgaeoladcdhpnl">
       <img src="https://github.com/user-attachments/assets/0213f46d-b7b1-4a5e-ac3c-4b70262ec247" alt="Whale 스토어에서 다운로드" />
     </a>
   </div>
   <br/>
   <div style="display: flex; justify-content: center">
-    <a href="">
+    <a href="https://www.notion.so/Kong_Al-FAQ-263faec81a4280aa893fe8ea89a3d341?source=copy_link">
       <img width="200" height="50" alt="Image" src="https://github.com/user-attachments/assets/21b3b498-dfe1-4a3d-868f-0873fa32248f" alt="사용자 가이드" />
     </a>
     <a href="https://buymeacoffee.com/dhwlsdud62z">
@@ -89,7 +91,6 @@
 
 ```bash
 src/
-├── assets                    # Servuce assets
 ├── background                # Extension background
 ├── components                # Common components
 ├── constants                 # Service constants
@@ -114,6 +115,7 @@ src/
 ```
 #   feat        : 기능 (새로운 기능)
 #   fix         : 버그 (버그 수정)
+#   release     : 서비스 배포
 #   refactor    : 리팩토링
 #   design      : CSS 등 사용자 UI 디자인 변경
 #   comment     : 필요한 주석 추가 및 변경
