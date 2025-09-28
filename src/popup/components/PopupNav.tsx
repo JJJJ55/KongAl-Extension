@@ -7,7 +7,7 @@ export const PopupNav = () => {
       <NavLink link={import.meta.env.VITE_GITHUB} text="Github">
         <GithubIcon className="h-[20px] w-[20px]" />
       </NavLink>
-      <NavLink link={import.meta.env.VITE_OPENCHAT} text="문의 & 오류접수">
+      <NavLink link={import.meta.env.VITE_GUIDE} text="이용가이드 (필독)">
         <CallIcon className="h-[20px] w-[20px]" />
       </NavLink>
       <NavLink link={import.meta.env.VITE_DONATION} text="개발자 후원">
