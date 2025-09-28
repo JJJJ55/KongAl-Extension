@@ -39,6 +39,10 @@
   }
 }
 
+:fullscreen #youtube {
+  display: none !important;
+}
+
 :host {
   all: initial;
   font-size: 16px !important;

@@ -121,7 +121,10 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
   return (
     <>
       {isDragging && (
-        <div className="fixed top-0 left-0 z-[2147483647] flex h-[100vh] w-[100vw] items-center justify-center bg-black/50">
+        <div
+          id="youtube"
+          className="youtube fixed top-0 left-0 z-[2147483647] flex h-[100vh] w-[100vw] items-center justify-center bg-black/50"
+        >
           <div className="font-pretendard text-[20px] font-bold text-white">원하는 모서리에 가져다 놓아주세요!</div>
           <ModalBtnDrag activeCorner={activeCorner} positionName="tl" img={settings.image} />
           <ModalBtnDrag activeCorner={activeCorner} positionName="tr" img={settings.image} />
@@ -130,12 +133,13 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
         </div>
       )}
       <motion.div
+        id="youtube"
         data-testid="modal-button"
         onClick={() => {
           if (!isDragging) handleModalOpen()
         }}
         onDragStart={() => setIsDragging(true)}
-        className="fixed z-[2147483647] h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat"
+        className="youtube fixed z-[2147483647] h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat"
         drag
         dragSnapToOrigin
         dragMomentum={false}

@@ -38,12 +38,13 @@ export const MainModal = ({ isLoading }: { isLoading: boolean }) => {
 
   return (
     <motion.div
+      id="youtube"
       variants={modalVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
       transition={{ duration: 0.3 }}
-      className="bg-bgColor fixed z-[2147483647] h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
+      className="youtube bg-bgColor fixed z-[2147483647] h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
       style={{
         boxShadow: ' 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
         ...(system.pos === 'tl' && { top: '96px', left: '25px' }),
