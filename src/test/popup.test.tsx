@@ -20,7 +20,7 @@ describe('Popup', () => {
     })
 
     render(<App />)
-    expect(await screen.findByText('LMS 사이트에서 로그인 후 진행해주세요!')).toBeInTheDocument()
+    expect(await screen.findByText('토큰 관련 내용은 이용 가이드의 필독 사항을 꼭 확인해주세요!')).toBeInTheDocument()
   })
   it.skip('팝업 렌더링(LMS o)', async () => {
     chrome.tabs.query.mockImplementation((_q: any, cb: any) => {

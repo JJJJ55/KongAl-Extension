@@ -143,26 +143,18 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
     })
 
     for (const courseId in newBoardList) {
-      console.log('공지', courseId)
-      // const currentDetail = currentCourseDetail[courseId] || courseDetailItems
       newCourseDetail[courseId] = {
-        // ...currentDetail,
         ...newCourseDetail[courseId],
         BoardList: {
-          // ...currentDetail.BoardList,
           ...newBoardList[courseId],
         },
       }
     }
 
     for (const courseId in newReportList) {
-      console.log('과제', courseId)
-      // const currentDetail = currentCourseDetail[courseId] || courseDetailItems
       newCourseDetail[courseId] = {
-        // ...currentDetail,
         ...newCourseDetail[courseId],
         ReportList: {
-          // ...currentDetail.ReportList,
           ...newReportList[courseId],
         },
       }

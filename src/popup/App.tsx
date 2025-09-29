@@ -88,7 +88,6 @@ export default function App() {
       toast.success('정보가 업데이트 됐어요!', { icon: false })
     }
 
-    // // info, settings 업데이트
     await updateData('settings', prev => ({
       ...prev,
       siteToken: token,

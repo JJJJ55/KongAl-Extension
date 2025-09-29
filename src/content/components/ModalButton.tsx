@@ -1,9 +1,11 @@
+import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { useCallback, useEffect, useRef } from 'react'
 import { toast } from 'react-toastify'
 import { ModalBtnDrag } from './ModalBtnDrag'
 import { useDragBtn } from '@/hooks/useDragBtnHook'
+import { useFullScreen } from '@/hooks/useFullScreenHook'
 import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
 import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
@@ -35,6 +37,7 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
   const { system, contents, settings, info, updateData } = useStoragestore()
   const { handleOnDrag, isDragging, setIsDragging, activeCorner } = useDragBtn()
   const { shouldRefresh } = useRefreshCheck()
+  const { isFull } = useFullScreen()
 
   const handleModalOpen = () => {
     if (info.noti) toast.success('학습, 공지, 과제 알림이 있어요!', { icon: false })
@@ -135,7 +138,10 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
           if (!isDragging) handleModalOpen()
         }}
         onDragStart={() => setIsDragging(true)}
-        className="fixed z-[2147483647] h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat"
+        className={clsx(
+          'fixed z-[2147483647] h-[45px] w-[45px] cursor-pointer rounded-full bg-cover bg-center bg-no-repeat',
+          isFull && 'hidden',
+        )}
         drag
         dragSnapToOrigin
         dragMomentum={false}

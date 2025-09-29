@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { useState, useMemo } from 'react'
 
@@ -5,6 +6,7 @@ import { SettingPage } from './setting/SettingPage'
 import { BottomNavBar } from './subject/BottomNavbar'
 import { SubjectPage } from './subject/SubjectPage'
 import ToastComponent from '@/components/ToastComponent'
+import { useFullScreen } from '@/hooks/useFullScreenHook'
 import { useThemeCheck } from '@/hooks/useThemeHook'
 import { useStoragestore } from '@/store/useStorageStore'
 
@@ -31,6 +33,7 @@ export const MainModal = ({ isLoading }: { isLoading: boolean }) => {
   const [activeType, setActiveType] = useState<'subjects' | 'settings'>('subjects')
   const { mainRef } = useThemeCheck()
   const { system } = useStoragestore()
+  const { isFull } = useFullScreen()
 
   const ActiveContent = useMemo(() => {
     return activeType === 'subjects' ? <SubjectPage isLoading={isLoading} /> : <SettingPage />
@@ -43,7 +46,10 @@ export const MainModal = ({ isLoading }: { isLoading: boolean }) => {
       animate="visible"
       exit="exit"
       transition={{ duration: 0.3 }}
-      className="bg-bgColor fixed z-[2147483647] h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm"
+      className={clsx(
+        'bg-bgColor fixed z-[2147483647] h-[600px] w-[350px] origin-bottom-right overflow-hidden rounded-3xl shadow-[0_0_100px_0_rgba(0,0,0,0.2)] backdrop-blur-sm',
+        isFull && 'hidden',
+      )}
       style={{
         boxShadow: ' 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
         ...(system.pos === 'tl' && { top: '96px', left: '25px' }),
