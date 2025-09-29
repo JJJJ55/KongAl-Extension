@@ -70,7 +70,7 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center">
-            <Text className="mt-4 text-[15px] font-bold">LMS 사이트에서 로그인 후 진행해주세요!</Text>
+            <Text className="mt-4 text-[15px] font-bold">LMS 로그인 후 사이트 내에서 등록가능합니다.</Text>
             <div className="flex w-full justify-around">
               <a
                 className="text-14px text-knuBlue dark:text-positive cursor-pointer font-bold"
@@ -78,13 +78,6 @@ export const TopContent = ({ noti, token, updateFn }: TopContentProps) => {
                 target="_blank"
               >
                 LMS 바로가기
-              </a>
-              <a
-                className="text-14px text-knuBlue dark:text-positive cursor-pointer font-bold"
-                href={`${import.meta.env.VITE_GUIDE}`}
-                target="_blank"
-              >
-                이용 가이드
               </a>
             </div>
           </div>
