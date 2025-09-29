@@ -1,5 +1,6 @@
+import { BadgeQuestionMark } from 'lucide-react'
 import { NavLink } from './NavLink'
-import { CallIcon, GithubIcon, BuymecoffeeIcon } from '@/components/Icons'
+import { GithubIcon, BuymecoffeeIcon } from '@/components/Icons'
 
 export const PopupNav = () => {
   return (
@@ -8,7 +9,7 @@ export const PopupNav = () => {
         <GithubIcon className="h-[20px] w-[20px]" />
       </NavLink>
       <NavLink link={import.meta.env.VITE_GUIDE} text="이용가이드 (필독)">
-        <CallIcon className="h-[20px] w-[20px]" />
+        <BadgeQuestionMark className="h-[20px] w-[20px] text-black dark:text-white" />
       </NavLink>
       <NavLink link={import.meta.env.VITE_DONATION} text="개발자 후원">
         <BuymecoffeeIcon className="h-[20px] w-[20px]" />
