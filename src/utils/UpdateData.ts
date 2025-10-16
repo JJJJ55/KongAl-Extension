@@ -200,9 +200,9 @@ export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn 
       if (!newPlayList[position]) newPlayList[position] = {}
       newPlayList[position][moduleId] = {
         title,
-        isComplete: completed,
+        isComplete: completed === undefined || completed === null ? false : completed,
         isAttendance: null,
-        dueAt: d.content_data.due_at,
+        dueAt: d.content_data === undefined || d.content_data === null ? null : d.content_data.due_at,
       }
       if (contentType === 'attendance_item') {
         const { use_attendance: useAttendance, omit_progress: omitProgress } = d.content_data
