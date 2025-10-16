@@ -30,8 +30,8 @@ export default function App() {
     setIsLoading(false)
   }
 
-  const getInfo = async (token: string | null) => {
-    const response = await sendMessageAsync({ type: 'USER_INFO', token })
+  const getInfo = async (siteToken: string | null) => {
+    const response = await sendMessageAsync({ type: 'USER_INFO', siteToken })
     if (!response.success) {
       toast.error('올바른 토큰이 아닙니다. 다시 확인해주세요.', { icon: false })
       return
@@ -46,7 +46,7 @@ export default function App() {
       return
     }
 
-    const subjectRes = await sendMessageAsync({ type: 'USER_SUBJECT', token })
+    const subjectRes = await sendMessageAsync({ type: 'USER_SUBJECT', siteToken })
     if (!subjectRes.success) {
       toast.error('과목 업데이트에 실패했어요.', { icon: false })
       return
@@ -54,7 +54,7 @@ export default function App() {
 
     const ids = UpdateSubject({ contents, itemData: subjectRes.data, updateFn: updateData })
     if (ids.length !== 0) {
-      const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token, ids })
+      const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', siteToken, ids })
       if (issueRes.success) {
         UpdateIssue({
           isBeep: system.notiBeep,
@@ -70,7 +70,7 @@ export default function App() {
       }
 
       for (const id of ids) {
-        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: lmsRes.xToken })
+        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, xToken: lmsRes.xToken })
         const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
         if (res.success) {
           UpdatePlay({
@@ -90,7 +90,7 @@ export default function App() {
 
     await updateData('settings', prev => ({
       ...prev,
-      siteToken: token,
+      siteToken: siteToken,
       updateAt: new Date().toISOString(),
       xToken: lmsRes.xToken,
     }))
