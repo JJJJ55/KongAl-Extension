@@ -17,6 +17,9 @@ export const TokenLoading = React.memo(() => {
       <Suspense>
         <Lottie animationData={loadingJson} loop={true} />
       </Suspense>
+      <Text className="text-negative dark:text-negative text-center text-[13px] font-bold whitespace-pre">
+        작업이 완료되기 전, 팝업 창이 닫히지 않게 해주세요.
+      </Text>
     </main>
   )
 })

@@ -23,21 +23,21 @@ chrome.runtime.onUpdateAvailable.addListener(() => {
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type === 'USER_INFO') {
-    getUserInfo(message.token).then(result => sendResponse(result))
+    getUserInfo(message.siteToken).then(result => sendResponse(result))
 
     return true
   } else if (message.type === 'USER_SUBJECT') {
-    getSubject(message.token).then(result => sendResponse(result))
+    getSubject(message.siteToken).then(result => sendResponse(result))
 
     return true
   } else if (message.type === 'USER_ISSUE') {
-    const { token, ids } = message
-    getSubjectIssue(token, ids).then(result => sendResponse(result))
+    const { siteToken, ids } = message
+    getSubjectIssue(siteToken, ids).then(result => sendResponse(result))
 
     return true
   } else if (message.type === 'SUBJECT_LIST') {
-    const { token, id } = message
-    getPlayList(id, token).then(result => sendResponse(result))
+    const { xToken, id } = message
+    getPlayList(id, xToken).then(result => sendResponse(result))
 
     return true
   } else if (message.type === 'NOTI') {
