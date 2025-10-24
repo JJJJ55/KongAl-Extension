@@ -20,7 +20,7 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
 
   useEffect(() => {
     if (contents.courseList[courseId].updateAt === null || CheckPlayUpdate(contents.courseList[courseId].updateAt)) {
-      chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id: courseId, token: settings.xToken }, response => {
+      chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id: courseId, xToken: settings.xToken }, response => {
         if (response.success) {
           // 비프 제외하여 알림 x
           UpdatePlay({
