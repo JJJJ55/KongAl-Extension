@@ -52,8 +52,7 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
     let isIssue = false
     let isPlay = false
     onLoading(true)
-
-    const subjectRes = await sendMessageAsync({ type: 'USER_SUBJECT', token: settings.siteToken })
+    const subjectRes = await sendMessageAsync({ type: 'USER_SUBJECT', siteToken: settings.siteToken })
     if (!subjectRes.success) {
       toast.error('과목 업데이트에 실패했어요.', { icon: false })
       onLoading(false)
@@ -67,7 +66,7 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
       onLoading(false)
       return
     }
-    const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', token: settings.siteToken, ids })
+    const issueRes = await sendMessageAsync({ type: 'USER_ISSUE', siteToken: settings.siteToken, ids })
     if (issueRes.success) {
       UpdateIssue({
         isBeep: system.notiBeep,
@@ -87,7 +86,7 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
         contents.courseList[id].updateAt === null ||
         CheckPlayUpdate(contents.courseList[id].updateAt)
       ) {
-        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, token: settings.xToken })
+        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, xToken: settings.xToken })
         const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
         if (res.success) {
           UpdatePlay({
