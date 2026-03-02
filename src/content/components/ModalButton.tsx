@@ -76,7 +76,7 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
         updateAt: settings.updateAt,
         updateFn: updateData,
       })
-      updateData('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
+      // updateData('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
       isIssue = true
     }
 
@@ -104,6 +104,7 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
       }
     }
     onLoading(false)
+    updateData('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
     if (isIssue) {
       toast.success('이슈가 업데이트 됐어요!', { icon: false })
     } else {
