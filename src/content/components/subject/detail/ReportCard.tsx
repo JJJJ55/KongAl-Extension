@@ -19,7 +19,9 @@ export const ReportCard = ({ index, data, onStatus }: ReportProps) => {
   const [hover, setHover] = useState(false)
 
   const handleLink = (link: string) => {
-    window.location.href = `${import.meta.env.VITE_REDIRECT_URL}${link}`
+    // window.location.href = `${import.meta.env.VITE_REDIRECT_URL}${link}`
+    const url = `${import.meta.env.VITE_REDIRECT_URL}${link}`
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   return (

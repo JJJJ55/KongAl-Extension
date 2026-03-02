@@ -15,7 +15,9 @@ export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
   const playList = contents.courseDetail[courseId]?.PlayList || {}
 
   const handleLink = () => {
-    window.location.href = `${import.meta.env.VITE_REDIRECT_URL}/courses/${courseId}/external_tools/62`
+    // window.location.href = `${import.meta.env.VITE_REDIRECT_URL}/courses/${courseId}/external_tools/62`
+    const url = `${import.meta.env.VITE_REDIRECT_URL}/courses/${courseId}/external_tools/62`
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   useEffect(() => {

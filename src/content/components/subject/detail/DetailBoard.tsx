@@ -10,7 +10,9 @@ export const DetailBoard = ({ courseId }: { courseId: string | '' }) => {
     if (!isOk) {
       ChangeBoardStatus({ courseId, itemId: bid, updateFn: updateData })
     }
-    window.location.href = `${import.meta.env.VITE_REDIRECT_URL}${link}`
+    // window.location.href = `${import.meta.env.VITE_REDIRECT_URL}${link}`
+    const url = `${import.meta.env.VITE_REDIRECT_URL}${link}`
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
   return (
     <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">
