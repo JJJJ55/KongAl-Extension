@@ -237,3 +237,29 @@ export const DownloadIcon = (props: React.ComponentProps<'svg'>) => {
     </svg>
   )
 }
+
+export const NoticeIcon = (props: React.ComponentProps<'svg'>) => {
+  return (
+    <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <g clip-path="url(#clip0_759_11875)">
+        <path
+          d="M8.6025 20.5102H3.73125C2.913 20.5102 2.25 19.8472 2.25 19.029V10.9725C2.25 10.1542 2.913 9.49121 3.73125 9.49121H8.6025V20.5102Z"
+          fill="#EF4452"
+        />
+        <path
+          d="M8.60254 20.5099V9.49093L22.458 2.92093C23.4405 2.45518 24.5738 3.17143 24.5738 4.25968V25.7419C24.5738 26.8294 23.4405 27.5464 22.458 27.0807L8.60254 20.5099Z"
+          fill="#F56570"
+        />
+        <path
+          d="M24.5737 12.2461H26.2687C27.087 12.2461 27.75 12.9091 27.75 13.7273V16.2743C27.75 17.0926 27.087 17.7556 26.2687 17.7556H24.5737"
+          fill="#E32939"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_759_11875">
+          <rect width="30" height="30" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}
