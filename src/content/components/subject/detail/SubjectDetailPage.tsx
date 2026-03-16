@@ -26,7 +26,7 @@ const modalVariants: Variants = {
 }
 
 export const SubjectDetailPage = ({ data, onClick }: { data: [string, CourseItem] | null; onClick: () => void }) => {
-  const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('play')
+  const [activeType, setActiveType] = useState<'play' | 'board' | 'report'>('board') // play(학습) 주석처리
 
   const ActiveContent = useMemo(() => {
     return activeType === 'play' ? (

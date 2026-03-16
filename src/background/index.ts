@@ -36,8 +36,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
     return true
   } else if (message.type === 'SUBJECT_LIST') {
-    const { xToken, id } = message
-    getPlayList(id, xToken).then(result => sendResponse(result))
+    // const { xToken, id } = message
+    // getPlayList(id, xToken).then(result => sendResponse(result))
 
     return true
   } else if (message.type === 'NOTI') {
@@ -143,19 +143,19 @@ const getSubjectIssue = async (token: string, ids: string[]) => {
   return { success: true, data: IssueItems }
 }
 
-const getPlayList = async (id: string, token: string) => {
-  return await fetch(`${import.meta.env.VITE_XTOKEN_URL}${id}${import.meta.env.VITE_PLAYSTRING}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then(response => response.json())
-    .then(result => {
-      return { success: true, data: result }
-    })
-    .catch(error => {
-      return { success: false, data: error.message }
-    })
-}
+// const getPlayList = async (id: string, token: string) => {
+//   return await fetch(`${import.meta.env.VITE_XTOKEN_URL}${id}${import.meta.env.VITE_PLAYSTRING}`, {
+//     method: 'GET',
+//     credentials: 'include',
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   })
+//     .then(response => response.json())
+//     .then(result => {
+//       return { success: true, data: result }
+//     })
+//     .catch(error => {
+//       return { success: false, data: error.message }
+//     })
+// }

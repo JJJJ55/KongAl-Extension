@@ -8,10 +8,10 @@ import { useDragBtn } from '@/hooks/useDragBtnHook'
 import { useFullScreen } from '@/hooks/useFullScreenHook'
 import { useRefreshCheck } from '@/hooks/useRecycleHook'
 import { useStoragestore } from '@/store/useStorageStore'
-import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
+// import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
 
 import { sendMessageAsync } from '@/utils/RequestApi'
-import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
+import { UpdateIssue, UpdateSubject } from '@/utils/UpdateData'
 
 type ModalButtonProps = {
   isOpen: boolean
@@ -50,7 +50,7 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
 
   const UpdateSubjectData = useCallback(async () => {
     let isIssue = false
-    let isPlay = false
+    // let isPlay = false
     onLoading(true)
     const subjectRes = await sendMessageAsync({ type: 'USER_SUBJECT', siteToken: settings.siteToken })
     if (!subjectRes.success) {
@@ -80,29 +80,29 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
       isIssue = true
     }
 
-    for (const id of ids) {
-      if (
-        contents.courseList[id] === undefined ||
-        contents.courseList[id].updateAt === null ||
-        CheckPlayUpdate(contents.courseList[id].updateAt)
-      ) {
-        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, xToken: settings.xToken })
-        const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
-        if (res.success) {
-          UpdatePlay({
-            itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-            isBeep: system.notiBeep,
-            contents,
-            id,
-            updateAt: contents.courseList[id]?.updateAt,
-            updateFn: updateData,
-          })
-          await new Promise(resolve => setTimeout(resolve, delay))
-        } else {
-          isPlay = true
-        }
-      }
-    }
+    // for (const id of ids) {
+    //   if (
+    //     contents.courseList[id] === undefined ||
+    //     contents.courseList[id].updateAt === null ||
+    //     CheckPlayUpdate(contents.courseList[id].updateAt)
+    //   ) {
+    //     const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, xToken: settings.xToken })
+    //     const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
+    //     if (res.success) {
+    //       UpdatePlay({
+    //         itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+    //         isBeep: system.notiBeep,
+    //         contents,
+    //         id,
+    //         updateAt: contents.courseList[id]?.updateAt,
+    //         updateFn: updateData,
+    //       })
+    //       await new Promise(resolve => setTimeout(resolve, delay))
+    //     } else {
+    //       isPlay = true
+    //     }
+    //   }
+    // }
     onLoading(false)
     updateData('settings', prev => ({ ...prev, updateAt: new Date().toISOString() }))
     if (isIssue) {
@@ -110,7 +110,7 @@ export const ModalButton = ({ isOpen, onClick, onLoading }: ModalButtonProps) =>
     } else {
       toast.error('이슈 업데이트에 실패했어요.', { icon: false })
     }
-    if (isPlay) toast.error('학습 업데이트에 일부 문제가 있어요', { icon: false })
+    // if (isPlay) toast.error('학습 업데이트에 일부 문제가 있어요', { icon: false })
   }, [])
 
   const didRun = useRef(false)
