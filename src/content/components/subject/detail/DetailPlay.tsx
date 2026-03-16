@@ -1,42 +1,45 @@
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 import { Fragment } from 'react'
-import { toast } from 'react-toastify'
+// import { toast } from 'react-toastify'
 import { PlayCard } from './PlayCard'
 import { NotFound } from '../NotFound'
 import { LineText, Text } from '@/components'
 import { useStoragestore } from '@/store/useStorageStore'
-import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
-import { UpdatePlay } from '@/utils/UpdateData'
+// import { CheckPlayUpdate } from '@/utils/CheckPlayUpdate'
+// import { UpdatePlay } from '@/utils/UpdateData'
 
 export const DetailPlay = ({ courseId }: { courseId: string | '' }) => {
-  const { settings, contents, updateData } = useStoragestore()
+  // const { settings, contents, updateData } = useStoragestore()
+  const { contents } = useStoragestore()
 
   const weeks = Array.from({ length: 15 }, (_, i) => String(i + 1))
   const playList = contents.courseDetail[courseId]?.PlayList || {}
 
   const handleLink = () => {
-    window.location.href = `${import.meta.env.VITE_REDIRECT_URL}/courses/${courseId}/external_tools/62`
+    // window.location.href = `${import.meta.env.VITE_REDIRECT_URL}/courses/${courseId}/external_tools/62`
+    const url = `${import.meta.env.VITE_REDIRECT_URL}/courses/${courseId}/external_tools/62`
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
-  useEffect(() => {
-    if (contents.courseList[courseId].updateAt === null || CheckPlayUpdate(contents.courseList[courseId].updateAt)) {
-      chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id: courseId, xToken: settings.xToken }, response => {
-        if (response.success) {
-          // 비프 제외하여 알림 x
-          UpdatePlay({
-            itemData: response.data,
-            contents,
-            id: courseId,
-            updateAt: contents.courseList[courseId].updateAt,
-            updateFn: updateData,
-          })
-          toast.success('주차 학습이 업데이트 됐어요!', { icon: false })
-        } else {
-          toast.error('주차 학습 업데이트에 오류가 발생했어요.', { icon: false })
-        }
-      })
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (contents.courseList[courseId].updateAt === null || CheckPlayUpdate(contents.courseList[courseId].updateAt)) {
+  //     chrome.runtime.sendMessage({ type: 'SUBJECT_LIST', id: courseId, xToken: settings.xToken }, response => {
+  //       if (response.success) {
+  //         // 비프 제외하여 알림 x
+  //         UpdatePlay({
+  //           itemData: response.data,
+  //           contents,
+  //           id: courseId,
+  //           updateAt: contents.courseList[courseId].updateAt,
+  //           updateFn: updateData,
+  //         })
+  //         toast.success('주차 학습이 업데이트 됐어요!', { icon: false })
+  //       } else {
+  //         toast.error('주차 학습 업데이트에 오류가 발생했어요.', { icon: false })
+  //       }
+  //     })
+  //   }
+  // }, [])
 
   return (
     <div className="scrollbar-hidden flex flex-1 flex-col items-center gap-3 overflow-auto py-3">

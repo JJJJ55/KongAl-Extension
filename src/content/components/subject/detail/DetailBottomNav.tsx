@@ -1,5 +1,5 @@
 import { DetailBottomItem } from './DetailBottomItem'
-import { BoardIcon, BottomNavContent, PlayIcon, ReportIcon } from '@/components'
+import { BoardIcon, BottomNavContent, ReportIcon } from '@/components'
 import { useStoragestore } from '@/store/useStorageStore'
 
 type DetailBottomNavProps = {
@@ -16,10 +16,10 @@ export const DetailBottomNav = ({ dId, activeType, setActiveType }: DetailBottom
   const { contents } = useStoragestore()
   return (
     <BottomNavContent>
-      <DetailBottomItem activeType={activeType} setActiveType={setActiveType} item="play" itemName="학 습">
+      {/* <DetailBottomItem activeType={activeType} setActiveType={setActiveType} item="play" itemName="학 습">
         {contents.courseList[dId].isPlay > 0 && <IssueOn />}
         <PlayIcon />
-      </DetailBottomItem>
+      </DetailBottomItem> */}
       <DetailBottomItem activeType={activeType} setActiveType={setActiveType} item="board" itemName="공 지">
         {contents.courseList[dId].isBoard > 0 && <IssueOn />}
         <BoardIcon />

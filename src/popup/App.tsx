@@ -5,7 +5,7 @@ import { PopupNav, TokenLoading, TopContent } from './components'
 import { useThemeCheck } from '@/hooks/useThemeHook'
 import { useStoragestore } from '@/store/useStorageStore'
 import { getLmsWebInfo, sendMessageAsync } from '@/utils/RequestApi'
-import { UpdateIssue, UpdatePlay, UpdateSubject } from '@/utils/UpdateData'
+import { UpdateIssue, UpdateSubject } from '@/utils/UpdateData'
 
 export default function App() {
   const { system, contents, settings, info, updateData } = useStoragestore()
@@ -69,21 +69,21 @@ export default function App() {
         toast.error('이슈 업데이트에 실패했어요.', { icon: false })
       }
 
-      for (const id of ids) {
-        const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, xToken: lmsRes.xToken })
-        const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
-        if (res.success) {
-          UpdatePlay({
-            itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
-            isBeep: system.notiBeep,
-            contents,
-            id,
-            updateAt: contents.courseList[id]?.updateAt,
-            updateFn: updateData,
-          })
-          await new Promise(resolve => setTimeout(resolve, delay))
-        }
-      }
+      // for (const id of ids) {
+      //   const res = await sendMessageAsync({ type: 'SUBJECT_LIST', id, xToken: lmsRes.xToken })
+      //   const delay = Math.floor(Math.random() * (2000 - 500 + 1)) + 500
+      //   if (res.success) {
+      //     UpdatePlay({
+      //       itemData: res.data, // 이전 코드에서 response.data가 아닌 res.data
+      //       isBeep: system.notiBeep,
+      //       contents,
+      //       id,
+      //       updateAt: contents.courseList[id]?.updateAt,
+      //       updateFn: updateData,
+      //     })
+      //     await new Promise(resolve => setTimeout(resolve, delay))
+      //   }
+      // }
     } else {
       toast.success('정보가 업데이트 됐어요!', { icon: false })
     }
