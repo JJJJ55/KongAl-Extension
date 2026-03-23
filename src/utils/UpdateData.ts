@@ -7,7 +7,7 @@ import type {
   IssueItem,
   Noti,
   NotificationItem,
-  PlayItem,
+  // PlayItem,
   StorageData,
 } from '@/types'
 
@@ -178,86 +178,86 @@ export const UpdateIssue = ({ isBeep, contents, ids, updateAt, itemData, updateF
   })
 }
 
-export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn }: UpdateDataProps) => {
-  const newPlayList: Record<string, Record<string, PlayItem>> = {}
-  const newNoti: Record<string, Noti> = {}
-  const notificationList: NotificationItem[] = []
-  const seen: Set<string> = new Set()
+// export const UpdatePlay = ({ itemData, id, isBeep, contents, updateAt, updateFn }: UpdateDataProps) => {
+//   const newPlayList: Record<string, Record<string, PlayItem>> = {}
+//   const newNoti: Record<string, Noti> = {}
+//   const notificationList: NotificationItem[] = []
+//   const seen: Set<string> = new Set()
 
-  const pushNotification = (title: string, msg: string) => {
-    const key = `${title}-${msg}`
-    if (!seen.has(key)) {
-      seen.add(key)
-      notificationList.push({ title, msg })
-    }
-  }
+//   const pushNotification = (title: string, msg: string) => {
+//     const key = `${title}-${msg}`
+//     if (!seen.has(key)) {
+//       seen.add(key)
+//       notificationList.push({ title, msg })
+//     }
+//   }
 
-  if (!newNoti[id!]) newNoti[id!] = { isPlay: 0 }
-  for (const data of itemData) {
-    const { position } = data
-    for (const d of data.module_items) {
-      const { module_item_id: moduleId, title, content_type: contentType, completed } = d
-      if (!newPlayList[position]) newPlayList[position] = {}
-      newPlayList[position][moduleId] = {
-        title,
-        isComplete: completed === undefined || completed === null ? false : completed,
-        isAttendance: null,
-        dueAt: d.content_data === undefined || d.content_data === null ? null : d.content_data.due_at,
-      }
-      if (contentType === 'attendance_item') {
-        const { use_attendance: useAttendance, omit_progress: omitProgress } = d.content_data
-        if (useAttendance === true && omitProgress === false) {
-          newPlayList[position][moduleId].isAttendance = d.attendance_status
-          if (d.attendance_status !== 'attendance' || d.attendance_status !== 'absent') {
-            //출석 또는 결석은 알림을 안울림
-            if (ChangeDutAt(d.content_data.due_at) !== '마 감') {
-              newNoti[id!].isPlay = newNoti[id!].isPlay! + 1
-              if (isBeep === undefined) continue
-              if (updateAt === null || updateAt === undefined) {
-                pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차학습이 있어요!')
-              } else {
-                const type = CompareDueAt(d.content_data.due_at, updateAt)
-                if (type === '오늘') {
-                  pushNotification(contents?.courseList[id!]?.title || '콩알', '오늘 마감인 학습이 있어요!')
-                } else if (type === '이내') {
-                  pushNotification(contents?.courseList[id!]?.title || '콩알', '곧 마감되는 학습이 있어요!')
-                } else if (CompareUpdateAt(d.content_data.created_at, updateAt)) {
-                  pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차학습이 있어요!')
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+//   if (!newNoti[id!]) newNoti[id!] = { isPlay: 0 }
+//   for (const data of itemData) {
+//     const { position } = data
+//     for (const d of data.module_items) {
+//       const { module_item_id: moduleId, title, content_type: contentType, completed } = d
+//       if (!newPlayList[position]) newPlayList[position] = {}
+//       newPlayList[position][moduleId] = {
+//         title,
+//         isComplete: completed === undefined || completed === null ? false : completed,
+//         isAttendance: null,
+//         dueAt: d.content_data === undefined || d.content_data === null ? null : d.content_data.due_at,
+//       }
+//       if (contentType === 'attendance_item') {
+//         const { use_attendance: useAttendance, omit_progress: omitProgress } = d.content_data
+//         if (useAttendance === true && omitProgress === false) {
+//           newPlayList[position][moduleId].isAttendance = d.attendance_status
+//           if (d.attendance_status !== 'attendance' || d.attendance_status !== 'absent') {
+//             //출석 또는 결석은 알림을 안울림
+//             if (ChangeDutAt(d.content_data.due_at) !== '마 감') {
+//               newNoti[id!].isPlay = newNoti[id!].isPlay! + 1
+//               if (isBeep === undefined) continue
+//               if (updateAt === null || updateAt === undefined) {
+//                 pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차학습이 있어요!')
+//               } else {
+//                 const type = CompareDueAt(d.content_data.due_at, updateAt)
+//                 if (type === '오늘') {
+//                   pushNotification(contents?.courseList[id!]?.title || '콩알', '오늘 마감인 학습이 있어요!')
+//                 } else if (type === '이내') {
+//                   pushNotification(contents?.courseList[id!]?.title || '콩알', '곧 마감되는 학습이 있어요!')
+//                 } else if (CompareUpdateAt(d.content_data.created_at, updateAt)) {
+//                   pushNotification(contents?.courseList[id!]?.title || '콩알', '새로운 주차학습이 있어요!')
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
 
-  if (notificationList.length > 0) {
-    updateFn('info', prev => ({ ...prev, noti: true }))
-    chrome.runtime.sendMessage({ type: 'NOTI', beep: isBeep, notification: notificationList })
-  }
+//   if (notificationList.length > 0) {
+//     updateFn('info', prev => ({ ...prev, noti: true }))
+//     chrome.runtime.sendMessage({ type: 'NOTI', beep: isBeep, notification: notificationList })
+//   }
 
-  updateFn('contents', prev => {
-    const currentDetail = prev.courseDetail[id!] || courseDetailItems
-    const newCourseList = { ...prev.courseList }
-    newCourseList[id!] = {
-      ...prev.courseList[id!],
-      ...newNoti[id!],
-      updateAt: new Date().toISOString(),
-    }
+//   updateFn('contents', prev => {
+//     const currentDetail = prev.courseDetail[id!] || courseDetailItems
+//     const newCourseList = { ...prev.courseList }
+//     newCourseList[id!] = {
+//       ...prev.courseList[id!],
+//       ...newNoti[id!],
+//       updateAt: new Date().toISOString(),
+//     }
 
-    return {
-      ...prev,
-      courseList: { ...newCourseList },
-      courseDetail: {
-        ...prev.courseDetail,
-        [id!]: {
-          ...currentDetail, // 기존 BoardList/ReportList 보존
-          PlayList: {
-            ...newPlayList,
-          },
-        },
-      },
-    }
-  })
-}
+//     return {
+//       ...prev,
+//       courseList: { ...newCourseList },
+//       courseDetail: {
+//         ...prev.courseDetail,
+//         [id!]: {
+//           ...currentDetail, // 기존 BoardList/ReportList 보존
+//           PlayList: {
+//             ...newPlayList,
+//           },
+//         },
+//       },
+//     }
+//   })
+// }
