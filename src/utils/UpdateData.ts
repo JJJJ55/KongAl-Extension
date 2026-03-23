@@ -3,7 +3,7 @@ import type {
   Contents,
   CourseItem,
   Detail,
-  DetailItem,
+  // DetailItem,
   IssueItem,
   Noti,
   NotificationItem,
@@ -21,11 +21,11 @@ type UpdateDataProps = {
   updateFn: <K extends keyof StorageData>(key: K, update: (prev: StorageData[K]) => StorageData[K]) => Promise<void>
 }
 
-const courseDetailItems: DetailItem = {
-  PlayList: {},
-  BoardList: {},
-  ReportList: {},
-}
+// const courseDetailItems: DetailItem = {
+//   PlayList: {},
+//   BoardList: {},
+//   ReportList: {},
+// }
 
 export const UpdateSubject = ({ contents, itemData, updateFn }: UpdateDataProps) => {
   const currentList = contents.courseList
